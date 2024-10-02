@@ -1,4 +1,4 @@
-package com.klearn.klearn_website.dto;
+package com.klearn.klearn_website.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

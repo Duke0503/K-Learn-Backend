@@ -22,8 +22,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = userMapper.findByUsernameOrEmail(emailOrUsername, emailOrUsername);
 
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username or email: " + emailOrUsername);
+        }
         return new org.springframework.security.core.userdetails.User(
-                emailOrUsername,
+                user.getUsername(),
                 user.getPassword(),
                 true, 
                 true, 

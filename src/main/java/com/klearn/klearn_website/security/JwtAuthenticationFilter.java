@@ -18,49 +18,59 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private JwtTokenProvider jwtTokenProvider;
-
-    private UserDetailsService userDetailsService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserDetailsService userDetailsService;
 
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
     }
 
-    @Override 
+    @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // get JWT token from HTTP request
+        // Get JWT token from HTTP request
         String token = getTokenFromRequest(request);
 
-        // Validate Token
-        if(StringUtils.hasText(token) && jwtTokenProvider.validate_token((token))) {
-            // get username from token
-            String username = jwtTokenProvider.get_username(token);
+        try {
+            if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
+                // Get username from token
+                String username = jwtTokenProvider.getUsername(token);
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                // Load user details associated with the token
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userDetails, 
-                null,
-                null
-            );
+                if (userDetails != null) {
+                    // Create authentication token and set it in the SecurityContext
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
 
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    // Set the authentication in SecurityContext
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
+            }
+        } catch (Exception ex) {
+            // Handle exceptions such as token validation failure or user not found
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);  // Return 401 Unauthorized
+            response.getWriter().write("Unauthorized: Invalid or missing token");
+            return;
         }
 
         filterChain.doFilter(request, response);
     }
 
-    private String getTokenFromRequest(HttpServletRequest request){
+    private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
-            return bearerToken.substring(7, bearerToken.length());
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
 
         return null;

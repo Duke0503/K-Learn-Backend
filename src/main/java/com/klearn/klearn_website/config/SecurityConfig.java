@@ -53,7 +53,7 @@ public class SecurityConfig {
         // Add the JWT filter to process JWTs in each request
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
+        return http.getOrBuild();
     }
 
     @Bean

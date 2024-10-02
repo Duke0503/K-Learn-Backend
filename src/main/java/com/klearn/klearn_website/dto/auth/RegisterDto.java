@@ -1,4 +1,4 @@
-package com.klearn.klearn_website.dto;
+package com.klearn.klearn_website.dto.auth;
 
 import java.time.LocalDate;
 
@@ -16,7 +16,7 @@ public class RegisterDto {
 
   private LocalDate dob;
 
-  private Boolean gender;
+  private String gender;
 
   private String password;
 
