@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.klearn.klearn_website.dto.JwtAuthResponse;
-import com.klearn.klearn_website.dto.LoginDto;
-import com.klearn.klearn_website.dto.RegisterDto;
+import com.klearn.klearn_website.dto.auth.JwtAuthResponse;
+import com.klearn.klearn_website.dto.auth.LoginDto;
+import com.klearn.klearn_website.dto.auth.RegisterDto;
 import com.klearn.klearn_website.service.auth.AuthService;
 
 

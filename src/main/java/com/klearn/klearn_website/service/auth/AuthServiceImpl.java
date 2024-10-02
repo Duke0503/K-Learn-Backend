@@ -1,7 +1,7 @@
 package com.klearn.klearn_website.service.auth;
 
-import com.klearn.klearn_website.dto.LoginDto;
-import com.klearn.klearn_website.dto.RegisterDto;
+import com.klearn.klearn_website.dto.auth.LoginDto;
+import com.klearn.klearn_website.dto.auth.RegisterDto;
 import com.klearn.klearn_website.mapper.UserMapper;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.security.JwtTokenProvider;
@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -36,12 +37,14 @@ public class AuthServiceImpl implements AuthService {
         );
         
         User user = userMapper.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
-      
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username or email: " + loginDto.getUsernameOrEmail());
+        }
         userMapper.updateLastLogin(user.getId(), LocalDateTime.now());
         
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return jwtTokenProvider.generate_token(authentication);
+        return jwtTokenProvider.generateToken(authentication);
     }
 
     @Override
@@ -55,11 +58,12 @@ public class AuthServiceImpl implements AuthService {
         }
     
         User user = new User();
-        user.setFull_name(registerDto.getFirstname() + " " + registerDto.getLastname());
+        user.setFullname(registerDto.getFirstname() + " " + registerDto.getLastname());
         user.setEmail(registerDto.getEmail());
         user.setUsername(registerDto.getUsername());
         user.setDob(registerDto.getDob());
         user.setGender(registerDto.getGender());
+        user.setLast_login(LocalDateTime.now());
         user.setLast_modified(LocalDateTime.now());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
@@ -72,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return jwtTokenProvider.generate_token(authentication);
+        return jwtTokenProvider.generateToken(authentication);
     }
     
 

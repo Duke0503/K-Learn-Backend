@@ -16,21 +16,14 @@ public class JwtTokenProvider {
   @Value("${app.jwt-secret}")
   private String jwt_secret;
 
-  @Value("${app.jwt-expiration-milliseconds}")
-  private long jwt_expiration_date;
 
   // generate JWT token
-  public String generate_token(Authentication authentication) {
+  public String generateToken(Authentication authentication) {
     String username = authentication.getName();
 
-    Date current_date = new Date();
-
-    Date expire_date = new Date(current_date.getTime() + jwt_expiration_date);
-
     String token = Jwts.builder()
-              .subject(username)
-              .issuedAt(new Date())
-              .expiration(expire_date)
+              .setSubject(username)
+              .setIssuedAt(new Date())
               .signWith(key())
               .compact();
     
@@ -41,24 +34,27 @@ public class JwtTokenProvider {
     return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwt_secret));
   }
 
-  // get username from JWT token
-  public String get_username(String token){
+// get username from JWT token
+public String getUsername(String token){
+  return Jwts.parserBuilder()
+             .setSigningKey((SecretKey) key())
+             .build()
+             .parseClaimsJws(token)
+             .getBody()
+             .getSubject();
+}
 
-    return Jwts.parser()
-              .verifyWith((SecretKey) key())
-              .build()
-              .parseSignedClaims(token)
-              .getPayload()
-              .getSubject();
+// validate JWT token
+public boolean validateToken(String token) {
+  try {
+      Jwts.parserBuilder()
+          .setSigningKey((SecretKey) key())
+          .build()
+          .parseClaimsJws(token);
+      return true;
+  } catch (Exception e) {
+      // handle different exceptions for token expiration, signature mismatch, etc.
+      return false;
   }
-
-  // validate JWT token
-  public boolean validate_token(String token) {
-    Jwts.parser()
-      .verifyWith((SecretKey) key())
-      .build()
-      .parse(token);
-
-    return true;
-  }
+}
 }
