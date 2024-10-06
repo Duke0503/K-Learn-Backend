@@ -25,6 +25,9 @@ public class Grammar {
   @Column(name = "grammar_name", nullable = false, length = 255)
   private String grammar_name;
 
+  @Column(name = "grammar_description", columnDefinition = "TEXT")
+  private String grammar_description;
+  
   @Column(name = "explanation", columnDefinition = "TEXT")
   private String explanation;
 

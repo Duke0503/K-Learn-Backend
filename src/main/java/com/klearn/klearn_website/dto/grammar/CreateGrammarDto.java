@@ -13,6 +13,8 @@ import lombok.Setter;
 public class CreateGrammarDto {
   private String grammar_name;
 
+  private String grammar_description;
+  
   private String explanation;
 
   private String example;

@@ -22,6 +22,7 @@ public class GrammarService {
     Grammar grammar = new Grammar();
 
     grammar.setGrammar_name(createGrammarDto.getGrammar_name());
+    grammar.setGrammar_description(createGrammarDto.getGrammar_description());
     grammar.setExplanation(createGrammarDto.getExplanation());
     grammar.setExample(createGrammarDto.getExample());
     grammar.setLesson_number(createGrammarDto.getLesson_number());

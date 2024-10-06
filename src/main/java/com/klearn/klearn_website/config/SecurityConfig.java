@@ -37,7 +37,7 @@ public class SecurityConfig {
             .authorizeHttpRequests((authorize) -> {
                 // Permit all requests to auth-related endpoints (login, register)
                 authorize.requestMatchers("/api/auth/**").permitAll();
-                
+                authorize.requestMatchers("/api/course/**").permitAll();
                 // Allow preflight OPTIONS requests for CORS
                 authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                 

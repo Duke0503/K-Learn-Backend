@@ -7,8 +7,8 @@ import java.util.List;
 
 @Mapper
 public interface GrammarMapper {
-  @Insert("INSERT INTO grammar (course_id, grammar_name, explanation, example, lesson_number, last_modified, is_deleted) " +
-          "VALUES (#{course.id}, #{grammar_name}, #{explanation}, #{example}, #{lesson_number}, #{last_modified}, #{is_deleted})")
+  @Insert("INSERT INTO grammar (course_id, grammar_name, grammar_description, explanation, example, lesson_number, last_modified, is_deleted) " +
+          "VALUES (#{course.id}, #{grammar_name}, #{grammar_description}, #{explanation}, #{example}, #{lesson_number}, #{last_modified}, #{is_deleted})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void insertGrammar(Grammar grammar); 
   
@@ -18,6 +18,7 @@ public interface GrammarMapper {
   @Results({
     @Result(property = "id", column = "id"),
     @Result(property = "grammar_name", column = "grammar_name"),
+    @Result(property = "grammar_description", column = "grammar_description"),
     @Result(property = "explanation", column = "explanation"),
     @Result(property = "example", column = "example"),
     @Result(property = "lesson_number", column = "lesson_number"),
@@ -42,6 +43,7 @@ public interface GrammarMapper {
   @Results({
     @Result(property = "id", column = "id"),
     @Result(property = "grammar_name", column = "grammar_name"),
+    @Result(property = "grammar_description", column = "grammar_description"),
     @Result(property = "explanation", column = "explanation"),
     @Result(property = "example", column = "example"),
     @Result(property = "lesson_number", column = "lesson_number"),
