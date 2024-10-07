@@ -38,10 +38,13 @@ public class VocabularyTopicService {
   }
 
   public List<VocabularyTopic> getAllVocabularyTopic() {
+    
     return vocabularyTopicMapper.getAll();
+    // return Collections.emptyList();
   }
 
   public List<VocabularyTopic> getVocabularyTopicById(Integer course_id) {
     return vocabularyTopicMapper.getAllByCourseId(course_id);
+    // return Collections.emptyList();
   }
 }

@@ -58,5 +58,8 @@ public interface VocabularyTopicMapper {
       @Result(property = "course.last_modified", column = "last_modified"),
       @Result(property = "course.is_deleted", column = "is_deleted")
   })
-  List<VocabularyTopic> getAllByCourseId(@Param("course_id") Integer courseId);
+  List<VocabularyTopic> getAllByCourseId(@Param("course_id") Integer course_id);
+
+  @Select("SELECT * FROM vocabulary_topic WHERE id = #{topic_id} AND is_deleted = 0")
+  VocabularyTopic findVocabularyTopicById(@Param("topic_id") Integer topic_id);
 }

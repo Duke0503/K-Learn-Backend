@@ -38,6 +38,10 @@ public class SecurityConfig {
                 // Permit all requests to auth-related endpoints (login, register)
                 authorize.requestMatchers("/api/auth/**").permitAll();
                 authorize.requestMatchers("/api/course/**").permitAll();
+                authorize.requestMatchers("/api/vocabulary_topic/**").permitAll();
+                authorize.requestMatchers("/api/vocabulary/**").permitAll();
+                authorize.requestMatchers("/api/grammar/**").permitAll();
+                
                 // Allow preflight OPTIONS requests for CORS
                 authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                 
