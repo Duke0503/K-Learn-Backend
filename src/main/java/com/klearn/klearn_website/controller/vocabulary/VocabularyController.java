@@ -4,7 +4,9 @@ import com.klearn.klearn_website.dto.vocabulary.CreateVocabularyDto;
 import com.klearn.klearn_website.model.Vocabulary;
 import com.klearn.klearn_website.service.vocabulary.VocabularyService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,4 +41,16 @@ public class VocabularyController {
   public List<Vocabulary> getVocabularyByTopicId(@PathVariable Integer topic_id) {
     return vocabularyService.getVocabularyByTopicId(topic_id);
   }
+
+  @GetMapping("/count/{topic_id}")
+  public ResponseEntity<Map<String, Integer>> countVocabularyByTopicId(@PathVariable Integer topic_id) {
+      Integer count = vocabularyService.countVocabularyByTopicId(topic_id);
+
+      Map<String, Integer> response = new HashMap<>();
+
+      response.put("count_vocabulary", count);
+
+      return ResponseEntity.ok(response);
+  }
+
 }

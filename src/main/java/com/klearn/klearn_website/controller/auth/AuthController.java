@@ -48,6 +48,7 @@ public class AuthController {
 
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
         jwtAuthResponse.setAccessToken(token);
+        jwtAuthResponse.setRoleName("user");
 
         return new ResponseEntity<>(jwtAuthResponse, HttpStatus.CREATED);
     }

@@ -40,4 +40,8 @@ public class VocabularyService {
   public List<Vocabulary> getVocabularyByTopicId(Integer topic_id) {
     return vocabularyMapper.getVocabularyByTopicId(topic_id);
   }
+
+  public Integer countVocabularyByTopicId(Integer topic_id) {
+    return vocabularyMapper.countVocabularyByTopicId(topic_id);
+  }
 }
