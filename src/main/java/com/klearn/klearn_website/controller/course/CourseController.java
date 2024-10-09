@@ -4,6 +4,8 @@ import com.klearn.klearn_website.dto.course.CreateCourseDto;
 import com.klearn.klearn_website.model.Course;
 import com.klearn.klearn_website.service.course.CourseService;
 
+import lombok.AllArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/course")
 public class CourseController {
 
   private CourseService courseService;
-
-  public CourseController(CourseService courseService) {
-    this.courseService = courseService;
-  }
 
   @GetMapping
   public List<Course> getAllCourses() {

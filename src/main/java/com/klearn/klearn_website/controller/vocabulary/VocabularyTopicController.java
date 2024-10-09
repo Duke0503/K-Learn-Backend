@@ -4,6 +4,8 @@ import com.klearn.klearn_website.dto.vocabulary.CreateVocabularyTopicDto;
 import com.klearn.klearn_website.model.VocabularyTopic;
 import com.klearn.klearn_website.service.vocabulary.VocabularyTopicService;
 
+import lombok.AllArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/vocabulary_topic")
 public class VocabularyTopicController {
 
   private VocabularyTopicService vocabularyTopicService;
 
-  public VocabularyTopicController(VocabularyTopicService vocabularyTopicService) {
-    this.vocabularyTopicService = vocabularyTopicService;
-  }
-  
   @GetMapping
   public List<VocabularyTopic> getAllVocabularyTopic() {
       return vocabularyTopicService.getAllVocabularyTopic();

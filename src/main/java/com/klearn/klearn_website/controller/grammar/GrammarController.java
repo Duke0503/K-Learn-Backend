@@ -4,6 +4,8 @@ import com.klearn.klearn_website.dto.grammar.CreateGrammarDto;
 import com.klearn.klearn_website.model.Grammar;
 import com.klearn.klearn_website.service.grammar.GrammarService;
 
+import lombok.AllArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,16 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/grammar")
 public class GrammarController {
   
   private GrammarService grammarService;
-
-  public GrammarController(GrammarService grammarService) {
-    this.grammarService = grammarService;
-  }
 
   @GetMapping
   public List<Grammar> getAllGrammar() {

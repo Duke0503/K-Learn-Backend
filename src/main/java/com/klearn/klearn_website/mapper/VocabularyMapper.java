@@ -45,6 +45,6 @@ public interface VocabularyMapper {
   List<Vocabulary> getVocabularyByTopicId(@Param("topic_id") Integer topic_id);
 
   @Select("SELECT COUNT(*) FROM vocabulary WHERE topic_id = #{topic_id} AND is_deleted = 0")
-  int countVocabularyByTopicId(@Param("topic_id") Integer topic_id);
+  Integer countVocabularyByTopicId(@Param("topic_id") Integer topic_id);
 }
 

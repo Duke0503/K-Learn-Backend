@@ -4,6 +4,8 @@ import com.klearn.klearn_website.dto.vocabulary.CreateVocabularyDto;
 import com.klearn.klearn_website.model.Vocabulary;
 import com.klearn.klearn_website.service.vocabulary.VocabularyService;
 
+import lombok.AllArgsConstructor;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,15 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/vocabulary")
 public class VocabularyController {
   
   private VocabularyService vocabularyService;
-
-  private VocabularyController(VocabularyService vocabularyService) {
-    this.vocabularyService = vocabularyService;
-  }
 
   @PostMapping("/create")
   public ResponseEntity<String> createVocabulary(@RequestBody CreateVocabularyDto createVocabularyDto) {
@@ -44,13 +43,13 @@ public class VocabularyController {
 
   @GetMapping("/count/{topic_id}")
   public ResponseEntity<Map<String, Integer>> countVocabularyByTopicId(@PathVariable Integer topic_id) {
-      Integer count = vocabularyService.countVocabularyByTopicId(topic_id);
+    Integer count = vocabularyService.countVocabularyByTopicId(topic_id);
 
-      Map<String, Integer> response = new HashMap<>();
+    Map<String, Integer> response = new HashMap<>();
 
-      response.put("count_vocabulary", count);
+    response.put("count_vocabulary", count);
 
-      return ResponseEntity.ok(response);
+    return ResponseEntity.ok(response);
   }
 
 }
