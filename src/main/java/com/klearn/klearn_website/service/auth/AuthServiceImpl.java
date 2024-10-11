@@ -35,15 +35,14 @@ public class AuthServiceImpl implements AuthService {
                         loginDto.getPassword()
                 )
         );
-        
+
         User user = userMapper.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username or email: " + loginDto.getUsernameOrEmail());
         }
         userMapper.updateLastLogin(user.getId(), LocalDateTime.now());
-        
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtTokenProvider.generateToken(authentication);
     }
 
@@ -52,11 +51,11 @@ public class AuthServiceImpl implements AuthService {
         if (userMapper.existsByUsernameOrEmail(registerDto.getEmail(), registerDto.getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or username already exists");
         }
-    
+
         if (!registerDto.getPassword().equals(registerDto.getRe_password())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
         }
-    
+
         User user = new User();
         user.setFullname(registerDto.getFirstname() + " " + registerDto.getLastname());
         user.setEmail(registerDto.getEmail());
@@ -66,18 +65,16 @@ public class AuthServiceImpl implements AuthService {
         user.setLast_login(LocalDateTime.now());
         user.setLast_modified(LocalDateTime.now());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-
         user.setRole(0);  // 0 for learner, 1 for admin, 2 for content-management
 
         userMapper.createUser(user);
 
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(registerDto.getUsername(), registerDto.getPassword())
+                new UsernamePasswordAuthenticationToken(registerDto.getUsername(), registerDto.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return jwtTokenProvider.generateToken(authentication);
     }
-    
 
 }

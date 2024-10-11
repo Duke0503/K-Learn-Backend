@@ -28,7 +28,7 @@ public class User {
   @Column(name = "email", nullable = false, unique = true, length = 100)
   private String email;
 
-  @Column(name = "password", nullable = false)
+  @Column(name = "password")
   private String password;
 
   @Column(name = "fullname", length = 100)
@@ -55,5 +55,6 @@ public class User {
   @Column(name = "role", nullable = false, columnDefinition = "INT DEFAULT 0")
   private Integer role = 0;  // 0: learner, 1: admin, 2: content-management
 
-    
+  @Column(name = "type")
+  private String type;   
 }

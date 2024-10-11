@@ -21,8 +21,8 @@ public interface UserMapper {
   Integer getRole(@Param("email") String email, @Param("username") String username);
 
   // Create a new user
-  @Insert("INSERT INTO users (username, password, email, fullname, dob, gender, last_login, last_modified) " +
-          "VALUES (#{username}, #{password}, #{email}, #{fullname}, #{dob}, #{gender}, #{last_login}, #{last_modified})")
+  @Insert("INSERT INTO users (username, password, email, fullname, dob, gender, type, last_login, last_modified) " +
+          "VALUES (#{username}, #{password}, #{email}, #{fullname}, #{dob}, #{gender}, #{type}, #{last_login}, #{last_modified})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void createUser(User user);
 
