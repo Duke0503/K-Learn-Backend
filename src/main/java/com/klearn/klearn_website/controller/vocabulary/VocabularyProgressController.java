@@ -61,4 +61,26 @@ public class VocabularyProgressController {
 
     return ResponseEntity.ok(response);
   }
+
+  @GetMapping("/learned/{topicId}/")
+  public List<VocabularyProgress> getLearnedVocabularyProgress(@PathVariable Integer topicId) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    
+    String username = authentication.getName();
+
+    User user = userService.getUser(username);  
+
+    return vocabularyProgressService.getVocabularyLearned(user.getId(), topicId);
+  }
+
+  @GetMapping("/not_learned/{topicId}/")
+  public List<VocabularyProgress> getNotLearnedVocabularyProgress(@PathVariable Integer topicId) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    
+    String username = authentication.getName();
+
+    User user = userService.getUser(username);  
+
+    return vocabularyProgressService.getVocabularyNotLearned(user.getId(), topicId);
+  }
 }

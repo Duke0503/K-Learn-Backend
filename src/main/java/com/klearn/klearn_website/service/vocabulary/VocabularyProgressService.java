@@ -61,4 +61,12 @@ public class VocabularyProgressService {
   public Integer countVocabularyLearned(Integer userId, Integer topicId) {
     return vocabularyProgressMapper.countVocabularyLearned(userId, topicId);
   }
+
+  public List<VocabularyProgress> getVocabularyNotLearned(Integer userId, Integer topicId) {
+    return vocabularyProgressMapper.getNotLearnedVocabularyProgressByUserIdAndTopicId(userId, topicId);
+  }
+
+  public List<VocabularyProgress> getVocabularyLearned(Integer userId, Integer topicId) {
+    return vocabularyProgressMapper.getLearnedVocabularyProgressByUserIdAndTopicId(userId, topicId);
+  }
 }
