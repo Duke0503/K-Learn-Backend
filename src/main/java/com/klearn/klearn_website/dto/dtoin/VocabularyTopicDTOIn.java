@@ -1,4 +1,4 @@
-package com.klearn.klearn_website.dto.vocabulary;
+package com.klearn.klearn_website.dto.dtoin;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateVocabularyTopicDto {
+public class VocabularyTopicDTOIn {
 
     private String topic_name;
 

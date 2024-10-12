@@ -1,11 +1,11 @@
-package com.klearn.klearn_website.dto.auth;
+package com.klearn.klearn_website.dto.dtoin;
 
 import java.time.LocalDate;
 
 import lombok.Data;
 
 @Data
-public class RegisterDto {
+public class RegisterDTOIn {
   private String firstname;
 
   private String lastname;

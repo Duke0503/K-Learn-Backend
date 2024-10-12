@@ -1,6 +1,6 @@
 package com.klearn.klearn_website.controller.grammar;
 
-import com.klearn.klearn_website.dto.grammar.CreateGrammarDto;
+import com.klearn.klearn_website.dto.dtoin.GrammarDTOIn;
 import com.klearn.klearn_website.model.Grammar;
 import com.klearn.klearn_website.service.grammar.GrammarService;
 
@@ -35,9 +35,9 @@ public class GrammarController {
   }
   
   @PostMapping("/create")
-  public ResponseEntity<String> createGrammar(@RequestBody CreateGrammarDto createGrammarDto) {
+  public ResponseEntity<String> createGrammar(@RequestBody GrammarDTOIn grammarDTOIn) {
     try {
-      grammarService.createGrammar(createGrammarDto);
+      grammarService.createGrammar(grammarDTOIn);
       return new ResponseEntity<>("Grammar Lesson created successfully", HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>("Failed to create Grammar Lesson: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

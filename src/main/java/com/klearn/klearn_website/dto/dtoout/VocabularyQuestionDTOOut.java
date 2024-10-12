@@ -1,4 +1,4 @@
-package com.klearn.klearn_website.model;
+package com.klearn.klearn_website.dto.dtoout;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VocabularyQuestion {
+public class VocabularyQuestionDTOOut {
   private Integer vocabulary_id;
 
   private String type;

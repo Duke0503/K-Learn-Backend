@@ -1,4 +1,4 @@
-package com.klearn.klearn_website.dto.auth;
+package com.klearn.klearn_website.dto.dtoin;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDto {
+public class LoginDTOIn {
     private String usernameOrEmail;
     private String password;
 }

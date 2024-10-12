@@ -1,4 +1,4 @@
-package com.klearn.klearn_website.dto.grammar;
+package com.klearn.klearn_website.dto.dtoin;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class CreateGrammarDto {
+public class GrammarDTOIn {
   private String grammar_name;
 
   private String grammar_description;

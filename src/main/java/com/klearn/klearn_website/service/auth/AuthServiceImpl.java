@@ -1,7 +1,7 @@
 package com.klearn.klearn_website.service.auth;
 
-import com.klearn.klearn_website.dto.auth.LoginDto;
-import com.klearn.klearn_website.dto.auth.RegisterDto;
+import com.klearn.klearn_website.dto.dtoin.LoginDTOIn;
+import com.klearn.klearn_website.dto.dtoin.RegisterDTOIn;
 import com.klearn.klearn_website.mapper.UserMapper;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.security.JwtTokenProvider;
@@ -28,17 +28,17 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public String login(LoginDto loginDto) {
+    public String login(LoginDTOIn loginDTOIn) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginDto.getUsernameOrEmail(),
-                        loginDto.getPassword()
+                    loginDTOIn.getUsernameOrEmail(),
+                    loginDTOIn.getPassword()
                 )
         );
 
-        User user = userMapper.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
+        User user = userMapper.findByUsernameOrEmail(loginDTOIn.getUsernameOrEmail(), loginDTOIn.getUsernameOrEmail());
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with username or email: " + loginDto.getUsernameOrEmail());
+            throw new UsernameNotFoundException("User not found with username or email: " + loginDTOIn.getUsernameOrEmail());
         }
         userMapper.updateLastLogin(user.getId(), LocalDateTime.now());
 
@@ -47,30 +47,30 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String register(RegisterDto registerDto) {
-        if (userMapper.existsByUsernameOrEmail(registerDto.getEmail(), registerDto.getUsername())) {
+    public String register(RegisterDTOIn registerDTOIn) {
+        if (userMapper.existsByUsernameOrEmail(registerDTOIn.getEmail(), registerDTOIn.getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or username already exists");
         }
 
-        if (!registerDto.getPassword().equals(registerDto.getRe_password())) {
+        if (!registerDTOIn.getPassword().equals(registerDTOIn.getRe_password())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
         }
 
         User user = new User();
-        user.setFullname(registerDto.getFirstname() + " " + registerDto.getLastname());
-        user.setEmail(registerDto.getEmail());
-        user.setUsername(registerDto.getUsername());
-        user.setDob(registerDto.getDob());
-        user.setGender(registerDto.getGender());
+        user.setFullname(registerDTOIn.getFirstname() + " " + registerDTOIn.getLastname());
+        user.setEmail(registerDTOIn.getEmail());
+        user.setUsername(registerDTOIn.getUsername());
+        user.setDob(registerDTOIn.getDob());
+        user.setGender(registerDTOIn.getGender());
         user.setLast_login(LocalDateTime.now());
         user.setLast_modified(LocalDateTime.now());
-        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(registerDTOIn.getPassword()));
         user.setRole(0);  // 0 for learner, 1 for admin, 2 for content-management
 
         userMapper.createUser(user);
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(registerDto.getUsername(), registerDto.getPassword())
+                new UsernamePasswordAuthenticationToken(registerDTOIn.getUsername(), registerDTOIn.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

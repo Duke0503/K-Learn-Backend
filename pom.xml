@@ -95,17 +95,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
-        <!-- Spring Security Thymeleaf Extras -->
-        <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
-        </dependency>
-
-        <!-- Spring Boot OAuth2 Client Starter -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
-        </dependency>
 	</dependencies>
 
 <build>

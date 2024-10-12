@@ -1,10 +1,10 @@
-package com.klearn.klearn_website.dto.course;
+package com.klearn.klearn_website.dto.dtoin;
 
 import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class CreateCourseDto {
+public class CourseDTOIn {
   String course_name;
 
   String course_level;

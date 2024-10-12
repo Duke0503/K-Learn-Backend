@@ -1,9 +1,9 @@
 package com.klearn.klearn_website.service.auth;
 
-import com.klearn.klearn_website.dto.auth.LoginDto;
-import com.klearn.klearn_website.dto.auth.RegisterDto;
+import com.klearn.klearn_website.dto.dtoin.LoginDTOIn;
+import com.klearn.klearn_website.dto.dtoin.RegisterDTOIn;
 
 public interface AuthService {
-    String login(LoginDto loginDto);
-    String register(RegisterDto registerDto);
+    String login(LoginDTOIn loginDTOIn);
+    String register(RegisterDTOIn registerDTOIn);
 }

@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.klearn.klearn_website.dto.dtoout.VocabularyQuestionDTOOut;
 import com.klearn.klearn_website.mapper.VocabularyProgressMapper;
 import com.klearn.klearn_website.model.VocabularyProgress;
-import com.klearn.klearn_website.model.VocabularyQuestion;
 
 import lombok.AllArgsConstructor;
 
@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 public class VocabularyQuizService {
   private VocabularyProgressMapper vocabularyProgressMapper;
 
-  public List<VocabularyQuestion> createVocabularyQuiz(Integer userId, Integer topicId) {
+  public List<VocabularyQuestionDTOOut> createVocabularyQuiz(Integer userId, Integer topicId) {
     List<VocabularyProgress> listVocabulary = vocabularyProgressMapper.getVocabularyProgressByUserIdAndTopicId(userId, topicId);
 
     List<String> definitions = new ArrayList<>();
@@ -26,7 +26,7 @@ public class VocabularyQuizService {
       definitions.add(vocabularyProgress.getVocabulary().getDefinition());
     });
 
-    List<VocabularyQuestion> listQuestions = new ArrayList<>();
+    List<VocabularyQuestionDTOOut> listQuestions = new ArrayList<>();
 
     listVocabulary.forEach(vocabularyProgress -> {
       if (vocabularyProgress.getIs_learned() == false) {
@@ -47,7 +47,7 @@ public class VocabularyQuizService {
 
         Collections.shuffle(options);
 
-        listQuestions.add(new VocabularyQuestion(
+        listQuestions.add(new VocabularyQuestionDTOOut(
           vocabularyId,
           "multichoice",
           word,
@@ -55,7 +55,7 @@ public class VocabularyQuizService {
           options
         ));
 
-        listQuestions.add(new VocabularyQuestion(
+        listQuestions.add(new VocabularyQuestionDTOOut(
           vocabularyId,
           "essay",
           word,

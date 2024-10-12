@@ -48,6 +48,7 @@ public class SecurityConfig {
                     registry.requestMatchers("/api/grammar/**").permitAll();
                     
                     registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                    // registry.requestMatchers("/api/mycourse/**").authenticated();
                     registry.anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2login -> 

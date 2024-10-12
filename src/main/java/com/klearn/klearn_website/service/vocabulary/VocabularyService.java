@@ -2,7 +2,7 @@ package com.klearn.klearn_website.service.vocabulary;
 
 import org.springframework.stereotype.Service;
 
-import com.klearn.klearn_website.dto.vocabulary.CreateVocabularyDto;
+import com.klearn.klearn_website.dto.dtoin.VocabularyDTOIn;
 import com.klearn.klearn_website.mapper.VocabularyMapper;
 import com.klearn.klearn_website.mapper.VocabularyTopicMapper;
 import com.klearn.klearn_website.model.Vocabulary;
@@ -18,18 +18,18 @@ public class VocabularyService {
   private VocabularyMapper vocabularyMapper;
   private VocabularyTopicMapper vocabularyTopicMapper;
 
-  public void createVocabulary(CreateVocabularyDto createVocabularyDto) {
+  public void createVocabulary(VocabularyDTOIn vocabularyDTOIn) {
     Vocabulary vocabulary = new Vocabulary();
 
-    vocabulary.setWord(createVocabularyDto.getWord());
-    vocabulary.setDefinition(createVocabularyDto.getDefinition());
-    vocabulary.setTranscription(createVocabularyDto.getTranscription());
-    vocabulary.setImage(createVocabularyDto.getImage());
+    vocabulary.setWord(vocabularyDTOIn.getWord());
+    vocabulary.setDefinition(vocabularyDTOIn.getDefinition());
+    vocabulary.setTranscription(vocabularyDTOIn.getTranscription());
+    vocabulary.setImage(vocabularyDTOIn.getImage());
     vocabulary.setIs_deleted(false);
     vocabulary.setLast_modified(LocalDateTime.now());
-    VocabularyTopic vocabularyTopic = vocabularyTopicMapper.findVocabularyTopicById(createVocabularyDto.getTopic_id());
+    VocabularyTopic vocabularyTopic = vocabularyTopicMapper.findVocabularyTopicById(vocabularyDTOIn.getTopic_id());
     if (vocabularyTopic == null) {
-      throw new RuntimeException("Topic not found with ID: " + createVocabularyDto.getTopic_id());
+      throw new RuntimeException("Topic not found with ID: " + vocabularyDTOIn.getTopic_id());
     }
 
     vocabulary.setVocabularyTopic(vocabularyTopic);

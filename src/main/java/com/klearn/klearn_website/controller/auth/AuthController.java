@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.klearn.klearn_website.dto.auth.JwtAuthResponse;
-import com.klearn.klearn_website.dto.auth.LoginDto;
-import com.klearn.klearn_website.dto.auth.RegisterDto;
+import com.klearn.klearn_website.dto.dtoin.LoginDTOIn;
+import com.klearn.klearn_website.dto.dtoin.RegisterDTOIn;
+import com.klearn.klearn_website.dto.dtoout.JwtAuthResponseDTOOut;
 import com.klearn.klearn_website.mapper.UserMapper;
 import com.klearn.klearn_website.service.auth.AuthService;
 
@@ -20,13 +20,13 @@ public class AuthController {
     private AuthService authService;
     
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto){
-        String token = authService.login(loginDto);
+    public ResponseEntity<JwtAuthResponseDTOOut> login(@RequestBody LoginDTOIn loginDTOIn){
+        String token = authService.login(loginDTOIn);
         
-        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        JwtAuthResponseDTOOut jwtAuthResponse = new JwtAuthResponseDTOOut();
         jwtAuthResponse.setAccessToken(token);
 
-        Integer role = userMapper.getRole(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
+        Integer role = userMapper.getRole(loginDTOIn.getUsernameOrEmail(), loginDTOIn.getUsernameOrEmail());
         
         switch (role) {
             case 0:
@@ -43,10 +43,10 @@ public class AuthController {
     }
     
     @PostMapping("/register")
-    public ResponseEntity<JwtAuthResponse> register(@RequestBody RegisterDto registerDto) {
-        String token = authService.register(registerDto);
+    public ResponseEntity<JwtAuthResponseDTOOut> register(@RequestBody RegisterDTOIn registerDTOIn) {
+        String token = authService.register(registerDTOIn);
 
-        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        JwtAuthResponseDTOOut jwtAuthResponse = new JwtAuthResponseDTOOut();
         jwtAuthResponse.setAccessToken(token);
         jwtAuthResponse.setRoleName("user");
 

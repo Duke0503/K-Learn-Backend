@@ -1,6 +1,6 @@
 package com.klearn.klearn_website.controller.vocabulary;
 
-import com.klearn.klearn_website.dto.vocabulary.CreateVocabularyTopicDto;
+import com.klearn.klearn_website.dto.dtoin.VocabularyTopicDTOIn;
 import com.klearn.klearn_website.model.VocabularyTopic;
 import com.klearn.klearn_website.service.vocabulary.VocabularyTopicService;
 
@@ -36,9 +36,9 @@ public class VocabularyTopicController {
   
   
   @PostMapping("/create")
-  public ResponseEntity<String> createVocabularyTopic(@RequestBody CreateVocabularyTopicDto createVocabularyTopicDto) {
+  public ResponseEntity<String> createVocabularyTopic(@RequestBody VocabularyTopicDTOIn vocabularyTopicDTOIn) {
     try {
-      vocabularyTopicService.createVocabularyTopic(createVocabularyTopicDto);
+      vocabularyTopicService.createVocabularyTopic(vocabularyTopicDTOIn);
       return new ResponseEntity<>("Vocabulary Topic created successfully", HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>("Failed to create Vocabulary Topic: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

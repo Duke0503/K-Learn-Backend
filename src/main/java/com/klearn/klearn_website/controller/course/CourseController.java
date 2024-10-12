@@ -1,6 +1,6 @@
 package com.klearn.klearn_website.controller.course;
 
-import com.klearn.klearn_website.dto.course.CreateCourseDto;
+import com.klearn.klearn_website.dto.dtoin.CourseDTOIn;
 import com.klearn.klearn_website.model.Course;
 import com.klearn.klearn_website.service.course.CourseService;
 
@@ -29,9 +29,9 @@ public class CourseController {
   }
 
   @PostMapping("/create")
-  public ResponseEntity<String> createCourse(@RequestBody CreateCourseDto createCourseDto) {
+  public ResponseEntity<String> createCourse(@RequestBody CourseDTOIn courseDTOIn) {
     try {
-      courseService.createCourse(createCourseDto);
+      courseService.createCourse(courseDTOIn);
       return new ResponseEntity<>("Course created successfully", HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>("Failed to create course: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

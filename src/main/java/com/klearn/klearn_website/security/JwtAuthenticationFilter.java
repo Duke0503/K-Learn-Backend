@@ -46,7 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception ex) {
-            // Ghi log lỗi và tiếp tục chuỗi lọc
             logger.error("JWT Authentication failed: " + ex.getMessage());
         }
 
