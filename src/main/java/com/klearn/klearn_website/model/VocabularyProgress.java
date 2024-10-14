@@ -24,7 +24,7 @@ public class VocabularyProgress {
     @Column(name = "is_learned", nullable = false)
     private Boolean is_learned;
 
-    @Column(name = "last_modified", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "last_modified")
     private LocalDateTime last_modified;
 
     @Column(name = "is_deleted", nullable = false)

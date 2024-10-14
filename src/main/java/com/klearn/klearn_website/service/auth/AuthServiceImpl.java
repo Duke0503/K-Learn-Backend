@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
         );
 
         User user = userMapper.findByUsernameOrEmail(loginDTOIn.getUsernameOrEmail(), loginDTOIn.getUsernameOrEmail());
-        if (user == null) {
+        if (user == null || user.getType() == "email") {
             throw new UsernameNotFoundException("User not found with username or email: " + loginDTOIn.getUsernameOrEmail());
         }
         userMapper.updateLastLogin(user.getId(), LocalDateTime.now());
