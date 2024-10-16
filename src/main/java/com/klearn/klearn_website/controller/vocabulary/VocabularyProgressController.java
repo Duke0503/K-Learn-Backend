@@ -34,15 +34,15 @@ public class VocabularyProgressController {
     return vocabularyProgressService.getVocabularyByUserIdAndTopicId(user.getId(), topicId);
   }
   
-  @GetMapping("/mark/topic/{topicId}/vocabulary/{vocabularyId}")
-  public void markVocabularyAsLearned(@PathVariable Integer topicId, @PathVariable Integer vocabularyId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    
-    String username = authentication.getName();
-
-    User user = userService.getUser(username);  
-    
-    vocabularyProgressService.markVocabularyAsLearned(user.getId(), topicId, vocabularyId);
+  @PatchMapping("/mark/topic/{topicId}/vocabulary/{vocabularyId}")
+  public ResponseEntity<String> markVocabularyAsLearned(@PathVariable Integer topicId, @PathVariable Integer vocabularyId) {
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      
+      String username = authentication.getName();
+      User user = userService.getUser(username);  
+      
+      vocabularyProgressService.markVocabularyAsLearned(user.getId(), topicId, vocabularyId);
+      return ResponseEntity.ok("Vocabulary marked as learned.");
   }
 
   @GetMapping("/progress/{topicId}")

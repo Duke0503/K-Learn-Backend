@@ -61,4 +61,8 @@ public interface GrammarMapper {
     @Result(property = "course.is_deleted", column = "is_deleted")
   })
   List<Grammar> getAllByCourseId(@Param("course_id") Integer courseId);
+
+  @Select("SELECT * FROM grammar " +
+  "WHERE id = #{grammar_id} AND is_deleted = 0")
+  Grammar getGrammarById(@Param("grammar_id") Integer grammarId);
 }

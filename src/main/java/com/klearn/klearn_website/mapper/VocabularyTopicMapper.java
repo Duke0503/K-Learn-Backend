@@ -62,4 +62,7 @@ public interface VocabularyTopicMapper {
 
   @Select("SELECT * FROM vocabulary_topic WHERE id = #{topic_id} AND is_deleted = 0")
   VocabularyTopic findVocabularyTopicById(@Param("topic_id") Integer topic_id);
+
+  @Select("SELECT course_id FROM vocabulary_topic WHERE id = #{topic_id} AND is_deleted = 0")
+  Integer getCourseIdByTopicId(@Param("topic_id") Integer topic_id);
 }

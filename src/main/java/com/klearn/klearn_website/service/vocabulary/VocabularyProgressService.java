@@ -26,12 +26,12 @@ public class VocabularyProgressService {
 
   public List<VocabularyProgress> getVocabularyByUserIdAndTopicId(Integer userId, Integer topicId) {
     User user = userMapper.findUserById(userId);
+    
     VocabularyTopic topic = vocabularyTopicMapper.findVocabularyTopicById(topicId);
 
     List<Vocabulary> listVocabulary = vocabularyMapper.getVocabularyByTopicId(topicId);
 
-    listVocabulary.forEach(vocabulary -> {
-
+    for(Vocabulary vocabulary : listVocabulary) {
       if (!vocabularyProgressMapper.existsByUserIdAndTopicId(userId, topicId, vocabulary.getId())) {
 
         VocabularyProgress newProgress = new VocabularyProgress(
@@ -44,9 +44,9 @@ public class VocabularyProgressService {
           topic
         );
         vocabularyProgressMapper.insertVocabularyProgress(newProgress);
-      }
-    });
-
+      }      
+    }
+ 
     return vocabularyProgressMapper.getVocabularyProgressByUserIdAndTopicId(userId, topicId);
   }
 

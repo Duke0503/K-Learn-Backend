@@ -30,9 +30,6 @@ public class MyCourse {
   @Column(name = "last_modified")
   private LocalDateTime last_modified;
 
-  @Column(name = "my_progress")
-  private Integer my_progress;
-
   @Column(name = "is_deleted")
   private Boolean is_deleted;
 

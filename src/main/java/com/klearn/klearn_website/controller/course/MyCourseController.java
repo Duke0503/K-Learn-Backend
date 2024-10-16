@@ -36,7 +36,7 @@ public class MyCourseController {
       return ResponseEntity.ok(courses);
   }
 
-  @GetMapping("/{courseId}/progress")
+  @GetMapping("/vocabulary/{courseId}/progress")
   public ResponseEntity<String> getCourseProgress (@PathVariable Integer courseId) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     
@@ -49,9 +49,18 @@ public class MyCourseController {
     return ResponseEntity.ok(progress);
   }
 
-    @PostMapping("/enroll")
-    public ResponseEntity<String> enrollInCourse(@RequestBody MyCourseDTOIn myCourseDTOIn) {
-        myCourseService.insertMyCourse(myCourseDTOIn);
-        return ResponseEntity.ok("Course enrolled successfully");
-    }
+  @GetMapping("/grammar/{courseId}/progress")
+  public ResponseEntity<String> getGrammarProgress(@PathVariable Integer courseId) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+    User user = userService.getUser(username);
+    String progress = myCourseService.getGrammarProgressByUserIdAndCourseId(user.getId(), courseId);
+    return ResponseEntity.ok(progress);
+  }
+
+  @PostMapping("/enroll")
+  public ResponseEntity<String> enrollInCourse(@RequestBody MyCourseDTOIn myCourseDTOIn) {
+      myCourseService.insertMyCourse(myCourseDTOIn);
+      return ResponseEntity.ok("Course enrolled successfully");
+  }
 }
