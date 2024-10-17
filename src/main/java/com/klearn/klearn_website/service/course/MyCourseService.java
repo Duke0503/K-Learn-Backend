@@ -69,8 +69,59 @@ public class MyCourseService {
     myCourseMapper.insertMyCourse(mycourse);
   }
 
-  public List<MyCourse> getMyCourseByUserId(Integer userId) {
-    return myCourseMapper.getMyCourseByUserId(userId);
+  public String getMyCourseByUserId(Integer userId) {
+    try {
+      List<MyCourse> listMyCourses =  myCourseMapper.getMyCourseByUserId(userId);
+      if (listMyCourses.isEmpty()) {
+        return "{}";
+      }
+  
+      Map<String, Object> responseData = new HashMap<>();
+  
+      for (MyCourse myCourse : listMyCourses) {
+        Map<String, Object> course = new HashMap<>();
+        course.put("id", myCourse.getCourse().getId());
+        course.put("name", myCourse.getCourse().getCourse_name());
+        
+        // Calculate the progress of Grammar
+        int learnedGrammar = grammarProgressMapper.countLearnedGrammar(userId, myCourse.getCourse().getId());
+        int notLearnedGrammar = grammarProgressMapper.countNotLearnedGrammar(userId, myCourse.getCourse().getId());
+        int grammar_progress = (learnedGrammar + notLearnedGrammar) == 0 ? 0 :
+                (int) Math.ceil((double) learnedGrammar * 100 / (learnedGrammar + notLearnedGrammar));
+    
+        // Calculate the progress of Vocabulary
+        int vocab_progress = 0;
+        List<VocabularyTopic> topics = vocabularyTopicMapper.getAllByCourseId( myCourse.getCourse().getId());
+        if (topics.isEmpty()) {
+          vocab_progress = 0;
+        } else {
+          int learnedTopics = 0;
+          int totalTopics = 0;
+          for (VocabularyTopic topic : topics) {
+            int learnedWords = vocabularyProgressMapper.countVocabularyLearned(userId, topic.getId());
+            int notLearnedWords = vocabularyProgressMapper.countVocabularyNotLearned(userId, topic.getId());
+
+            int totalWords = learnedWords + notLearnedWords;
+            int topic_progress = (totalWords == 0) ? 0 : (int) Math.ceil((double) learnedWords * 100 / totalWords);
+
+            if (topic_progress >= 80) learnedTopics++;
+            totalTopics++; 
+          }
+          vocab_progress = totalTopics == 0 ? 0 : (int) Math.ceil((double) learnedTopics * 100 / totalTopics);      
+        }
+
+        course.put("progress", (int) Math.ceil(((double) grammar_progress) + (double) vocab_progress) / 2);
+  
+        responseData.put("course_" + myCourse.getCourse().getId(), course);
+      }
+
+      ObjectMapper mapper = new ObjectMapper();
+      return mapper.writeValueAsString(responseData);
+
+    } catch (Exception e) {
+      System.err.println("Error occurred while fetching my course: " + e.getMessage());
+      throw new RuntimeException("Error fetching my course", e);
+    }    
   }
 
   public String getVocabularyProgressByUserIdAndCourseId(Integer userId, Integer courseId) {

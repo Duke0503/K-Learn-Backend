@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/mycourse")
@@ -28,11 +26,11 @@ public class MyCourseController {
   private UserService userService;
 
   @GetMapping("/user/courses")
-  public ResponseEntity<List<MyCourse>> getUserCourses() {
+  public ResponseEntity<String> getUserCourses() {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       String username = authentication.getName();
       User user = userService.getUser(username);
-      List<MyCourse> courses = myCourseService.getMyCourseByUserId(user.getId());
+      String courses = myCourseService.getMyCourseByUserId(user.getId());
       return ResponseEntity.ok(courses);
   }
 
