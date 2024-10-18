@@ -26,7 +26,7 @@ public class VocabularyQuizService {
         listVocabulary.forEach(vocabularyProgress -> {
             definitions.add(vocabularyProgress.getVocabulary().getDefinition());
         });
-
+        
         List<VocabularyQuestionDTOOut> listQuestions = new ArrayList<>();
 
         listVocabulary.forEach(vocabularyProgress -> {

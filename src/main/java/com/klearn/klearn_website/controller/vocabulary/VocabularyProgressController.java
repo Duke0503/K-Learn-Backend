@@ -35,7 +35,7 @@ public class VocabularyProgressController {
         String username = authentication.getName();
         User user = userService.getUser(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
-
+                
         return vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topicId);
     }
 

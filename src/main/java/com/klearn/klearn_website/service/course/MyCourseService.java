@@ -55,6 +55,15 @@ public class MyCourseService {
 
         // Insert into the database
         myCourseMapper.insertMyCourse(myCourse);
+
+        List<VocabularyTopic> listTopics = vocabularyTopicService.getVocabularyTopicsByCourseId(course.getId());
+
+        for (VocabularyTopic topic : listTopics) {
+            vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topic.getId());
+        }
+        
+        grammarProgressService.getGrammarProgressByUserIdAndGrammarId(user.getId(), course.getId());
+
     }
 
     /**
