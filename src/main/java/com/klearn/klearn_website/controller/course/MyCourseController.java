@@ -21,43 +21,113 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/api/mycourse")
 public class MyCourseController {
-  private MyCourseService myCourseService;
-  private UserService userService;
+    private final MyCourseService myCourseService;
+    private final UserService userService;
 
-  @GetMapping("/user/courses")
-  public ResponseEntity<String> getUserCourses() {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      String username = authentication.getName();
-      User user = userService.getUser(username);
-      String courses = myCourseService.getMyCourseByUserId(user.getId());
-      return ResponseEntity.ok(courses);
-  }
+    /**
+     * Get all courses for the authenticated user.
+     * 
+     * @return A JSON representation of the user's courses.
+     */
+    @GetMapping("/user/courses")
+    public ResponseEntity<String> getUserCourses() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        String courses = myCourseService.getMyCourseByUserId(user.getId());
+        return ResponseEntity.ok(courses);
+    }
 
-  @GetMapping("/vocabulary/{courseId}/progress")
-  public ResponseEntity<String> getCourseProgress (@PathVariable Integer courseId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    
-    String username = authentication.getName();
+    /**
+     * Get vocabulary progress for a specific course.
+     * 
+     * @param courseId The ID of the course.
+     * @return A JSON representation of the vocabulary progress.
+     */
+    @GetMapping("/vocabulary/{courseId}/progress")
+    public ResponseEntity<String> getVocabularyProgress(@PathVariable Integer courseId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        String progress = myCourseService.getVocabularyProgressByUserIdAndCourseId(user.getId(), courseId);
+        return ResponseEntity.ok(progress);
+    }
 
-    User user = userService.getUser(username);
-    
-    String progress = myCourseService.getVocabularyProgressByUserIdAndCourseId(user.getId(), courseId);
+    /**
+     * Get grammar progress for a specific course.
+     * 
+     * @param courseId The ID of the course.
+     * @return A JSON representation of the grammar progress.
+     */
+    @GetMapping("/grammar/{courseId}/progress")
+    public ResponseEntity<String> getGrammarProgress(@PathVariable Integer courseId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        String progress = myCourseService.getDetailedGrammarProgressByUserIdAndCourseId(user.getId(), courseId);
+        return ResponseEntity.ok(progress);
+    }
 
-    return ResponseEntity.ok(progress);
-  }
+    /**
+     * Enroll in a new course.
+     * 
+     * @param myCourseDTOIn The details of the course enrollment.
+     * @return A message indicating the result of the enrollment.
+     */
+    @PostMapping("/enroll")
+    public ResponseEntity<String> enrollInCourse(@RequestBody MyCourseDTOIn myCourseDTOIn) {
+        myCourseService.insertMyCourse(myCourseDTOIn);
+        return ResponseEntity.ok("Course enrolled successfully");
+    }
 
-  @GetMapping("/grammar/{courseId}/progress")
-  public ResponseEntity<String> getGrammarProgress(@PathVariable Integer courseId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
-    User user = userService.getUser(username);
-    String progress = myCourseService.getGrammarProgressByUserIdAndCourseId(user.getId(), courseId);
-    return ResponseEntity.ok(progress);
-  }
+    /**
+     * Get detailed grammar progress, including quiz questions, for a specific course.
+     * 
+     * @param courseId The ID of the course.
+     * @return A JSON representation of the detailed grammar progress.
+     */
+    @GetMapping("/grammar/{courseId}/detailed-progress")
+    public ResponseEntity<String> getDetailedGrammarProgress(@PathVariable Integer courseId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        String progress = myCourseService.getDetailedGrammarProgressByUserIdAndCourseId(user.getId(), courseId);
+        return ResponseEntity.ok(progress);
+    }
 
-  @PostMapping("/enroll")
-  public ResponseEntity<String> enrollInCourse(@RequestBody MyCourseDTOIn myCourseDTOIn) {
-      myCourseService.insertMyCourse(myCourseDTOIn);
-      return ResponseEntity.ok("Course enrolled successfully");
-  }
+    /**
+     * Get detailed vocabulary progress for a specific course.
+     * 
+     * @param courseId The ID of the course.
+     * @return A JSON representation of the detailed vocabulary progress.
+     */
+    @GetMapping("/vocabulary/{courseId}/detailed-progress")
+    public ResponseEntity<String> getDetailedVocabularyProgress(@PathVariable Integer courseId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        String progress = myCourseService.getVocabularyProgressByUserIdAndCourseId(user.getId(), courseId);
+        return ResponseEntity.ok(progress);
+    }
+
+    /**
+     * Get the overall course progress, including grammar and vocabulary.
+     *
+     * @param courseId The ID of the course.
+     * @return JSON representation of the course's overall progress.
+     */
+    @GetMapping("/{courseId}/overall-progress")
+    public ResponseEntity<String> getOverallCourseProgress(@PathVariable Integer courseId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        String progress = myCourseService.getMyCourseByUserId(user.getId());
+        return ResponseEntity.ok(progress);
+    }
 }

@@ -1,8 +1,8 @@
 package com.klearn.klearn_website.security;
 
-import com.klearn.klearn_website.mapper.UserMapper;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.auth.OAuth2UserService;
+import com.klearn.klearn_website.service.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final OAuth2UserService oAuth2UserService;
-    private final UserMapper userMapper;
+    private final UserService userService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -32,7 +32,7 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
 
         String token = oAuth2UserService.processOAuthPostLogin(email, oAuth2User);
 
-        User user = userMapper.findByUsernameOrEmail(email, email);
+        User user = userService.getUser(email).orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
 
         String role;
 

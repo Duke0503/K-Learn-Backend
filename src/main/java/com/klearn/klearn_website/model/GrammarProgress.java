@@ -46,19 +46,14 @@ public class GrammarProgress {
     private Course course;
 
     @Embeddable
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class GrammarProgressId implements Serializable {
         private Integer user_id;
         private Integer grammar_id;
         private Integer course_id;
-
-        public GrammarProgressId() {
-        }
-
-        public GrammarProgressId(Integer user_id, Integer grammar_id, Integer course_id) {
-            this.user_id = user_id;
-            this.grammar_id = grammar_id;
-            this.course_id = course_id;
-        }
 
         @Override
         public boolean equals(Object o) {

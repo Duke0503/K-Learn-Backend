@@ -7,12 +7,14 @@ import java.util.List;
 @Mapper
 public interface VocabularyTopicMapper {
 
+    // Create a new vocabulary topic
     @Insert("INSERT INTO vocabulary_topic (course_id, topic_name, topic_description, topic_image, created_at, last_modified, is_deleted) "
             +
             "VALUES (#{course.id}, #{topic_name}, #{topic_description}, #{topic_image}, #{created_at}, #{last_modified}, #{is_deleted})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertVocabularyTopic(VocabularyTopic vocabularyTopic);
 
+    // Get all vocabulary topics that are not deleted
     @Select("SELECT vt.*, c.* FROM vocabulary_topic vt " +
             "JOIN courses c ON vt.course_id = c.id " +
             "WHERE vt.is_deleted = 0")
@@ -37,6 +39,7 @@ public interface VocabularyTopicMapper {
     })
     List<VocabularyTopic> getAll();
 
+    // Get all vocabulary topics by course ID that are not deleted
     @Select("SELECT vt.*, c.* FROM vocabulary_topic vt " +
             "JOIN courses c ON vt.course_id = c.id " +
             "WHERE vt.course_id = #{course_id} AND vt.is_deleted = 0")
@@ -61,9 +64,25 @@ public interface VocabularyTopicMapper {
     })
     List<VocabularyTopic> getAllByCourseId(@Param("course_id") Integer course_id);
 
+    // Find a vocabulary topic by its ID that is not deleted
     @Select("SELECT * FROM vocabulary_topic WHERE id = #{topic_id} AND is_deleted = 0")
     VocabularyTopic findVocabularyTopicById(@Param("topic_id") Integer topic_id);
 
+    // Get course ID by vocabulary topic ID
     @Select("SELECT course_id FROM vocabulary_topic WHERE id = #{topic_id} AND is_deleted = 0")
     Integer getCourseIdByTopicId(@Param("topic_id") Integer topic_id);
+
+    // Update a vocabulary topic
+    @Update("UPDATE vocabulary_topic SET topic_name = #{topic_name}, topic_description = #{topic_description}, topic_image = #{topic_image}, "
+            +
+            "last_modified = NOW() WHERE id = #{id} AND is_deleted = 0")
+    void updateVocabularyTopic(VocabularyTopic vocabularyTopic);
+
+    // Soft delete a vocabulary topic by setting is_deleted to 1
+    @Update("UPDATE vocabulary_topic SET is_deleted = 1, last_modified = NOW() WHERE id = #{topic_id}")
+    void softDeleteVocabularyTopic(@Param("topic_id") Integer topic_id);
+
+    // Permanently delete a vocabulary topic (use with caution)
+    @Delete("DELETE FROM vocabulary_topic WHERE id = #{topic_id}")
+    void deleteVocabularyTopicPermanently(@Param("topic_id") Integer topic_id);
 }

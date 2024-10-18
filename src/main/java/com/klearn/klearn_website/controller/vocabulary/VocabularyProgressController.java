@@ -20,38 +20,58 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/vocabulary_progress")
 public class VocabularyProgressController {
-    private UserService userService;
-    private VocabularyProgressService vocabularyProgressService;
+    private final UserService userService;
+    private final VocabularyProgressService vocabularyProgressService;
 
+    /**
+     * Retrieves vocabulary progress for a specific topic by user.
+     *
+     * @param topicId The ID of the topic.
+     * @return List of VocabularyProgress entries for the user and topic.
+     */
     @GetMapping("/topic/{topicId}")
     public List<VocabularyProgress> getVocabularyProgress(@PathVariable Integer topicId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         String username = authentication.getName();
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
 
-        User user = userService.getUser(username);
-
-        return vocabularyProgressService.getVocabularyByUserIdAndTopicId(user.getId(), topicId);
+        return vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topicId);
     }
 
+    /**
+     * Marks a vocabulary as learned for a specific topic.
+     *
+     * @param topicId      The ID of the topic.
+     * @param vocabularyId The ID of the vocabulary to mark as learned.
+     * @return ResponseEntity indicating the result of the operation.
+     */
     @PatchMapping("/mark/topic/{topicId}/vocabulary/{vocabularyId}")
     public ResponseEntity<String> markVocabularyAsLearned(@PathVariable Integer topicId,
             @PathVariable Integer vocabularyId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         String username = authentication.getName();
-        User user = userService.getUser(username);
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
 
         vocabularyProgressService.markVocabularyAsLearned(user.getId(), topicId, vocabularyId);
         return ResponseEntity.ok("Vocabulary marked as learned.");
     }
 
+    /**
+     * Retrieves the count of learned and not learned vocabularies for a specific
+     * topic.
+     *
+     * @param topicId The ID of the topic.
+     * @return ResponseEntity containing the counts of learned and not learned
+     *         vocabularies.
+     */
     @GetMapping("/progress/{topicId}")
     public ResponseEntity<?> getVocabularyProgressCounts(@PathVariable Integer topicId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
-        User user = userService.getUser(username);
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
 
         Integer countVocabularyNotLearned = vocabularyProgressService.countVocabularyNotLearned(user.getId(), topicId);
         Integer countVocabularyLearned = vocabularyProgressService.countVocabularyLearned(user.getId(), topicId);
@@ -63,25 +83,97 @@ public class VocabularyProgressController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/learned/{topicId}/")
+    /**
+     * Retrieves all learned vocabulary progress for a specific topic.
+     *
+     * @param topicId The ID of the topic.
+     * @return List of learned VocabularyProgress entries for the user and topic.
+     */
+    @GetMapping("/learned/{topicId}")
     public List<VocabularyProgress> getLearnedVocabularyProgress(@PathVariable Integer topicId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         String username = authentication.getName();
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
 
-        User user = userService.getUser(username);
-
-        return vocabularyProgressService.getVocabularyLearned(user.getId(), topicId);
+        return vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topicId).stream()
+                .filter(VocabularyProgress::getIs_learned)
+                .toList();
     }
 
-    @GetMapping("/not_learned/{topicId}/")
+    /**
+     * Retrieves all not learned vocabulary progress for a specific topic.
+     *
+     * @param topicId The ID of the topic.
+     * @return List of not learned VocabularyProgress entries for the user and
+     *         topic.
+     */
+    @GetMapping("/not_learned/{topicId}")
     public List<VocabularyProgress> getNotLearnedVocabularyProgress(@PathVariable Integer topicId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         String username = authentication.getName();
+        User user = userService.getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
 
-        User user = userService.getUser(username);
+        return vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topicId).stream()
+                .filter(vp -> !vp.getIs_learned())
+                .toList();
+    }
 
-        return vocabularyProgressService.getVocabularyNotLearned(user.getId(), topicId);
+    /**
+     * Creates a new VocabularyProgress entry.
+     *
+     * @param vocabularyProgress The VocabularyProgress entity to create.
+     * @return ResponseEntity indicating the result of the create operation.
+     */
+    @PostMapping("/create")
+    public ResponseEntity<String> createVocabularyProgress(@RequestBody VocabularyProgress vocabularyProgress) {
+        vocabularyProgressService.createVocabularyProgress(vocabularyProgress);
+        return ResponseEntity.ok("VocabularyProgress created successfully.");
+    }
+
+    /**
+     * Updates an existing VocabularyProgress entry.
+     *
+     * @param vocabularyProgress The VocabularyProgress entity to update.
+     * @return ResponseEntity indicating the result of the update operation.
+     */
+    @PutMapping("/update")
+    public ResponseEntity<String> updateVocabularyProgress(@RequestBody VocabularyProgress vocabularyProgress) {
+        vocabularyProgressService.updateVocabularyProgress(vocabularyProgress);
+        return ResponseEntity.ok("VocabularyProgress updated successfully.");
+    }
+
+    /**
+     * Soft deletes a VocabularyProgress entry.
+     *
+     * @param userId       The ID of the user.
+     * @param vocabularyId The ID of the vocabulary.
+     * @param topicId      The ID of the topic.
+     * @return ResponseEntity indicating the result of the soft delete operation.
+     */
+    @DeleteMapping("/soft_delete/{userId}/{vocabularyId}/{topicId}")
+    public ResponseEntity<String> softDeleteVocabularyProgress(@PathVariable Integer userId,
+            @PathVariable Integer vocabularyId,
+            @PathVariable Integer topicId) {
+        vocabularyProgressService.softDeleteVocabularyProgress(userId, vocabularyId, topicId);
+        return ResponseEntity.ok("VocabularyProgress soft deleted successfully.");
+    }
+
+    /**
+     * Permanently deletes a VocabularyProgress entry.
+     *
+     * @param userId       The ID of the user.
+     * @param vocabularyId The ID of the vocabulary.
+     * @param topicId      The ID of the topic.
+     * @return ResponseEntity indicating the result of the permanent delete
+     *         operation.
+     */
+    @DeleteMapping("/delete/{userId}/{vocabularyId}/{topicId}")
+    public ResponseEntity<String> deleteVocabularyProgressPermanently(@PathVariable Integer userId,
+            @PathVariable Integer vocabularyId,
+            @PathVariable Integer topicId) {
+        vocabularyProgressService.deleteVocabularyProgressPermanently(userId, vocabularyId, topicId);
+        return ResponseEntity.ok("VocabularyProgress permanently deleted successfully.");
     }
 }

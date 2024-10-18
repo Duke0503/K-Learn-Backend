@@ -11,5 +11,7 @@ public class CourseDTOIn {
 
     String course_description;
 
+    String course_image;
+
     BigDecimal course_price;
 }
