@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -17,30 +17,30 @@ import java.time.LocalDateTime;
 @Table(name = "vocabulary")
 
 public class Vocabulary {
-  @Id 
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-  @Column(name = "word", nullable = false, length = 50)
-  private String word;
+    @Column(name = "word", nullable = false, length = 50)
+    private String word;
 
-  @Column(name = "definition", columnDefinition = "TEXT", nullable = false)
-  private String definition;
-  
-  @Column(name = "transcription", columnDefinition = "TEXT")
-  private String transcription;
+    @Column(name = "definition", columnDefinition = "TEXT", nullable = false)
+    private String definition;
 
-  @Column(name = "image", columnDefinition = "TEXT")
-  private String image;
+    @Column(name = "transcription", columnDefinition = "TEXT")
+    private String transcription;
 
-  @Column(name = "last_modified")
-  private LocalDateTime last_modified;
+    @Column(name = "image", columnDefinition = "TEXT")
+    private String image;
 
-  @Column(name = "is_deleted")
-  private Boolean is_deleted;
+    @Column(name = "last_modified")
+    private LocalDateTime last_modified;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
-  private VocabularyTopic vocabularyTopic;
+    @Column(name = "is_deleted")
+    private Boolean is_deleted;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
+    private VocabularyTopic vocabularyTopic;
 }

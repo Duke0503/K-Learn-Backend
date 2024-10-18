@@ -1,6 +1,5 @@
 package com.klearn.klearn_website.controller.grammar;
 
-
 import com.klearn.klearn_website.dto.dtoin.QuestionGrammarDTOIn;
 import com.klearn.klearn_website.model.QuestionGrammar;
 import com.klearn.klearn_website.service.grammar.QuestionGrammarService;
@@ -34,4 +33,3 @@ public class QuestionGrammarController {
         return ResponseEntity.ok(questions);
     }
 }
-

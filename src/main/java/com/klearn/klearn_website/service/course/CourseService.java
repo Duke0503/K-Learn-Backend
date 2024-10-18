@@ -12,27 +12,27 @@ import java.time.LocalDateTime;
 @Service
 public class CourseService {
 
-  private CourseMapper courseMapper;
+    private CourseMapper courseMapper;
 
-  public CourseService(CourseMapper courseMapper) {
-    this.courseMapper = courseMapper;
-  }
+    public CourseService(CourseMapper courseMapper) {
+        this.courseMapper = courseMapper;
+    }
 
-  public List<Course> getAllCourses() {
-    return courseMapper.findAll();
-  }
+    public List<Course> getAllCourses() {
+        return courseMapper.findAll();
+    }
 
-  public void createCourse(CourseDTOIn courseDTOIn) {
-    Course course = new Course();
+    public void createCourse(CourseDTOIn courseDTOIn) {
+        Course course = new Course();
 
-    course.setCourse_name(courseDTOIn.getCourse_name());
-    course.setCourse_level(courseDTOIn.getCourse_level());
-    course.setCourse_description(courseDTOIn.getCourse_description());
-    course.setCourse_price(courseDTOIn.getCourse_price());
-    course.setCreated_at(LocalDateTime.now());
-    course.setLast_modified(LocalDateTime.now());
-    course.setIs_deleted(false);
+        course.setCourse_name(courseDTOIn.getCourse_name());
+        course.setCourse_level(courseDTOIn.getCourse_level());
+        course.setCourse_description(courseDTOIn.getCourse_description());
+        course.setCourse_price(courseDTOIn.getCourse_price());
+        course.setCreated_at(LocalDateTime.now());
+        course.setLast_modified(LocalDateTime.now());
+        course.setIs_deleted(false);
 
-    courseMapper.createCourse(course);
-  }
+        courseMapper.createCourse(course);
+    }
 }

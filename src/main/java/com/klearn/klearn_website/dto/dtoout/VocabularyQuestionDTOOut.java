@@ -11,13 +11,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VocabularyQuestionDTOOut {
-  private Integer vocabulary_id;
+    private Integer vocabulary_id;
 
-  private String type;
+    private String type;
 
-  private String word;
+    private String word;
 
-  private String definition;
+    private String definition;
 
-  private List<String> options;
+    private List<String> options;
 }

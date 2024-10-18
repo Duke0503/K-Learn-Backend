@@ -6,19 +6,19 @@ import lombok.Data;
 
 @Data
 public class RegisterDTOIn {
-  private String firstname;
+    private String firstname;
 
-  private String lastname;
+    private String lastname;
 
-  private String email;
+    private String email;
 
-  private String username; 
+    private String username;
 
-  private LocalDate dob;
+    private LocalDate dob;
 
-  private String gender;
+    private String gender;
 
-  private String password;
+    private String password;
 
-  private String re_password;
+    private String re_password;
 }

@@ -11,15 +11,15 @@ import lombok.Setter;
 @AllArgsConstructor
 
 public class GrammarDTOIn {
-  private String grammar_name;
+    private String grammar_name;
 
-  private String grammar_description;
-  
-  private String explanation;
+    private String grammar_description;
 
-  private String example;
+    private String explanation;
 
-  private Integer lesson_number;
-  
-  private Integer course_id; 
+    private String example;
+
+    private Integer lesson_number;
+
+    private Integer course_id;
 }

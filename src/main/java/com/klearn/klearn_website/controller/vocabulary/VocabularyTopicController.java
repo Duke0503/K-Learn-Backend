@@ -22,26 +22,26 @@ import java.util.List;
 @RequestMapping("/api/vocabulary_topic")
 public class VocabularyTopicController {
 
-  private VocabularyTopicService vocabularyTopicService;
+    private VocabularyTopicService vocabularyTopicService;
 
-  @GetMapping
-  public List<VocabularyTopic> getAllVocabularyTopic() {
-      return vocabularyTopicService.getAllVocabularyTopic();
-  }
-
-  @GetMapping("/{course_id}")
-  public List<VocabularyTopic> getVocabularyTopicsById(@PathVariable Integer course_id) {
-      return vocabularyTopicService.getVocabularyTopicById(course_id);
-  }
-  
-  
-  @PostMapping("/create")
-  public ResponseEntity<String> createVocabularyTopic(@RequestBody VocabularyTopicDTOIn vocabularyTopicDTOIn) {
-    try {
-      vocabularyTopicService.createVocabularyTopic(vocabularyTopicDTOIn);
-      return new ResponseEntity<>("Vocabulary Topic created successfully", HttpStatus.CREATED);
-    } catch (Exception e) {
-      return new ResponseEntity<>("Failed to create Vocabulary Topic: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @GetMapping
+    public List<VocabularyTopic> getAllVocabularyTopic() {
+        return vocabularyTopicService.getAllVocabularyTopic();
     }
-  }
+
+    @GetMapping("/{course_id}")
+    public List<VocabularyTopic> getVocabularyTopicsById(@PathVariable Integer course_id) {
+        return vocabularyTopicService.getVocabularyTopicById(course_id);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createVocabularyTopic(@RequestBody VocabularyTopicDTOIn vocabularyTopicDTOIn) {
+        try {
+            vocabularyTopicService.createVocabularyTopic(vocabularyTopicDTOIn);
+            return new ResponseEntity<>("Vocabulary Topic created successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to create Vocabulary Topic: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

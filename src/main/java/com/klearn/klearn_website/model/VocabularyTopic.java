@@ -16,31 +16,31 @@ import lombok.Setter;
 @Entity
 @Table(name = "vocabulary_topic")
 public class VocabularyTopic {
-  
-  @Id 
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
 
-  @Column(name = "topic_name", nullable = false, length = 50)
-  private String topic_name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-  @Column(name = "topic_description", columnDefinition = "TEXT")
-  private String topic_description;
+    @Column(name = "topic_name", nullable = false, length = 50)
+    private String topic_name;
 
-  @Column(name = "topic_image", columnDefinition = "TEXT")
-  private String topic_image;
+    @Column(name = "topic_description", columnDefinition = "TEXT")
+    private String topic_description;
 
-  @Column(name = "created_at")
-  private LocalDateTime created_at;
+    @Column(name = "topic_image", columnDefinition = "TEXT")
+    private String topic_image;
 
-  @Column(name = "last_modified")
-  private LocalDateTime last_modified;
+    @Column(name = "created_at")
+    private LocalDateTime created_at;
 
-  @Column(name = "is_deleted", columnDefinition = "BIT DEFAULT 0")
-  private Boolean is_deleted;
+    @Column(name = "last_modified")
+    private LocalDateTime last_modified;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
-  private Course course; 
+    @Column(name = "is_deleted", columnDefinition = "BIT DEFAULT 0")
+    private Boolean is_deleted;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
+    private Course course;
 }

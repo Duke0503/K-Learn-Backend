@@ -48,7 +48,8 @@ public class VocabularyProgress {
         private Integer vocabulary_id;
         private Integer topic_id;
 
-        public VocabularyProgressId() {}
+        public VocabularyProgressId() {
+        }
 
         public VocabularyProgressId(Integer user_id, Integer vocabulary_id, Integer topic_id) {
             this.user_id = user_id;
@@ -58,8 +59,10 @@ public class VocabularyProgress {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
             VocabularyProgressId that = (VocabularyProgressId) o;
             return Objects.equals(user_id, that.user_id) &&
                     Objects.equals(vocabulary_id, that.vocabulary_id) &&

@@ -18,19 +18,20 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/api/quiz")
 public class VocabularyQuizController {
-  
-  private VocabularyQuizService vocabularyQuizService;
-  private UserService userService;
 
-  @GetMapping("/vocabulary/{topicId}")
-  public ResponseEntity<List<VocabularyQuestionDTOOut>> createVocabularyQuiz(@PathVariable Integer topicId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
+    private VocabularyQuizService vocabularyQuizService;
+    private UserService userService;
 
-    User user = userService.getUser(username);  
+    @GetMapping("/vocabulary/{topicId}")
+    public ResponseEntity<List<VocabularyQuestionDTOOut>> createVocabularyQuiz(@PathVariable Integer topicId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
 
-    List<VocabularyQuestionDTOOut> listQuestions = vocabularyQuizService.createVocabularyQuiz(user.getId(), topicId);
+        User user = userService.getUser(username);
 
-    return ResponseEntity.ok(listQuestions);
-  }
+        List<VocabularyQuestionDTOOut> listQuestions = vocabularyQuizService.createVocabularyQuiz(user.getId(),
+                topicId);
+
+        return ResponseEntity.ok(listQuestions);
+    }
 }

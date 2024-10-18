@@ -8,14 +8,15 @@ import java.util.List;
 @Mapper
 public interface QuestionGrammarMapper {
 
-    @Insert("INSERT INTO question_grammar (question_text, correct_answer, incorrect_answer, quiz_type, created_at, last_modified, is_deleted, grammar_id) " +
+    @Insert("INSERT INTO question_grammar (question_text, correct_answer, incorrect_answer, quiz_type, created_at, last_modified, is_deleted, grammar_id) "
+            +
             "VALUES (#{question_text}, #{correct_answer}, #{incorrect_answer}, #{quiz_type}, #{created_at}, #{last_modified}, #{is_deleted}, #{grammar.id})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertQuestionGrammar(QuestionGrammar questionGrammar);
 
     @Update("UPDATE question_grammar SET is_deleted = 1 WHERE id = #{id}")
     void softDeleteQuestionGrammar(Integer id);
-  
+
     @Select("SELECT * FROM question_grammar WHERE grammar_id = #{grammar_id} AND is_deleted = 0")
     @Results({
             @Result(property = "id", column = "id"),

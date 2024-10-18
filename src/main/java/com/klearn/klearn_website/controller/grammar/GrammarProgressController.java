@@ -16,85 +16,85 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RequestMapping("/api/grammar_progress")
 public class GrammarProgressController {
-  private final GrammarProgressService grammarProgressService;
-  private final UserService userService;
+    private final GrammarProgressService grammarProgressService;
+    private final UserService userService;
 
-  @GetMapping("/{courseId}")
-  public List<GrammarProgress> getGrammarProgress(@PathVariable Integer courseId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    
-    String username = authentication.getName();
-
-    User user = userService.getUser(username);  
-
-    return grammarProgressService.getGrammarProgressByUserIdAndCourseId(user.getId(), courseId);    
-  }
-
-  @PatchMapping("/mark_learned_theory/{grammarId}/{courseId}")
-  public ResponseEntity<String> markGrammarTheoryAsLearned(
-          @PathVariable Integer grammarId,
-          @PathVariable Integer courseId) {
-      try {
+    @GetMapping("/{courseId}")
+    public List<GrammarProgress> getGrammarProgress(@PathVariable Integer courseId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    
+
         String username = authentication.getName();
-    
-        User user = userService.getUser(username);  
 
-        grammarProgressService.markGrammarTheoryAsLearned(user.getId(), grammarId, courseId);
+        User user = userService.getUser(username);
 
-        return ResponseEntity.ok("Grammar Theory marked as learned.");
+        return grammarProgressService.getGrammarProgressByUserIdAndCourseId(user.getId(), courseId);
+    }
 
-      } catch (RuntimeException e) {
-          return ResponseEntity.status(404).body(e.getMessage());
-      }
-  }
+    @PatchMapping("/mark_learned_theory/{grammarId}/{courseId}")
+    public ResponseEntity<String> markGrammarTheoryAsLearned(
+            @PathVariable Integer grammarId,
+            @PathVariable Integer courseId) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-  @PatchMapping("/mark_grammar_quiz/{grammarId}/{courseId}")
-  public ResponseEntity<String> markGrammarQuizAsFinished(
-          @PathVariable Integer grammarId,
-          @PathVariable Integer courseId) {
-      try {
+            String username = authentication.getName();
+
+            User user = userService.getUser(username);
+
+            grammarProgressService.markGrammarTheoryAsLearned(user.getId(), grammarId, courseId);
+
+            return ResponseEntity.ok("Grammar Theory marked as learned.");
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/mark_grammar_quiz/{grammarId}/{courseId}")
+    public ResponseEntity<String> markGrammarQuizAsFinished(
+            @PathVariable Integer grammarId,
+            @PathVariable Integer courseId) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            String username = authentication.getName();
+
+            User user = userService.getUser(username);
+
+            grammarProgressService.markGrammarQuizAsFinished(user.getId(), grammarId, courseId);
+
+            return ResponseEntity.ok("Grammar Quiz marked as finished.");
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/count_learned/{courseId}")
+    public ResponseEntity<Integer> countLearnedGrammar(
+            @PathVariable Integer courseId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    
+
         String username = authentication.getName();
-    
-        User user = userService.getUser(username);  
 
-        grammarProgressService.markGrammarQuizAsFinished(user.getId(), grammarId, courseId);
+        User user = userService.getUser(username);
 
-        return ResponseEntity.ok("Grammar Quiz marked as finished.");
+        int count = grammarProgressService.countLearnedGrammar(user.getId(), courseId);
 
-      } catch (RuntimeException e) {
-          return ResponseEntity.status(404).body(e.getMessage());
-      }
-  }
+        return ResponseEntity.ok(count);
+    }
 
-  @GetMapping("/count_learned/{courseId}")
-  public ResponseEntity<Integer> countLearnedGrammar(
-          @PathVariable Integer courseId) {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @GetMapping("/count_not_learned/{courseId}")
+    public ResponseEntity<Integer> countNotLearnedGrammar(
+            @PathVariable Integer courseId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-      String username = authentication.getName();
-  
-      User user = userService.getUser(username); 
+        String username = authentication.getName();
 
-      int count = grammarProgressService.countLearnedGrammar(user.getId(), courseId);
+        User user = userService.getUser(username);
 
-      return ResponseEntity.ok(count);
-  }
+        int count = grammarProgressService.countNotLearnedGrammar(user.getId(), courseId);
 
-  @GetMapping("/count_not_learned/{courseId}")
-  public ResponseEntity<Integer> countNotLearnedGrammar(
-          @PathVariable Integer courseId) {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-      String username = authentication.getName();
-  
-      User user = userService.getUser(username); 
-
-      int count = grammarProgressService.countNotLearnedGrammar(user.getId(), courseId);
-
-      return ResponseEntity.ok(count);
-  }
+        return ResponseEntity.ok(count);
+    }
 }

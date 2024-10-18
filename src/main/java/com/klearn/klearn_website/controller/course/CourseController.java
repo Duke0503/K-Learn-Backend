@@ -21,20 +21,20 @@ import java.util.List;
 @RequestMapping("/api/course")
 public class CourseController {
 
-  private CourseService courseService;
+    private CourseService courseService;
 
-  @GetMapping
-  public List<Course> getAllCourses() {
-    return courseService.getAllCourses();
-  }
-
-  @PostMapping("/create")
-  public ResponseEntity<String> createCourse(@RequestBody CourseDTOIn courseDTOIn) {
-    try {
-      courseService.createCourse(courseDTOIn);
-      return new ResponseEntity<>("Course created successfully", HttpStatus.CREATED);
-    } catch (Exception e) {
-      return new ResponseEntity<>("Failed to create course: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @GetMapping
+    public List<Course> getAllCourses() {
+        return courseService.getAllCourses();
     }
-  }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createCourse(@RequestBody CourseDTOIn courseDTOIn) {
+        try {
+            courseService.createCourse(courseDTOIn);
+            return new ResponseEntity<>("Course created successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to create course: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

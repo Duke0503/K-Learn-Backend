@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class UserService {
-  
-  private UserMapper userMapper;
 
-  public User getUser(String emailOrUsername) {
-    return userMapper.findByUsernameOrEmail(emailOrUsername, emailOrUsername);
-  }
+    private UserMapper userMapper;
+
+    public User getUser(String emailOrUsername) {
+        return userMapper.findByUsernameOrEmail(emailOrUsername, emailOrUsername);
+    }
 }

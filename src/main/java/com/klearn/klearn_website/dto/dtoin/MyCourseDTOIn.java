@@ -11,9 +11,9 @@ import lombok.Setter;
 @AllArgsConstructor
 
 public class MyCourseDTOIn {
-  private Integer user_id;
+    private Integer user_id;
 
-  private Integer course_id;
+    private Integer course_id;
 
-  private String payment_status;
+    private String payment_status;
 }

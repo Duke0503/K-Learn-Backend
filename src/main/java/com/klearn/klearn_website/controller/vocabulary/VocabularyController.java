@@ -23,33 +23,34 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 @RequestMapping("/api/vocabulary")
 public class VocabularyController {
-  
-  private VocabularyService vocabularyService;
 
-  @PostMapping("/create")
-  public ResponseEntity<String> createVocabulary(@RequestBody VocabularyDTOIn vocabularyDTOIn) {
-    try {
-      vocabularyService.createVocabulary(vocabularyDTOIn);
-      return new ResponseEntity<>("Vocabulary created successfully", HttpStatus.CREATED);
-    } catch (Exception e) {
-      return new ResponseEntity<>("Failed to create Vocabulary: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    private VocabularyService vocabularyService;
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createVocabulary(@RequestBody VocabularyDTOIn vocabularyDTOIn) {
+        try {
+            vocabularyService.createVocabulary(vocabularyDTOIn);
+            return new ResponseEntity<>("Vocabulary created successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to create Vocabulary: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-  }
 
-  @GetMapping("/{topic_id}")
-  public List<Vocabulary> getVocabularyByTopicId(@PathVariable Integer topic_id) {
-    return vocabularyService.getVocabularyByTopicId(topic_id);
-  }
+    @GetMapping("/{topic_id}")
+    public List<Vocabulary> getVocabularyByTopicId(@PathVariable Integer topic_id) {
+        return vocabularyService.getVocabularyByTopicId(topic_id);
+    }
 
-  @GetMapping("/count/{topic_id}")
-  public ResponseEntity<Map<String, Integer>> countVocabularyByTopicId(@PathVariable Integer topic_id) {
-    Integer count = vocabularyService.countVocabularyByTopicId(topic_id);
+    @GetMapping("/count/{topic_id}")
+    public ResponseEntity<Map<String, Integer>> countVocabularyByTopicId(@PathVariable Integer topic_id) {
+        Integer count = vocabularyService.countVocabularyByTopicId(topic_id);
 
-    Map<String, Integer> response = new HashMap<>();
+        Map<String, Integer> response = new HashMap<>();
 
-    response.put("count_vocabulary", count);
+        response.put("count_vocabulary", count);
 
-    return ResponseEntity.ok(response);
-  }
+        return ResponseEntity.ok(response);
+    }
 
 }

@@ -17,5 +17,5 @@ public class VocabularyTopicDTOIn {
 
     private String topic_image;
 
-    private Integer course_id; 
+    private Integer course_id;
 }

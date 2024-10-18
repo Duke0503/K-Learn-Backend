@@ -19,54 +19,53 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class VocabularyProgressService {
-  private UserMapper userMapper;
-  private VocabularyTopicMapper vocabularyTopicMapper;
-  private VocabularyMapper vocabularyMapper;
-  private VocabularyProgressMapper vocabularyProgressMapper;
+    private UserMapper userMapper;
+    private VocabularyTopicMapper vocabularyTopicMapper;
+    private VocabularyMapper vocabularyMapper;
+    private VocabularyProgressMapper vocabularyProgressMapper;
 
-  public List<VocabularyProgress> getVocabularyByUserIdAndTopicId(Integer userId, Integer topicId) {
-    User user = userMapper.findUserById(userId);
-    
-    VocabularyTopic topic = vocabularyTopicMapper.findVocabularyTopicById(topicId);
+    public List<VocabularyProgress> getVocabularyByUserIdAndTopicId(Integer userId, Integer topicId) {
+        User user = userMapper.findUserById(userId);
 
-    List<Vocabulary> listVocabulary = vocabularyMapper.getVocabularyByTopicId(topicId);
+        VocabularyTopic topic = vocabularyTopicMapper.findVocabularyTopicById(topicId);
 
-    for(Vocabulary vocabulary : listVocabulary) {
-      if (!vocabularyProgressMapper.existsByUserIdAndTopicId(userId, topicId, vocabulary.getId())) {
+        List<Vocabulary> listVocabulary = vocabularyMapper.getVocabularyByTopicId(topicId);
 
-        VocabularyProgress newProgress = new VocabularyProgress(
-          new VocabularyProgressId(userId, vocabulary.getId(), topicId),
-          false,
-          LocalDateTime.now(),
-          false,
-          user,
-          vocabulary,
-          topic
-        );
-        vocabularyProgressMapper.insertVocabularyProgress(newProgress);
-      }      
+        for (Vocabulary vocabulary : listVocabulary) {
+            if (!vocabularyProgressMapper.existsByUserIdAndTopicId(userId, topicId, vocabulary.getId())) {
+
+                VocabularyProgress newProgress = new VocabularyProgress(
+                        new VocabularyProgressId(userId, vocabulary.getId(), topicId),
+                        false,
+                        LocalDateTime.now(),
+                        false,
+                        user,
+                        vocabulary,
+                        topic);
+                vocabularyProgressMapper.insertVocabularyProgress(newProgress);
+            }
+        }
+
+        return vocabularyProgressMapper.getVocabularyProgressByUserIdAndTopicId(userId, topicId);
     }
- 
-    return vocabularyProgressMapper.getVocabularyProgressByUserIdAndTopicId(userId, topicId);
-  }
 
-  public void markVocabularyAsLearned(Integer userId, Integer topicId, Integer vocabularyId) {
-    vocabularyProgressMapper.markVocabularyAsLearned(userId, topicId, vocabularyId);
-  }
+    public void markVocabularyAsLearned(Integer userId, Integer topicId, Integer vocabularyId) {
+        vocabularyProgressMapper.markVocabularyAsLearned(userId, topicId, vocabularyId);
+    }
 
-  public Integer countVocabularyNotLearned(Integer userId, Integer topicId) {
-    return vocabularyProgressMapper.countVocabularyNotLearned(userId, topicId);
-  }
+    public Integer countVocabularyNotLearned(Integer userId, Integer topicId) {
+        return vocabularyProgressMapper.countVocabularyNotLearned(userId, topicId);
+    }
 
-  public Integer countVocabularyLearned(Integer userId, Integer topicId) {
-    return vocabularyProgressMapper.countVocabularyLearned(userId, topicId);
-  }
+    public Integer countVocabularyLearned(Integer userId, Integer topicId) {
+        return vocabularyProgressMapper.countVocabularyLearned(userId, topicId);
+    }
 
-  public List<VocabularyProgress> getVocabularyNotLearned(Integer userId, Integer topicId) {
-    return vocabularyProgressMapper.getNotLearnedVocabularyProgressByUserIdAndTopicId(userId, topicId);
-  }
+    public List<VocabularyProgress> getVocabularyNotLearned(Integer userId, Integer topicId) {
+        return vocabularyProgressMapper.getNotLearnedVocabularyProgressByUserIdAndTopicId(userId, topicId);
+    }
 
-  public List<VocabularyProgress> getVocabularyLearned(Integer userId, Integer topicId) {
-    return vocabularyProgressMapper.getLearnedVocabularyProgressByUserIdAndTopicId(userId, topicId);
-  }
+    public List<VocabularyProgress> getVocabularyLearned(Integer userId, Integer topicId) {
+        return vocabularyProgressMapper.getLearnedVocabularyProgressByUserIdAndTopicId(userId, topicId);
+    }
 }

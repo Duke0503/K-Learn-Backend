@@ -34,45 +34,47 @@ public class GrammarProgress {
     private Boolean is_deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable=false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "grammar_id", referencedColumnName = "id", insertable = false, updatable=false)
+    @JoinColumn(name = "grammar_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Grammar grammar;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", referencedColumnName = "id", insertable = false, updatable=false)
+    @JoinColumn(name = "course_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Course course;
 
     @Embeddable
     public static class GrammarProgressId implements Serializable {
         private Integer user_id;
         private Integer grammar_id;
-        private Integer course_id; 
-    
-        public GrammarProgressId() {}
-    
+        private Integer course_id;
+
+        public GrammarProgressId() {
+        }
+
         public GrammarProgressId(Integer user_id, Integer grammar_id, Integer course_id) {
             this.user_id = user_id;
             this.grammar_id = grammar_id;
-            this.course_id = course_id; 
+            this.course_id = course_id;
         }
-    
+
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
             GrammarProgressId that = (GrammarProgressId) o;
             return Objects.equals(user_id, that.user_id) &&
                     Objects.equals(grammar_id, that.grammar_id) &&
-                    Objects.equals(course_id, that.course_id); 
+                    Objects.equals(course_id, that.course_id);
         }
-    
+
         @Override
         public int hashCode() {
-            return Objects.hash(user_id, grammar_id, course_id); 
+            return Objects.hash(user_id, grammar_id, course_id);
         }
     }
 }
-

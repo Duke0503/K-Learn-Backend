@@ -16,34 +16,34 @@ import lombok.Setter;
 @Entity
 @Table(name = "grammar")
 public class Grammar {
-  
-  @Id 
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
 
-  @Column(name = "grammar_name", nullable = false, length = 255)
-  private String grammar_name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-  @Column(name = "grammar_description", columnDefinition = "TEXT")
-  private String grammar_description;
-  
-  @Column(name = "explanation", columnDefinition = "TEXT")
-  private String explanation;
+    @Column(name = "grammar_name", nullable = false, length = 255)
+    private String grammar_name;
 
-  @Column(name = "example", columnDefinition = "TEXT")
-  private String example;
+    @Column(name = "grammar_description", columnDefinition = "TEXT")
+    private String grammar_description;
 
-  @Column(name = "lesson_number")
-  private Integer lesson_number;
+    @Column(name = "explanation", columnDefinition = "TEXT")
+    private String explanation;
 
-  @Column(name = "last_modified")
-  private LocalDateTime last_modified;
+    @Column(name = "example", columnDefinition = "TEXT")
+    private String example;
 
-  @Column(name = "is_deleted")
-  private Boolean is_deleted;
+    @Column(name = "lesson_number")
+    private Integer lesson_number;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
-  private Course course; 
+    @Column(name = "last_modified")
+    private LocalDateTime last_modified;
+
+    @Column(name = "is_deleted")
+    private Boolean is_deleted;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "course_id", referencedColumnName = "id", nullable = false)
+    private Course course;
 }

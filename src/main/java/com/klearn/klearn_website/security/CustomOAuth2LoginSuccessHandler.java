@@ -25,14 +25,15 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
     private final UserMapper userMapper;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+            Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = oAuth2User.getAttribute("email");
 
         String token = oAuth2UserService.processOAuthPostLogin(email, oAuth2User);
-        
+
         User user = userMapper.findByUsernameOrEmail(email, email);
-        
+
         String role;
 
         switch (user.getRole()) {
@@ -46,11 +47,10 @@ public class CustomOAuth2LoginSuccessHandler implements AuthenticationSuccessHan
                 role = "content-management";
         }
         String redirectUrl = String.format(
-            "http://localhost:5173/oauth2/redirect?token=%s&role=%s&type=%s",
-            java.net.URLEncoder.encode(token, StandardCharsets.UTF_8.name()),
-            java.net.URLEncoder.encode(role, StandardCharsets.UTF_8.name()),
-            java.net.URLEncoder.encode(user.getType(), StandardCharsets.UTF_8.name())
-        );
+                "http://localhost:5173/oauth2/redirect?token=%s&role=%s&type=%s",
+                java.net.URLEncoder.encode(token, StandardCharsets.UTF_8.name()),
+                java.net.URLEncoder.encode(role, StandardCharsets.UTF_8.name()),
+                java.net.URLEncoder.encode(user.getType(), StandardCharsets.UTF_8.name()));
 
         response.sendRedirect(redirectUrl);
     }

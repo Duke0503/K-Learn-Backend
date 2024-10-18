@@ -26,13 +26,13 @@ public class QuestionGrammarService {
 
         Grammar grammar = grammarMapper.getGrammarById(questionGrammarDTOIn.getGrammar_id());
         if (grammar == null) {
-          throw new RuntimeException("Grammar not found with ID: " + questionGrammarDTOIn.getGrammar_id());
+            throw new RuntimeException("Grammar not found with ID: " + questionGrammarDTOIn.getGrammar_id());
         }
 
         QuestionGrammar questionGrammar = new QuestionGrammar();
         questionGrammar.setQuestion_text(questionGrammarDTOIn.getQuestion_text());
         questionGrammar.setCorrect_answer(questionGrammarDTOIn.getCorrect_answer());
-        questionGrammar.setIncorrect_answer(incorrectAnswersAsString); 
+        questionGrammar.setIncorrect_answer(incorrectAnswersAsString);
         questionGrammar.setQuiz_type(questionGrammarDTOIn.getQuiz_type());
         questionGrammar.setGrammar(grammar);
         questionGrammar.setCreated_at(LocalDateTime.now());
@@ -51,6 +51,6 @@ public class QuestionGrammarService {
     }
 
     public List<QuestionGrammar> getAllQuestionsByGrammarId(Integer grammarId) {
-      return questionGrammarMapper.getQuestionsByGrammarId(grammarId);
-  }
+        return questionGrammarMapper.getQuestionsByGrammarId(grammarId);
+    }
 }

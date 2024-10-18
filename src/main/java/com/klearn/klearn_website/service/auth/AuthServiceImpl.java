@@ -31,14 +31,13 @@ public class AuthServiceImpl implements AuthService {
     public String login(LoginDTOIn loginDTOIn) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    loginDTOIn.getUsernameOrEmail(),
-                    loginDTOIn.getPassword()
-                )
-        );
+                        loginDTOIn.getUsernameOrEmail(),
+                        loginDTOIn.getPassword()));
 
         User user = userMapper.findByUsernameOrEmail(loginDTOIn.getUsernameOrEmail(), loginDTOIn.getUsernameOrEmail());
         if (user == null || user.getType() == "email") {
-            throw new UsernameNotFoundException("User not found with username or email: " + loginDTOIn.getUsernameOrEmail());
+            throw new UsernameNotFoundException(
+                    "User not found with username or email: " + loginDTOIn.getUsernameOrEmail());
         }
         userMapper.updateLastLogin(user.getId(), LocalDateTime.now());
 
@@ -65,13 +64,12 @@ public class AuthServiceImpl implements AuthService {
         user.setLast_login(LocalDateTime.now());
         user.setLast_modified(LocalDateTime.now());
         user.setPassword(passwordEncoder.encode(registerDTOIn.getPassword()));
-        user.setRole(0);  // 0 for learner, 1 for admin, 2 for content-management
+        user.setRole(0); // 0 for learner, 1 for admin, 2 for content-management
 
         userMapper.createUser(user);
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(registerDTOIn.getUsername(), registerDTOIn.getPassword())
-        );
+                new UsernamePasswordAuthenticationToken(registerDTOIn.getUsername(), registerDTOIn.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return jwtTokenProvider.generateToken(authentication);

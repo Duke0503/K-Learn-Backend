@@ -20,67 +20,68 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/vocabulary_progress")
 public class VocabularyProgressController {
-  private UserService userService;
-  private VocabularyProgressService vocabularyProgressService;
+    private UserService userService;
+    private VocabularyProgressService vocabularyProgressService;
 
-  @GetMapping("/topic/{topicId}")
-  public List<VocabularyProgress> getVocabularyProgress(@PathVariable Integer topicId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    
-    String username = authentication.getName();
+    @GetMapping("/topic/{topicId}")
+    public List<VocabularyProgress> getVocabularyProgress(@PathVariable Integer topicId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    User user = userService.getUser(username);  
+        String username = authentication.getName();
 
-    return vocabularyProgressService.getVocabularyByUserIdAndTopicId(user.getId(), topicId);
-  }
-  
-  @PatchMapping("/mark/topic/{topicId}/vocabulary/{vocabularyId}")
-  public ResponseEntity<String> markVocabularyAsLearned(@PathVariable Integer topicId, @PathVariable Integer vocabularyId) {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      
-      String username = authentication.getName();
-      User user = userService.getUser(username);  
-      
-      vocabularyProgressService.markVocabularyAsLearned(user.getId(), topicId, vocabularyId);
-      return ResponseEntity.ok("Vocabulary marked as learned.");
-  }
+        User user = userService.getUser(username);
 
-  @GetMapping("/progress/{topicId}")
-  public ResponseEntity<?> getVocabularyProgressCounts(@PathVariable Integer topicId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
+        return vocabularyProgressService.getVocabularyByUserIdAndTopicId(user.getId(), topicId);
+    }
 
-    User user = userService.getUser(username);
+    @PatchMapping("/mark/topic/{topicId}/vocabulary/{vocabularyId}")
+    public ResponseEntity<String> markVocabularyAsLearned(@PathVariable Integer topicId,
+            @PathVariable Integer vocabularyId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    Integer countVocabularyNotLearned = vocabularyProgressService.countVocabularyNotLearned(user.getId(), topicId);
-    Integer countVocabularyLearned = vocabularyProgressService.countVocabularyLearned(user.getId(), topicId);
+        String username = authentication.getName();
+        User user = userService.getUser(username);
 
-    Map<String, Integer> response = new HashMap<>();
-    response.put("countVocabularyNotLearned", countVocabularyNotLearned);
-    response.put("countVocabularyLearned", countVocabularyLearned);
+        vocabularyProgressService.markVocabularyAsLearned(user.getId(), topicId, vocabularyId);
+        return ResponseEntity.ok("Vocabulary marked as learned.");
+    }
 
-    return ResponseEntity.ok(response);
-  }
+    @GetMapping("/progress/{topicId}")
+    public ResponseEntity<?> getVocabularyProgressCounts(@PathVariable Integer topicId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
 
-  @GetMapping("/learned/{topicId}/")
-  public List<VocabularyProgress> getLearnedVocabularyProgress(@PathVariable Integer topicId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    
-    String username = authentication.getName();
+        User user = userService.getUser(username);
 
-    User user = userService.getUser(username);  
+        Integer countVocabularyNotLearned = vocabularyProgressService.countVocabularyNotLearned(user.getId(), topicId);
+        Integer countVocabularyLearned = vocabularyProgressService.countVocabularyLearned(user.getId(), topicId);
 
-    return vocabularyProgressService.getVocabularyLearned(user.getId(), topicId);
-  }
+        Map<String, Integer> response = new HashMap<>();
+        response.put("countVocabularyNotLearned", countVocabularyNotLearned);
+        response.put("countVocabularyLearned", countVocabularyLearned);
 
-  @GetMapping("/not_learned/{topicId}/")
-  public List<VocabularyProgress> getNotLearnedVocabularyProgress(@PathVariable Integer topicId) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    
-    String username = authentication.getName();
+        return ResponseEntity.ok(response);
+    }
 
-    User user = userService.getUser(username);  
+    @GetMapping("/learned/{topicId}/")
+    public List<VocabularyProgress> getLearnedVocabularyProgress(@PathVariable Integer topicId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    return vocabularyProgressService.getVocabularyNotLearned(user.getId(), topicId);
-  }
+        String username = authentication.getName();
+
+        User user = userService.getUser(username);
+
+        return vocabularyProgressService.getVocabularyLearned(user.getId(), topicId);
+    }
+
+    @GetMapping("/not_learned/{topicId}/")
+    public List<VocabularyProgress> getNotLearnedVocabularyProgress(@PathVariable Integer topicId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        User user = userService.getUser(username);
+
+        return vocabularyProgressService.getVocabularyNotLearned(user.getId(), topicId);
+    }
 }

@@ -42,7 +42,7 @@ public class OAuth2UserService {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        
+
         return jwtTokenProvider.generateToken(authentication);
     }
 }

@@ -46,17 +46,16 @@ public class SecurityConfig {
                     registry.requestMatchers("/api/vocabulary_topic/**").permitAll();
                     registry.requestMatchers("/api/vocabulary/**").permitAll();
                     registry.requestMatchers("/api/grammar/**").permitAll();
-                    
+
                     registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     // registry.requestMatchers("/api/mycourse/**").authenticated();
                     registry.anyRequest().authenticated();
                 })
-                .oauth2Login(oauth2login -> 
-                    oauth2login
+                .oauth2Login(oauth2login -> oauth2login
                         .successHandler(customOAuth2LoginSuccessHandler)
-                        .failureHandler(oAuth2AuthenticationFailureHandler))         
+                        .failureHandler(oAuth2AuthenticationFailureHandler))
                 .exceptionHandling(exception -> exception
-                    .authenticationEntryPoint(authenticationEntryPoint))
+                        .authenticationEntryPoint(authenticationEntryPoint))
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .getOrBuild();
     }

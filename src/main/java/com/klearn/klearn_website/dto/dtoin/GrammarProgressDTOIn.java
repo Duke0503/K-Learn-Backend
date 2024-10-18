@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GrammarProgressDTOIn {
-  Integer user_id;
+    Integer user_id;
 
-  Integer gammar_id;
+    Integer gammar_id;
 }

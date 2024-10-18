@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.klearn.klearn_website.dto.dtoin.MyCourseDTOIn;
-import com.klearn.klearn_website.model.MyCourse;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.course.MyCourseService;
 import com.klearn.klearn_website.service.user.UserService;

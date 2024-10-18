@@ -11,14 +11,14 @@ import lombok.Setter;
 @AllArgsConstructor
 public class VocabularyDTOIn {
 
-  private String word;
+    private String word;
 
-  private String definition;
+    private String definition;
 
-  private String transcription;
+    private String transcription;
 
-  private String image;
+    private String image;
 
-  private Integer topic_id;
-  
+    private Integer topic_id;
+
 }

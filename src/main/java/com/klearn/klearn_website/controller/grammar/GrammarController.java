@@ -21,26 +21,27 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/grammar")
 public class GrammarController {
-  
-  private GrammarService grammarService;
 
-  @GetMapping
-  public List<Grammar> getAllGrammar() {
-    return grammarService.getAllGrammar();
-  }
+    private GrammarService grammarService;
 
-  @GetMapping("/{courseId}")
-  public List<Grammar> getGrammarByCourseId(@PathVariable Integer courseId) {
-    return grammarService.getGrammarByCourseId(courseId);
-  }
-  
-  @PostMapping("/create")
-  public ResponseEntity<String> createGrammar(@RequestBody GrammarDTOIn grammarDTOIn) {
-    try {
-      grammarService.createGrammar(grammarDTOIn);
-      return new ResponseEntity<>("Grammar Lesson created successfully", HttpStatus.CREATED);
-    } catch (Exception e) {
-      return new ResponseEntity<>("Failed to create Grammar Lesson: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @GetMapping
+    public List<Grammar> getAllGrammar() {
+        return grammarService.getAllGrammar();
     }
-  }
+
+    @GetMapping("/{courseId}")
+    public List<Grammar> getGrammarByCourseId(@PathVariable Integer courseId) {
+        return grammarService.getGrammarByCourseId(courseId);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createGrammar(@RequestBody GrammarDTOIn grammarDTOIn) {
+        try {
+            grammarService.createGrammar(grammarDTOIn);
+            return new ResponseEntity<>("Grammar Lesson created successfully", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to create Grammar Lesson: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

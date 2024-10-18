@@ -15,35 +15,35 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class GrammarService {
-  private CourseMapper courseMapper;
-  private GrammarMapper grammarMapper;
+    private CourseMapper courseMapper;
+    private GrammarMapper grammarMapper;
 
-  public void createGrammar(GrammarDTOIn grammarDTOIn) {
-    Grammar grammar = new Grammar();
+    public void createGrammar(GrammarDTOIn grammarDTOIn) {
+        Grammar grammar = new Grammar();
 
-    grammar.setGrammar_name(grammarDTOIn.getGrammar_name());
-    grammar.setGrammar_description(grammarDTOIn.getGrammar_description());
-    grammar.setExplanation(grammarDTOIn.getExplanation());
-    grammar.setExample(grammarDTOIn.getExample());
-    grammar.setLesson_number(grammarDTOIn.getLesson_number());
-    grammar.setIs_deleted(false);
-    grammar.setLast_modified(LocalDateTime.now());
+        grammar.setGrammar_name(grammarDTOIn.getGrammar_name());
+        grammar.setGrammar_description(grammarDTOIn.getGrammar_description());
+        grammar.setExplanation(grammarDTOIn.getExplanation());
+        grammar.setExample(grammarDTOIn.getExample());
+        grammar.setLesson_number(grammarDTOIn.getLesson_number());
+        grammar.setIs_deleted(false);
+        grammar.setLast_modified(LocalDateTime.now());
 
-    Course course = courseMapper.findCourseById(grammarDTOIn.getCourse_id());
-    if (course == null) {
-      throw new RuntimeException("Course not found with ID: " + grammarDTOIn.getCourse_id());
+        Course course = courseMapper.findCourseById(grammarDTOIn.getCourse_id());
+        if (course == null) {
+            throw new RuntimeException("Course not found with ID: " + grammarDTOIn.getCourse_id());
+        }
+
+        grammar.setCourse(course);
+
+        grammarMapper.insertGrammar(grammar);
     }
 
-    grammar.setCourse(course);
+    public List<Grammar> getAllGrammar() {
+        return grammarMapper.getAllGrammar();
+    }
 
-    grammarMapper.insertGrammar(grammar);
-  }
-
-  public List<Grammar> getAllGrammar() {
-    return grammarMapper.getAllGrammar();
-  }
-
-  public List<Grammar> getGrammarByCourseId(Integer courseId) {
-    return grammarMapper.getAllByCourseId(courseId);
-  }
+    public List<Grammar> getGrammarByCourseId(Integer courseId) {
+        return grammarMapper.getAllByCourseId(courseId);
+    }
 }

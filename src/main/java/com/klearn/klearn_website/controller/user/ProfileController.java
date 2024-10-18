@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/user")
 public class ProfileController {
-  private UserService userService;
+    private UserService userService;
 
-  @GetMapping("/profile")
-  public ResponseEntity<User> getProfile() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    
-    String username = authentication.getName();
+    @GetMapping("/profile")
+    public ResponseEntity<User> getProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    User user = userService.getUser(username);
+        String username = authentication.getName();
 
-    return ResponseEntity.ok(user);
-  }
-  
+        User user = userService.getUser(username);
+
+        return ResponseEntity.ok(user);
+    }
+
 }
