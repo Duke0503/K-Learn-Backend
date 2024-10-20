@@ -211,7 +211,7 @@ public class MyCourseService {
             if (myCourse == null) {
                 return "{}"; // Return empty JSON if course not found
             }
-            
+
             grammarProgressService.getGrammarProgressByUserIdAndCourseId(userId, courseId);
 
             Map<String, Object> responseData = prepareDetailedGrammarProgressData(userId, myCourse);
@@ -231,6 +231,9 @@ public class MyCourseService {
      */
     private Map<String, Object> prepareDetailedGrammarProgressData(Integer userId, MyCourse myCourse) {
         Map<String, Object> responseData = new HashMap<>();
+
+        Map<String, Object> listLession = new HashMap<>();
+
         responseData.put("course_id", myCourse.getCourse().getId());
         responseData.put("course_name", myCourse.getCourse().getCourse_name());
 
@@ -250,6 +253,8 @@ public class MyCourseService {
             GrammarProgress progress = grammarProgressEntity.get();
 
             List<QuestionGrammar> questionList = questionGrammarService.getAllQuestionsByGrammarId(grammar.getId());
+
+            
 
             Map<String, Object> content = new HashMap<>();
             content.put("id", grammar.getId());
@@ -291,8 +296,10 @@ public class MyCourseService {
                 content.put("quiz", quiz);
             }
 
-            responseData.put("lesson_" + grammar.getLesson_number(), content);
+            listLession.put("lesson_" + grammar.getLesson_number(), content);
         }
+        
+        responseData.put("list_lession", listLession);
 
         return responseData;
     }
