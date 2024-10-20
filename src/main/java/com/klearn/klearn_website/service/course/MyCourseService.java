@@ -232,7 +232,7 @@ public class MyCourseService {
     private Map<String, Object> prepareDetailedGrammarProgressData(Integer userId, MyCourse myCourse) {
         Map<String, Object> responseData = new HashMap<>();
 
-        Map<String, Object> listLession = new HashMap<>();
+        List<Map<String, Object>> listLesson = new ArrayList<>();
 
         responseData.put("course_id", myCourse.getCourse().getId());
         responseData.put("course_name", myCourse.getCourse().getCourse_name());
@@ -296,10 +296,10 @@ public class MyCourseService {
                 content.put("quiz", quiz);
             }
 
-            listLession.put("lesson_" + grammar.getLesson_number(), content);
+            listLesson.add(content);
         }
-        
-        responseData.put("list_lession", listLession);
+
+        responseData.put("list_lesson", listLesson);
 
         return responseData;
     }
