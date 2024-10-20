@@ -61,7 +61,7 @@ public class MyCourseService {
         for (VocabularyTopic topic : listTopics) {
             vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topic.getId());
         }
-        
+
         grammarProgressService.getGrammarProgressByUserIdAndGrammarId(user.getId(), course.getId());
 
     }
@@ -88,19 +88,22 @@ public class MyCourseService {
 
                 // Calculate the progress of Grammar
                 int learnedGrammar = grammarProgressService.countLearnedGrammar(userId, myCourse.getCourse().getId());
-                int notLearnedGrammar = grammarProgressService.countNotLearnedGrammar(userId, myCourse.getCourse().getId());
+                int notLearnedGrammar = grammarProgressService.countNotLearnedGrammar(userId,
+                        myCourse.getCourse().getId());
                 int grammarProgress = (learnedGrammar + notLearnedGrammar) == 0 ? 0
                         : (int) Math.ceil((double) learnedGrammar * 100 / (learnedGrammar + notLearnedGrammar));
 
                 // Calculate the progress of Vocabulary
                 int vocabProgress = 0;
-                List<VocabularyTopic> topics = vocabularyTopicService.getVocabularyTopicsByCourseId(myCourse.getCourse().getId());
+                List<VocabularyTopic> topics = vocabularyTopicService
+                        .getVocabularyTopicsByCourseId(myCourse.getCourse().getId());
                 if (!topics.isEmpty()) {
                     int learnedTopics = 0;
                     int totalTopics = 0;
                     for (VocabularyTopic topic : topics) {
                         int learnedWords = vocabularyProgressService.countVocabularyLearned(userId, topic.getId());
-                        int notLearnedWords = vocabularyProgressService.countVocabularyNotLearned(userId, topic.getId());
+                        int notLearnedWords = vocabularyProgressService.countVocabularyNotLearned(userId,
+                                topic.getId());
                         int totalWords = learnedWords + notLearnedWords;
                         int topicProgress = (totalWords == 0) ? 0
                                 : (int) Math.ceil((double) learnedWords * 100 / totalWords);
@@ -161,7 +164,8 @@ public class MyCourseService {
      * @param topics   The list of VocabularyTopic.
      * @return A map with the vocabulary progress details.
      */
-    private Map<String, Object> prepareVocabularyProgressData(Integer userId, MyCourse myCourse, List<VocabularyTopic> topics) {
+    private Map<String, Object> prepareVocabularyProgressData(Integer userId, MyCourse myCourse,
+            List<VocabularyTopic> topics) {
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("course_id", myCourse.getCourse().getId());
         responseData.put("course_name", myCourse.getCourse().getCourse_name());
@@ -193,17 +197,20 @@ public class MyCourseService {
 
         responseData.put("learned_topic", learnedTopics);
         responseData.put("total_topic", totalTopics);
-        responseData.put("course_progress", totalTopics == 0 ? 0 : (int) Math.ceil((double) learnedTopics * 100 / totalTopics));
+        responseData.put("course_progress",
+                totalTopics == 0 ? 0 : (int) Math.ceil((double) learnedTopics * 100 / totalTopics));
 
         return responseData;
     }
 
-     /**
-     * Get detailed grammar progress by user ID and course ID, including quiz questions.
+    /**
+     * Get detailed grammar progress by user ID and course ID, including quiz
+     * questions.
      *
      * @param userId   The ID of the user.
      * @param courseId The ID of the course.
-     * @return JSON representation of the user's detailed grammar progress, including questions.
+     * @return JSON representation of the user's detailed grammar progress,
+     *         including questions.
      */
     public String getDetailedGrammarProgressByUserIdAndCourseId(Integer userId, Integer courseId) {
         try {
@@ -232,7 +239,7 @@ public class MyCourseService {
     private Map<String, Object> prepareDetailedGrammarProgressData(Integer userId, MyCourse myCourse) {
         Map<String, Object> responseData = new HashMap<>();
 
-        List<Map<String, Object>> listLesson = new ArrayList<>();
+        List<Map<String, Object>> listLesson = new ArrayList<>(); // Changed to List for array-like structure
 
         responseData.put("course_id", myCourse.getCourse().getId());
         responseData.put("course_name", myCourse.getCourse().getCourse_name());
@@ -245,7 +252,8 @@ public class MyCourseService {
 
         List<Grammar> grammarList = grammarService.getGrammarByCourseId(myCourse.getCourse().getId());
         for (Grammar grammar : grammarList) {
-            Optional<GrammarProgress> grammarProgressEntity = grammarProgressService.getGrammarProgressByUserIdAndGrammarId(userId, grammar.getId());
+            Optional<GrammarProgress> grammarProgressEntity = grammarProgressService
+                    .getGrammarProgressByUserIdAndGrammarId(userId, grammar.getId());
 
             if (grammarProgressEntity.isEmpty()) {
                 continue; // Skip if no progress found for the grammar lesson
@@ -253,8 +261,6 @@ public class MyCourseService {
             GrammarProgress progress = grammarProgressEntity.get();
 
             List<QuestionGrammar> questionList = questionGrammarService.getAllQuestionsByGrammarId(grammar.getId());
-
-            
 
             Map<String, Object> content = new HashMap<>();
             content.put("id", grammar.getId());
@@ -277,7 +283,9 @@ public class MyCourseService {
                 Map<String, Object> quiz = new HashMap<>();
                 quiz.put("passed", progress.getIs_finish_quiz());
 
-                int questionNumber = 1;
+                // List to store questions as an array
+                List<Map<String, Object>> questionsArray = new ArrayList<>();
+
                 for (QuestionGrammar question : questionList) {
                     // Prepare options based on quiz type
                     List<String> options = prepareQuestionOptions(question);
@@ -288,18 +296,20 @@ public class MyCourseService {
                     questionData.put("type", question.getQuiz_type());
                     questionData.put("question_text", question.getQuestion_text());
                     questionData.put("correct_answer", question.getCorrect_answer());
-                    questionData.put("options", "essay".equals(question.getQuiz_type()) ? Collections.emptyList() : options);
+                    questionData.put("options",
+                            "essay".equals(question.getQuiz_type()) ? Collections.emptyList() : options);
 
-                    quiz.put("question_" + questionNumber, questionData);
-                    questionNumber++;
+                    // Add question to the array
+                    questionsArray.add(questionData);
                 }
+                quiz.put("questions", questionsArray); // Add the questions array to the quiz
                 content.put("quiz", quiz);
             }
 
-            listLesson.add(content);
+            listLesson.add(content); // Add each lesson's content to the list
         }
 
-        responseData.put("list_lesson", listLesson);
+        responseData.put("list_lesson", listLesson); // Use listLesson as a List
 
         return responseData;
     }
