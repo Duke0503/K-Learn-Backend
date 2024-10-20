@@ -211,6 +211,8 @@ public class MyCourseService {
             if (myCourse == null) {
                 return "{}"; // Return empty JSON if course not found
             }
+            
+            grammarProgressService.getGrammarProgressByUserIdAndCourseId(userId, courseId);
 
             Map<String, Object> responseData = prepareDetailedGrammarProgressData(userId, myCourse);
             return objectMapper.writeValueAsString(responseData);
