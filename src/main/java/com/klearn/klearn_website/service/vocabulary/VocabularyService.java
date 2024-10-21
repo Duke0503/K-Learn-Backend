@@ -6,7 +6,6 @@ import com.klearn.klearn_website.dto.dtoin.VocabularyDTOIn;
 import com.klearn.klearn_website.mapper.VocabularyMapper;
 import com.klearn.klearn_website.model.Vocabulary;
 import com.klearn.klearn_website.model.VocabularyTopic;
-import com.klearn.klearn_website.service.vocabulary.VocabularyTopicService;
 
 import lombok.AllArgsConstructor;
 
@@ -46,6 +45,20 @@ public class VocabularyService {
 
         // Insert the vocabulary into the database
         vocabularyMapper.createVocabulary(vocabulary);
+    }
+
+    /**
+     * Retrieves a Vocabulary entity by its ID.
+     *
+     * @param vocabularyId the ID of the vocabulary to retrieve.
+     * @return the Vocabulary entity, if found.
+     */
+    public Vocabulary getVocabularyById(Integer vocabularyId) {
+        Optional<Vocabulary> vocabulary = Optional.ofNullable(vocabularyMapper.getVocabularyById(vocabularyId));
+        if (vocabulary.isEmpty()) {
+            throw new RuntimeException("Vocabulary not found with ID: " + vocabularyId);
+        }
+        return vocabulary.get();
     }
 
     /**

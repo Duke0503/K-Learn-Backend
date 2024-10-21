@@ -10,8 +10,6 @@ import com.klearn.klearn_website.service.user.UserService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,10 +29,8 @@ public class MyCourseController {
      */
     @GetMapping("/user/courses")
     public ResponseEntity<String> getUserCourses() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
+
         String courses = myCourseService.getMyCourseByUserId(user.getId());
         return ResponseEntity.ok(courses);
     }
@@ -47,10 +43,8 @@ public class MyCourseController {
      */
     @GetMapping("/vocabulary/{courseId}/progress")
     public ResponseEntity<String> getVocabularyProgress(@PathVariable Integer courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
+
         String progress = myCourseService.getVocabularyProgressByUserIdAndCourseId(user.getId(), courseId);
         return ResponseEntity.ok(progress);
     }
@@ -63,10 +57,8 @@ public class MyCourseController {
      */
     @GetMapping("/grammar/{courseId}/progress")
     public ResponseEntity<String> getGrammarProgress(@PathVariable Integer courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
+
         String progress = myCourseService.getDetailedGrammarProgressByUserIdAndCourseId(user.getId(), courseId);
         return ResponseEntity.ok(progress);
     }
@@ -91,10 +83,8 @@ public class MyCourseController {
      */
     @GetMapping("/grammar/{courseId}/detailed-progress")
     public ResponseEntity<String> getDetailedGrammarProgress(@PathVariable Integer courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
+
         String progress = myCourseService.getDetailedGrammarProgressByUserIdAndCourseId(user.getId(), courseId);
         return ResponseEntity.ok(progress);
     }
@@ -107,10 +97,8 @@ public class MyCourseController {
      */
     @GetMapping("/vocabulary/{courseId}/detailed-progress")
     public ResponseEntity<String> getDetailedVocabularyProgress(@PathVariable Integer courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
+
         String progress = myCourseService.getVocabularyProgressByUserIdAndCourseId(user.getId(), courseId);
         return ResponseEntity.ok(progress);
     }
@@ -123,10 +111,8 @@ public class MyCourseController {
      */
     @GetMapping("/{courseId}/overall-progress")
     public ResponseEntity<String> getOverallCourseProgress(@PathVariable Integer courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
+
         String progress = myCourseService.getMyCourseByUserId(user.getId());
         return ResponseEntity.ok(progress);
     }

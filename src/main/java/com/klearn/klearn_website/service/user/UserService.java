@@ -3,7 +3,10 @@ package com.klearn.klearn_website.service.user;
 import com.klearn.klearn_website.mapper.UserMapper;
 import com.klearn.klearn_website.model.User;
 import lombok.AllArgsConstructor;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -65,5 +68,12 @@ public class UserService {
     // Un-delete a soft-deleted user
     public void unDeleteUser(Integer userId) {
         userMapper.unDeleteUser(userId);
+    }
+
+    public User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return getUser(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
     }
 }

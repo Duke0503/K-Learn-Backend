@@ -3,8 +3,6 @@ package com.klearn.klearn_website.controller.quiz;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.klearn.klearn_website.dto.dtoout.VocabularyQuestionDTOOut;
@@ -31,11 +29,7 @@ public class VocabularyQuizController {
      */
     @GetMapping("/vocabulary/{topicId}")
     public ResponseEntity<List<VocabularyQuestionDTOOut>> createVocabularyQuiz(@PathVariable Integer topicId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
 
         List<VocabularyQuestionDTOOut> listQuestions = vocabularyQuizService.createVocabularyQuiz(user.getId(),
                 topicId);

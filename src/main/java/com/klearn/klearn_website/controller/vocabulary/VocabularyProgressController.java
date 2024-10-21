@@ -3,8 +3,6 @@ package com.klearn.klearn_website.controller.vocabulary;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.klearn.klearn_website.model.User;
@@ -31,10 +29,7 @@ public class VocabularyProgressController {
      */
     @GetMapping("/topic/{topicId}")
     public List<VocabularyProgress> getVocabularyProgress(@PathVariable Integer topicId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
                 
         return vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topicId);
     }
@@ -49,10 +44,7 @@ public class VocabularyProgressController {
     @PatchMapping("/mark/topic/{topicId}/vocabulary/{vocabularyId}")
     public ResponseEntity<String> markVocabularyAsLearned(@PathVariable Integer topicId,
             @PathVariable Integer vocabularyId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
 
         vocabularyProgressService.markVocabularyAsLearned(user.getId(), topicId, vocabularyId);
         return ResponseEntity.ok("Vocabulary marked as learned.");
@@ -68,10 +60,7 @@ public class VocabularyProgressController {
      */
     @GetMapping("/progress/{topicId}")
     public ResponseEntity<?> getVocabularyProgressCounts(@PathVariable Integer topicId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
 
         Integer countVocabularyNotLearned = vocabularyProgressService.countVocabularyNotLearned(user.getId(), topicId);
         Integer countVocabularyLearned = vocabularyProgressService.countVocabularyLearned(user.getId(), topicId);
@@ -91,10 +80,7 @@ public class VocabularyProgressController {
      */
     @GetMapping("/learned/{topicId}")
     public List<VocabularyProgress> getLearnedVocabularyProgress(@PathVariable Integer topicId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
 
         return vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topicId).stream()
                 .filter(VocabularyProgress::getIs_learned)
@@ -110,10 +96,7 @@ public class VocabularyProgressController {
      */
     @GetMapping("/not_learned/{topicId}")
     public List<VocabularyProgress> getNotLearnedVocabularyProgress(@PathVariable Integer topicId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+        User user = userService.getAuthenticatedUser();
 
         return vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topicId).stream()
                 .filter(vp -> !vp.getIs_learned())

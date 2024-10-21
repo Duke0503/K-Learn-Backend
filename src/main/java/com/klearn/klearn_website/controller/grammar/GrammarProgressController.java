@@ -8,8 +8,6 @@ import com.klearn.klearn_website.service.user.UserService;
 import lombok.AllArgsConstructor;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,9 +25,7 @@ public class GrammarProgressController {
      */
     @GetMapping("/{courseId}")
     public List<GrammarProgress> getGrammarProgress(@PathVariable Integer courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userService.getAuthenticatedUser();
         return grammarProgressService.getGrammarProgressByUserIdAndCourseId(user.getId(), courseId);
     }
 
@@ -45,9 +41,8 @@ public class GrammarProgressController {
             @PathVariable Integer grammarId,
             @PathVariable Integer courseId) {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            User user = userService.getUser(username).orElseThrow(() -> new RuntimeException("User not found"));
+            User user = userService.getAuthenticatedUser();
+
             grammarProgressService.markGrammarTheoryAsLearned(user.getId(), grammarId, courseId);
             return ResponseEntity.ok("Grammar Theory marked as learned.");
         } catch (RuntimeException e) {
@@ -67,9 +62,8 @@ public class GrammarProgressController {
             @PathVariable Integer grammarId,
             @PathVariable Integer courseId) {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            User user = userService.getUser(username).orElseThrow(() -> new RuntimeException("User not found"));
+            User user = userService.getAuthenticatedUser();
+
             grammarProgressService.markGrammarQuizAsFinished(user.getId(), grammarId, courseId);
             return ResponseEntity.ok("Grammar Quiz marked as finished.");
         } catch (RuntimeException e) {
@@ -85,9 +79,8 @@ public class GrammarProgressController {
      */
     @GetMapping("/count_learned/{courseId}")
     public ResponseEntity<Integer> countLearnedGrammar(@PathVariable Integer courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userService.getAuthenticatedUser();
+
         int count = grammarProgressService.countLearnedGrammar(user.getId(), courseId);
         return ResponseEntity.ok(count);
     }
@@ -100,9 +93,8 @@ public class GrammarProgressController {
      */
     @GetMapping("/count_not_learned/{courseId}")
     public ResponseEntity<Integer> countNotLearnedGrammar(@PathVariable Integer courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.getUser(username).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userService.getAuthenticatedUser();
+
         int count = grammarProgressService.countNotLearnedGrammar(user.getId(), courseId);
         return ResponseEntity.ok(count);
     }
