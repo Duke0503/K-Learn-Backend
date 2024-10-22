@@ -216,7 +216,7 @@ public class MyCourseService {
         try {
             MyCourse myCourse = myCourseMapper.getMyCourseByUserIdAndCourseId(userId, courseId);
             if (myCourse == null) {
-                return "{}"; // Return empty JSON if course not found
+                return "[]"; // Return empty JSON if course not found
             }
 
             grammarProgressService.getGrammarProgressByUserIdAndCourseId(userId, courseId);
