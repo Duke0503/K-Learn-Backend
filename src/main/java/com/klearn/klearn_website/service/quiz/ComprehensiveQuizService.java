@@ -87,16 +87,19 @@ public class ComprehensiveQuizService {
         if (vocabularyList.isEmpty()) {
             return Collections.emptyList();
         }
-
+    
         Collections.shuffle(vocabularyList);
         List<Vocabulary> limitedVocabulary = vocabularyList.size() > 25 ? vocabularyList.subList(0, 25) : vocabularyList;
-
+    
         List<VocabularyQuestionDTOOut> quizQuestions = new ArrayList<>();
+        boolean onlyEssayQuestions = limitedVocabulary.size() < 4;
+    
         for (Vocabulary vocabulary : limitedVocabulary) {
-            String questionType = random.nextBoolean() ? "multichoice" : "essay";
+            // If the list size is less than 4, only create essay questions
+            String questionType = onlyEssayQuestions ? "essay" : (random.nextBoolean() ? "multichoice" : "essay");
             quizQuestions.add(createVocabularyQuestion(vocabulary, questionType, vocabularyList));
         }
-
+    
         return quizQuestions;
     }
 
