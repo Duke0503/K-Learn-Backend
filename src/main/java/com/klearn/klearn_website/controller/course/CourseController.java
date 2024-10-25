@@ -64,4 +64,6 @@ public class CourseController {
             return new ResponseEntity<>("Course not found with ID: " + courseId, HttpStatus.NOT_FOUND);
         }
     }
+
+
 }

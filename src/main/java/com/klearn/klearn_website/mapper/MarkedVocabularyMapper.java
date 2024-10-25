@@ -50,7 +50,7 @@ public interface MarkedVocabularyMapper {
     })
     List<MarkedVocabulary> findAllByUserId(Integer userId);
 
-    // Find all Marked Vocabularies for a User
+    // Find Marked Vocabulary for a User
     @Select("SELECT * FROM marked_vocabulary WHERE user_id = #{userId} AND vocabulary_id = #{vocabulary_id} AND is_deleted = false")
     Optional<MarkedVocabulary> findAllByUserIdAndVocabId(Integer userId, Integer vocabulary_id);
 

@@ -3,6 +3,7 @@ package com.klearn.klearn_website.service.course;
 import com.klearn.klearn_website.dto.dtoin.CourseDTOIn;
 import com.klearn.klearn_website.mapper.CourseMapper;
 import com.klearn.klearn_website.model.Course;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +62,7 @@ public class CourseService {
     /**
      * Updates an existing course.
      *
-     * @param courseId   The ID of the course to update.
+     * @param courseId    The ID of the course to update.
      * @param courseDTOIn The DTO containing the updated course details.
      * @return The updated course entity.
      */

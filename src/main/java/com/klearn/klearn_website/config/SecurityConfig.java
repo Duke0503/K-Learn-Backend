@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/", "/login", "/profile", "/oauth2/**").permitAll();
+                    registry.requestMatchers("/api/payment/**").permitAll();
+                    registry.requestMatchers("/api/homepage/**").permitAll();
                     registry.requestMatchers("/api/auth/**").permitAll();
                     registry.requestMatchers("/api/course/**").permitAll();
                     registry.requestMatchers("/api/vocabulary_topic/**").permitAll();
