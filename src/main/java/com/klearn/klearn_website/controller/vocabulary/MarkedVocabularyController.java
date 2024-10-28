@@ -54,4 +54,26 @@ public class MarkedVocabularyController {
         markedVocabularyService.softDelete(vocabularyId);
         return ResponseEntity.ok("Marked vocabulary soft deleted successfully.");
     }
+
+       /**
+     * Finds a marked vocabulary by user ID and vocabulary ID.
+     *
+     * @param userId    The ID of the user.
+     * @param vocabId   The ID of the vocabulary.
+     * @return ResponseEntity with MarkedVocabulary or a message "Not marked".
+     */
+    @GetMapping("/find/{vocabularyId}")
+    public ResponseEntity<?> getMarkedVocabulary(
+            @PathVariable Integer vocabularyId) {
+            
+        User user = userService.getAuthenticatedUser();
+
+        MarkedVocabulary markedVocab = markedVocabularyService.findAllByUserIdAndVocabId(user.getId(), vocabularyId);
+
+        if (markedVocab != null) {
+            return ResponseEntity.ok(markedVocab);
+        } else {
+            return ResponseEntity.ok("Not marked");
+        }
+    }
 }
