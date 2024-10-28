@@ -139,7 +139,7 @@ public class CourseHomePageService {
                                 grammarProgressService.countLearnedGrammar(userId, courseId),
                                 grammarProgressService.countNotLearnedGrammar(userId, courseId));
 
-                        if (grammarProgress > 0 && grammarProgress < 100) {
+                        if (grammarProgress >= 0 && grammarProgress < 100) {
                             Map<String, Object> grammarProgressData = new HashMap<>();
                             grammarProgressData.put("course_id", courseId);
                             grammarProgressData.put("course_name", myCourse.getCourse().getCourse_name());
