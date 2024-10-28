@@ -122,7 +122,7 @@ public class CourseHomePageService {
                                     vocabularyProgressService.countVocabularyLearned(userId, topic.getId()),
                                     vocabularyProgressService.countVocabularyNotLearned(userId, topic.getId()));
 
-                            if (vocabularyProgress > 0 && vocabularyProgress < 100) {
+                            if (vocabularyProgress >= 0 && vocabularyProgress < 100) {
                                 Map<String, Object> vocabProgressData = new HashMap<>();
                                 vocabProgressData.put("topic_id", topic.getId());
                                 vocabProgressData.put("topic_name", topic.getTopic_name());

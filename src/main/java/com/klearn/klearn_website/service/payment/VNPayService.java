@@ -83,39 +83,64 @@ public class VNPayService {
         return paymentUrl;
     }
 
-    public int orderReturn(HttpServletRequest request){
-        Map fields = new HashMap();
-        for (Enumeration params = request.getParameterNames(); params.hasMoreElements();) {
-            String fieldName = null;
-            String fieldValue = null;
+    
+    public int orderReturn(Map<String, String> requestParams) {
+        Map<String, String> fields = new HashMap<>();
+        
+        requestParams.forEach((key, value) -> {
             try {
-                fieldName = URLEncoder.encode((String) params.nextElement(), StandardCharsets.US_ASCII.toString());
-                fieldValue = URLEncoder.encode(request.getParameter(fieldName), StandardCharsets.US_ASCII.toString());
+                String encodedKey = URLEncoder.encode(key, StandardCharsets.US_ASCII.toString());
+                String encodedValue = URLEncoder.encode(value, StandardCharsets.US_ASCII.toString());
+                fields.put(encodedKey, encodedValue);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                fields.put(fieldName, fieldValue);
-            }
-        }
-
-        String vnp_SecureHash = request.getParameter("vnp_SecureHash");
-        if (fields.containsKey("vnp_SecureHashType")) {
-            fields.remove("vnp_SecureHashType");
-        }
-        if (fields.containsKey("vnp_SecureHash")) {
-            fields.remove("vnp_SecureHash");
-        }
+        });
+    
+        String vnp_SecureHash = requestParams.get("vnp_SecureHash");
+        fields.remove("vnp_SecureHashType");
+        fields.remove("vnp_SecureHash");
+    
         String signValue = VNPayConfig.hashAllFields(fields);
         if (signValue.equals(vnp_SecureHash)) {
-            if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return "00".equals(requestParams.get("vnp_TransactionStatus")) ? 1 : 0;
         } else {
             return -1;
         }
     }
+    // public int orderReturn(HttpServletRequest request){
+    //     Map fields = new HashMap();
+    //     for (Enumeration params = request.getParameterNames(); params.hasMoreElements();) {
+    //         String fieldName = null;
+    //         String fieldValue = null;
+    //         try {
+    //             fieldName = URLEncoder.encode((String) params.nextElement(), StandardCharsets.US_ASCII.toString());
+    //             fieldValue = URLEncoder.encode(request.getParameter(fieldName), StandardCharsets.US_ASCII.toString());
+    //         } catch (UnsupportedEncodingException e) {
+    //             e.printStackTrace();
+    //         }
+    //         if ((fieldValue != null) && (fieldValue.length() > 0)) {
+    //             fields.put(fieldName, fieldValue);
+    //         }
+    //     }
+
+    //     String vnp_SecureHash = request.getParameter("vnp_SecureHash");
+    //     if (fields.containsKey("vnp_SecureHashType")) {
+    //         fields.remove("vnp_SecureHashType");
+    //     }
+    //     if (fields.containsKey("vnp_SecureHash")) {
+    //         fields.remove("vnp_SecureHash");
+    //     }
+    //     String signValue = VNPayConfig.hashAllFields(fields);
+    //     if (signValue.equals(vnp_SecureHash)) {
+    //         if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
+    //             return 1;
+    //         } else {
+    //             return 0;
+    //         }
+    //     } else {
+    //         return -1;
+    //     }
+    // }
 
 }

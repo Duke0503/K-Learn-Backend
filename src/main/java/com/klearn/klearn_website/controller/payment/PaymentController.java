@@ -43,20 +43,20 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/vnpay-payment")
-    public ResponseEntity<Map<String, String>> handlePaymentReturn(HttpServletRequest request) {
-        System.out.println("Do Minh Duc");
+    @PostMapping("/vnpay-payment")
+    public ResponseEntity<Map<String, String>> handlePaymentReturn(@RequestBody Map<String, String> requestBody) {
+
         User user = userService.getAuthenticatedUser();
 
-        String paymentStatus = vnPayService.orderReturn(request) == 1 ? "success" : "failure";
+        String paymentStatus = vnPayService.orderReturn(requestBody) == 1 ? "success" : "failure";
 
-        String orderInfo = request.getParameter("vnp_OrderInfo");
-        String paymentTime = request.getParameter("vnp_PayDate");
-        String transactionId = request.getParameter("vnp_TransactionNo");
-        String totalPrice = request.getParameter("vnp_Amount");
-        
+        String orderInfo = requestBody.get("vnp_OrderInfo");
+        String paymentTime = requestBody.get("vnp_PayDate");
+        String transactionId = requestBody.get("vnp_TransactionNo");
+        String totalPrice = requestBody.get("vnp_Amount");
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        LocalDateTime vnPayDate = LocalDateTime.parse( request.getParameter("vnp_PayDate"), formatter);
+        LocalDateTime vnPayDate = LocalDateTime.parse(paymentTime, formatter);
 
         PaymentDTOIn paymentDTOIn = new PaymentDTOIn(
             user.getId(),
@@ -73,7 +73,7 @@ public class PaymentController {
         response.put("totalPrice", totalPrice);
         response.put("paymentTime", paymentTime);
         response.put("transactionId", transactionId);
-        response.put("paymentStatus", paymentStatus );
+        response.put("paymentStatus", paymentStatus);
 
         return ResponseEntity.ok(response);
     }
