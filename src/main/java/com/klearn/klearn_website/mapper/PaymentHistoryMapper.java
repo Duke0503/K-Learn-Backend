@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.*;
 
 import com.klearn.klearn_website.model.PaymentHistory;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,4 +49,19 @@ public interface PaymentHistoryMapper {
     // Soft Delete
     @Update("UPDATE payment_history SET is_deleted = true WHERE id = #{id}")
     void deleteById(Integer id);
+
+    // Check if a transaction exists based on unique properties
+    @Select("SELECT COUNT(1) FROM payment_history " +
+            "WHERE date_transaction = #{dateTransaction} " +
+            "AND transaction_price = #{transactionPrice} " +
+            "AND transaction_status = #{transactionStatus} " +
+            "AND course_id = #{courseId} " +
+            "AND user_id = #{userId} " +
+            "AND is_deleted = false")
+    boolean existsByTransactionDetails(
+            @Param("dateTransaction") LocalDateTime dateTransaction,
+            @Param("transactionPrice") BigDecimal transactionPrice,
+            @Param("transactionStatus") String transactionStatus,
+            @Param("courseId") Integer courseId,
+            @Param("userId") Integer userId);
 }

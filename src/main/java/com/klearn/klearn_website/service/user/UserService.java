@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -75,5 +76,12 @@ public class UserService {
         String username = authentication.getName();
         return getUser(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with username: " + username));
+    }
+
+    public List<User> findUsersNotLoggedInFor30Days() {
+        LocalDateTime startDate = LocalDateTime.now().minusDays(31);
+        LocalDateTime endDate = LocalDateTime.now().minusDays(30);
+
+        return userMapper.findUsersNotLoggedInSince(startDate, endDate);
     }
 }

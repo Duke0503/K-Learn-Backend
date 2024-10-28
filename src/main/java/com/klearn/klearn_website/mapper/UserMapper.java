@@ -4,6 +4,7 @@ import com.klearn.klearn_website.model.User;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Mapper
@@ -49,4 +50,8 @@ public interface UserMapper {
 
     @Update("UPDATE users SET is_deleted = 0, last_modified = NOW() WHERE id = #{id}")
     void unDeleteUser(@Param("id") Integer id);
+
+    @Select("SELECT * FROM users WHERE last_login >= #{startDate} AND last_login < #{endDate} AND is_deleted = 0")
+    List<User> findUsersNotLoggedInSince(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    
 }

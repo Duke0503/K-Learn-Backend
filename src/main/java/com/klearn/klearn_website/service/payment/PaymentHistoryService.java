@@ -1,5 +1,7 @@
 package com.klearn.klearn_website.service.payment;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -26,25 +28,48 @@ public class PaymentHistoryService {
      */
     public void insertPaymentHistory(PaymentDTOIn paymentDTOIn) {
         // Check if user exists
-        User user = userService.getUserById(paymentDTOIn.getUser_id())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + paymentDTOIn.getUser_id()));
-        // Check if course exists
-        Course course = courseService.getCourseById(paymentDTOIn.getCourse_id())
-                .orElseThrow(() -> new RuntimeException("Course not found with ID: " + paymentDTOIn.getCourse_id()));
+        if (!checkExistedPayment(
+                paymentDTOIn.getDate_transaction(),
+                paymentDTOIn.getTransaction_price(),
+                paymentDTOIn.getTransaction_status(),
+                paymentDTOIn.getCourse_id(),
+                paymentDTOIn.getUser_id())) {
+            User user = userService.getUserById(paymentDTOIn.getUser_id())
+                    .orElseThrow(() -> new RuntimeException("User not found with ID: " + paymentDTOIn.getUser_id()));
+            // Check if course exists
+            Course course = courseService.getCourseById(paymentDTOIn.getCourse_id())
+                    .orElseThrow(
+                            () -> new RuntimeException("Course not found with ID: " + paymentDTOIn.getCourse_id()));
 
-        PaymentHistory paymentHistory = new PaymentHistory();
-        paymentHistory.setDate_transaction(paymentDTOIn.getDate_transaction());
-        paymentHistory.setTransaction_price(paymentDTOIn.getTransaction_price());
-        paymentHistory.setTransaction_status(paymentDTOIn.getTransaction_status());
-        paymentHistory.setLast_modified(paymentDTOIn.getDate_transaction());
-        paymentHistory.setIs_deleted(false);
-        paymentHistory.setCourse(course);
-        paymentHistory.setUser(user);
+            PaymentHistory paymentHistory = new PaymentHistory();
+            paymentHistory.setDate_transaction(paymentDTOIn.getDate_transaction());
+            paymentHistory.setTransaction_price(paymentDTOIn.getTransaction_price());
+            paymentHistory.setTransaction_status(paymentDTOIn.getTransaction_status());
+            paymentHistory.setLast_modified(paymentDTOIn.getDate_transaction());
+            paymentHistory.setIs_deleted(false);
+            paymentHistory.setCourse(course);
+            paymentHistory.setUser(user);
 
-        paymentHistoryMapper.insertPaymentHistory(paymentHistory);
+            paymentHistoryMapper.insertPaymentHistory(paymentHistory);
+        }
+
     }
 
     public List<PaymentHistory> getPaymentHistory(Integer userId) {
         return paymentHistoryMapper.findByUserId(userId);
+    }
+
+    boolean checkExistedPayment(
+            LocalDateTime dateTransaction,
+            BigDecimal transactionPrice,
+            String transactionStatus,
+            Integer courseId,
+            Integer userId) {
+        return paymentHistoryMapper.existsByTransactionDetails(
+                dateTransaction,
+                transactionPrice,
+                transactionStatus,
+                courseId,
+                userId);
     }
 }
