@@ -1,6 +1,6 @@
 package com.klearn.klearn_website.service.payment;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class PaymentHistoryService {
     /**
      * 
      */
-    void insertPaymentHistory(PaymentDTOIn paymentDTOIn) {
+    public void insertPaymentHistory(PaymentDTOIn paymentDTOIn) {
         // Check if user exists
         User user = userService.getUserById(paymentDTOIn.getUser_id())
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + paymentDTOIn.getUser_id()));
@@ -35,12 +35,16 @@ public class PaymentHistoryService {
         PaymentHistory paymentHistory = new PaymentHistory();
         paymentHistory.setDate_transaction(paymentDTOIn.getDate_transaction());
         paymentHistory.setTransaction_price(paymentDTOIn.getTransaction_price());
-        paymentHistory.setTransaction_status(paymentHistory.getTransaction_status());
-        paymentHistory.setLast_modified(LocalDateTime.now());
+        paymentHistory.setTransaction_status(paymentDTOIn.getTransaction_status());
+        paymentHistory.setLast_modified(paymentDTOIn.getDate_transaction());
         paymentHistory.setIs_deleted(false);
         paymentHistory.setCourse(course);
         paymentHistory.setUser(user);
 
         paymentHistoryMapper.insertPaymentHistory(paymentHistory);
+    }
+
+    public List<PaymentHistory> getPaymentHistory(Integer userId) {
+        return paymentHistoryMapper.findByUserId(userId);
     }
 }

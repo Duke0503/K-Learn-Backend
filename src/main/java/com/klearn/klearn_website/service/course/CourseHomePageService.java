@@ -34,15 +34,12 @@ public class CourseHomePageService {
     private final VocabularyProgressService vocabularyProgressService;
     private final GrammarProgressService grammarProgressService;
 
-
-    public String getDataHomePage(Integer userId) {
+    public String getTopicSection() {
         try {
 
             List<Course> listCourses = courseService.getAllCourses();
 
             Map<String, Object> responseData = new HashMap<>();
-            Map<String, Object> topicsSection = new HashMap<>();
-            Map<String, Object> progressSection = new HashMap<>();
 
             // Get all vocabulary topics and grammar in one call per course
             List<VocabularyTopic> allTopics = new ArrayList<>();
@@ -57,11 +54,55 @@ public class CourseHomePageService {
             List<Map<String, Object>> vocabTopicList = prepareVocabularyTopicData(allTopics);
             List<Map<String, Object>> grammarList = prepareGrammarData(allGrammars);
 
-            topicsSection.put("topic_vocab", vocabTopicList);
-            topicsSection.put("grammar", grammarList);
-            responseData.put("topic_section", topicsSection);
+            responseData.put("topic_vocab", vocabTopicList);
+            responseData.put("grammar", grammarList);
 
-            // Validate that the user exists
+            return objectMapper.writeValueAsString(responseData);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching data for the main page", e);
+        }
+    }
+
+    /**
+     * Helper method to prepare vocabulary topic data.
+     */
+    private List<Map<String, Object>> prepareVocabularyTopicData(List<VocabularyTopic> topics) {
+        List<Map<String, Object>> listTopicVocab = new ArrayList<>();
+        for (VocabularyTopic topic : topics) {
+            Map<String, Object> topicData = new HashMap<>();
+            topicData.put("topic_id", topic.getId());
+            topicData.put("course_id", topic.getCourse().getId());
+            topicData.put("topic_name", topic.getTopic_name());
+            topicData.put("course_name", topic.getCourse().getCourse_name());
+            topicData.put("topic_image", topic.getTopic_image());
+            listTopicVocab.add(topicData);
+        }
+        return listTopicVocab;
+    }
+
+    /**
+     * Helper method to prepare grammar data.
+     */
+    private List<Map<String, Object>> prepareGrammarData(List<Grammar> grammars) {
+        List<Map<String, Object>> listGrammar = new ArrayList<>();
+        for (Grammar grammar : grammars) {
+            Map<String, Object> grammarData = new HashMap<>();
+            grammarData.put("grammar_id", grammar.getId());
+            grammarData.put("course_id", grammar.getCourse().getId());
+            grammarData.put("grammar_name", grammar.getGrammar_name());
+            grammarData.put("course_name", grammar.getCourse().getCourse_name());
+            grammarData.put("grammar_lesson_number", grammar.getLesson_number());
+            listGrammar.add(grammarData);
+        }
+        return listGrammar;
+    }
+
+    public String getProgressSection(Integer userId) {
+        // Validate that the user exists
+        try {
+            Map<String, Object> responseData = new HashMap<>();
+
             Optional<User> user = userService.getUserById(userId);
             if (!user.isEmpty()) {
                 List<MyCourse> listMyCourses = myCourseService.getAllCourseByUserId(userId);
@@ -108,51 +149,17 @@ public class CourseHomePageService {
                     }
 
                     // Add vocab and grammar progress to progressSection
-                    progressSection.put("vocab", vocabProgressList);
-                    progressSection.put("grammar", grammarProgressList);
+                    responseData.put("vocab", vocabProgressList);
+                    responseData.put("grammar", grammarProgressList);
+
                 }
             }
 
-            responseData.put("progress_section", progressSection);
             return objectMapper.writeValueAsString(responseData);
 
         } catch (Exception e) {
             throw new RuntimeException("Error fetching data for the main page", e);
         }
-    }
-
-    /**
-     * Helper method to prepare vocabulary topic data.
-     */
-    private List<Map<String, Object>> prepareVocabularyTopicData(List<VocabularyTopic> topics) {
-        List<Map<String, Object>> listTopicVocab = new ArrayList<>();
-        for (VocabularyTopic topic : topics) {
-            Map<String, Object> topicData = new HashMap<>();
-            topicData.put("topic_id", topic.getId());
-            topicData.put("course_id", topic.getCourse().getId());
-            topicData.put("topic_name", topic.getTopic_name());
-            topicData.put("course_name", topic.getCourse().getCourse_name());
-            topicData.put("topic_image", topic.getTopic_image());
-            listTopicVocab.add(topicData);
-        }
-        return listTopicVocab;
-    }
-
-    /**
-     * Helper method to prepare grammar data.
-     */
-    private List<Map<String, Object>> prepareGrammarData(List<Grammar> grammars) {
-        List<Map<String, Object>> listGrammar = new ArrayList<>();
-        for (Grammar grammar : grammars) {
-            Map<String, Object> grammarData = new HashMap<>();
-            grammarData.put("grammar_id", grammar.getId());
-            grammarData.put("course_id", grammar.getCourse().getId());
-            grammarData.put("grammar_name", grammar.getGrammar_name());
-            grammarData.put("course_name", grammar.getCourse().getCourse_name());
-            grammarData.put("grammar_lesson_number", grammar.getLesson_number());
-            listGrammar.add(grammarData);
-        }
-        return listGrammar;
     }
 
     /**
