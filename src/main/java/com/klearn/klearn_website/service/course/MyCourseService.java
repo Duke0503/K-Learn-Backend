@@ -299,7 +299,15 @@ public class MyCourseService {
                 // List to store questions as an array
                 List<Map<String, Object>> questionsArray = new ArrayList<>();
 
-                for (QuestionGrammar question : questionList) {
+                List<QuestionGrammar> selectedQuestions = questionList;
+
+                // Select a random subset of 5 questions if there are more than 5
+                if (questionList.size() > 5) {
+                    Collections.shuffle(questionList, new Random());
+                    selectedQuestions = questionList.subList(0, 5);
+                }
+
+                for (QuestionGrammar question : selectedQuestions) {
                     // Prepare options based on quiz type
                     List<String> options = prepareQuestionOptions(question);
 
