@@ -10,6 +10,7 @@ import com.klearn.klearn_website.service.grammar.GrammarProgressService;
 import com.klearn.klearn_website.service.grammar.GrammarService;
 import com.klearn.klearn_website.service.user.UserService;
 import com.klearn.klearn_website.service.vocabulary.VocabularyProgressService;
+import com.klearn.klearn_website.service.vocabulary.VocabularyService;
 import com.klearn.klearn_website.service.vocabulary.VocabularyTopicService;
 
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class CourseHomePageService {
     private final MyCourseService myCourseService;
     private final VocabularyProgressService vocabularyProgressService;
     private final GrammarProgressService grammarProgressService;
+    private final VocabularyService vocabularyService;
 
     public String getTopicSection() {
         try {
@@ -170,4 +172,22 @@ public class CourseHomePageService {
         return total == 0 ? 0 : (int) Math.ceil((double) learned * 100 / total);
     }
 
+    public List<Map<String, Object>> getCustomVocabularyTopicsByCourseId(Integer courseId) {
+        List<VocabularyTopic> topics = vocabularyTopicService.getVocabularyTopicsByCourseId(courseId);
+        List<Map<String, Object>> topicsWithData = new ArrayList<>();
+    
+        for (VocabularyTopic topic : topics) {
+            int totalWords = vocabularyService.countVocabularyByTopicId(topic.getId());
+    
+            Map<String, Object> topicData = new HashMap<>();
+            topicData.put("total_word", totalWords);
+            topicData.put("topic_id", topic.getId());
+            topicData.put("topic_name", topic.getTopic_name());
+            topicData.put("topic_description", topic.getTopic_description());
+    
+            topicsWithData.add(topicData);
+        }
+    
+        return topicsWithData;
+    }
 }

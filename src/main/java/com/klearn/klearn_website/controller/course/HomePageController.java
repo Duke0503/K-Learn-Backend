@@ -6,6 +6,8 @@ import com.klearn.klearn_website.service.user.UserService;
 
 import lombok.AllArgsConstructor;
 
+import java.util.Map;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,4 +52,13 @@ public class HomePageController {
 
         return new ResponseEntity<>(progressSection, HttpStatus.OK);
     }
+
+    @GetMapping("/vocabulary/{courseId}")
+    public ResponseEntity<List<Map<String, Object>>> getCustomVocabularyTopicsByCourseId(
+            @PathVariable Integer courseId) {
+        List<Map<String, Object>> vocabularyTopicsWithProgress = courseHomePageService
+                .getCustomVocabularyTopicsByCourseId(courseId);
+        return new ResponseEntity<>(vocabularyTopicsWithProgress, HttpStatus.OK);
+    }
+
 }
