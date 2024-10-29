@@ -47,7 +47,7 @@ public class MyCourseService {
         MyCourse myCourse = new MyCourse(
                 new MyCourse.MyCourseId(user.getId(), course.getId()),
                 LocalDateTime.now(),
-                "pending",
+                myCourseDTOIn.getPayment_status(),
                 LocalDateTime.now(),
                 false,
                 user,

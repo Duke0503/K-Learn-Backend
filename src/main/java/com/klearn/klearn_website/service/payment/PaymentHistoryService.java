@@ -6,12 +6,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.klearn.klearn_website.dto.dtoin.MyCourseDTOIn;
 import com.klearn.klearn_website.dto.dtoin.PaymentDTOIn;
 import com.klearn.klearn_website.mapper.PaymentHistoryMapper;
 import com.klearn.klearn_website.model.Course;
 import com.klearn.klearn_website.model.PaymentHistory;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.course.CourseService;
+import com.klearn.klearn_website.service.course.MyCourseService;
 import com.klearn.klearn_website.service.user.UserService;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ public class PaymentHistoryService {
     private final PaymentHistoryMapper paymentHistoryMapper;
     private final UserService userService;
     private final CourseService courseService;
+    private final MyCourseService myCourseService;
 
     /**
      * 
@@ -51,6 +54,15 @@ public class PaymentHistoryService {
             paymentHistory.setUser(user);
 
             paymentHistoryMapper.insertPaymentHistory(paymentHistory);
+
+            if (paymentDTOIn.getTransaction_status() == "success") {
+                
+                myCourseService.insertMyCourse(new MyCourseDTOIn(
+                    paymentDTOIn.getUser_id(),
+                    paymentDTOIn.getCourse_id(),
+                    paymentDTOIn.getTransaction_status()
+                ));
+            }
         }
 
     }
