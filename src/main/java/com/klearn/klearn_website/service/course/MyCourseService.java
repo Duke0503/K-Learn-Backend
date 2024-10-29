@@ -74,7 +74,7 @@ public class MyCourseService {
     List<MyCourse> getAllCourseByUserId(Integer userId) {
         return myCourseMapper.getMyCourseByUserId(userId);
     }
-    
+
     /**
      * Get MyCourse details by user ID.
      *
@@ -184,6 +184,7 @@ public class MyCourseService {
 
         int learnedTopics = 0;
         int totalTopics = 0;
+        List<Map<String, Object>> topicProgressArray = new ArrayList<>();
 
         for (VocabularyTopic topic : topics) {
             int learnedWords = vocabularyProgressService.countVocabularyLearned(userId, topic.getId());
@@ -201,13 +202,14 @@ public class MyCourseService {
             topicProgressData.put("topic_name", topic.getTopic_name());
             topicProgressData.put("topic_progress", topicProgress);
 
-            responseData.put("topic_" + topic.getId(), topicProgressData);
+            topicProgressArray.add(topicProgressData);
         }
 
         responseData.put("learned_topic", learnedTopics);
         responseData.put("total_topic", totalTopics);
         responseData.put("course_progress",
                 totalTopics == 0 ? 0 : (int) Math.ceil((double) learnedTopics * 100 / totalTopics));
+        responseData.put("topics", topicProgressArray); // Add array of topics here
 
         return responseData;
     }
