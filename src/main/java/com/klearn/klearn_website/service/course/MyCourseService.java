@@ -198,10 +198,11 @@ public class MyCourseService {
             totalTopics++;
 
             Map<String, Object> topicProgressData = new HashMap<>();
-            topicProgressData.put("total_word:", totalWords);
+            topicProgressData.put("total_word", totalWords);
             topicProgressData.put("topic_id", topic.getId());
             topicProgressData.put("topic_name", topic.getTopic_name());
             topicProgressData.put("topic_progress", topicProgress);
+            topicProgressData.put("topic_description", topic.getTopic_description());
 
             topicProgressArray.add(topicProgressData);
         }
