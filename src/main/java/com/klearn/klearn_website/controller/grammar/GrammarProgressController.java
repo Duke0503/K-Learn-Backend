@@ -71,6 +71,20 @@ public class GrammarProgressController {
         }
     }
 
+    @PatchMapping("/mark_grammar_quiz_failed/{grammarId}/{courseId}")
+    public ResponseEntity<String> markGrammarQuizAsFailed(
+            @PathVariable Integer grammarId,
+            @PathVariable Integer courseId) {
+        try {
+            User user = userService.getAuthenticatedUser();
+
+            grammarProgressService.markGrammarQuizAsFailed(user.getId(), grammarId, courseId);
+            return ResponseEntity.ok("Grammar Quiz marked as failed.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
     /**
      * Count the number of learned grammar entries for a specified course.
      *

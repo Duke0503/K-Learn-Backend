@@ -27,6 +27,9 @@ public class GrammarProgress {
     @Column(name = "is_finish_quiz", nullable = false)
     private Boolean is_finish_quiz;
 
+    @Column(name = "is_failed_quiz", nullable = false)
+    private Boolean is_failed_quiz;
+
     @Column(name = "last_modified")
     private LocalDateTime last_modified;
 

@@ -297,6 +297,7 @@ public class MyCourseService {
             if (!questionList.isEmpty()) {
                 Map<String, Object> quiz = new HashMap<>();
                 quiz.put("passed", progress.getIs_finish_quiz());
+                quiz.put("failed", progress.getIs_failed_quiz());
 
                 // List to store questions as an array
                 List<Map<String, Object>> questionsArray = new ArrayList<>();
