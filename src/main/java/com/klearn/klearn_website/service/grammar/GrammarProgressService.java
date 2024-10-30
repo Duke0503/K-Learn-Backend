@@ -53,7 +53,7 @@ public class GrammarProgressService {
                 GrammarProgress newGrammarProgress = new GrammarProgress(
                         new GrammarProgressId(userId, grammar.getId(), courseId),
                         false,
-                        false,
+                        is_finish_quiz,
                         false,
                         LocalDateTime.now(),
                         false,
