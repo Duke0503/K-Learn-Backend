@@ -181,6 +181,7 @@ public class MyCourseService {
         responseData.put("course_image", myCourse.getCourse().getCourse_image());
         responseData.put("course_description", myCourse.getCourse().getCourse_description());
         responseData.put("course_level", myCourse.getCourse().getCourse_level());
+        responseData.put("payment_status", myCourse.getPayment_status());
 
         int learnedTopics = 0;
         int totalTopics = 0;
@@ -256,6 +257,7 @@ public class MyCourseService {
 
         responseData.put("course_id", myCourse.getCourse().getId());
         responseData.put("course_name", myCourse.getCourse().getCourse_name());
+        responseData.put("payment_status", myCourse.getPayment_status());
 
         int learnedGrammar = grammarProgressService.countLearnedGrammar(userId, myCourse.getCourse().getId());
         int notLearnedGrammar = grammarProgressService.countNotLearnedGrammar(userId, myCourse.getCourse().getId());
