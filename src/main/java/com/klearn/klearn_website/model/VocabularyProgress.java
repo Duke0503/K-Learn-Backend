@@ -24,6 +24,9 @@ public class VocabularyProgress {
     @Column(name = "is_learned", nullable = false)
     private Boolean is_learned;
 
+    @Column(name = "is_proficient", nullable = false)
+    private Boolean is_proficient;
+
     @Column(name = "last_modified")
     private LocalDateTime last_modified;
 

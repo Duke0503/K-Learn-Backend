@@ -211,7 +211,7 @@ public class MyCourseService {
         responseData.put("total_topic", totalTopics);
         responseData.put("course_progress",
                 totalTopics == 0 ? 0 : (int) Math.ceil((double) learnedTopics * 100 / totalTopics));
-        responseData.put("topics", topicProgressArray); // Add array of topics here
+        responseData.put("topics", topicProgressArray);
 
         return responseData;
     }

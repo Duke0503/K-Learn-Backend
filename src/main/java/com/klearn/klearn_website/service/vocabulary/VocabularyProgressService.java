@@ -54,6 +54,7 @@ public class VocabularyProgressService {
                 VocabularyProgress newProgress = new VocabularyProgress(
                         new VocabularyProgressId(userId, vocabulary.getId(), topicId),
                         false,
+                        false,
                         LocalDateTime.now(),
                         false,
                         user,
@@ -98,6 +99,30 @@ public class VocabularyProgressService {
     public void markVocabularyAsLearned(Integer userId, Integer topicId, Integer vocabularyId) {
         VocabularyProgress existingProgress = findVocabularyProgressById(userId, vocabularyId, topicId);
         vocabularyProgressMapper.markVocabularyAsLearned(userId, topicId, vocabularyId);
+    }
+
+        /**
+     * Mark a VocabularyProgress entry as proficient.
+     *
+     * @param userId       the user ID.
+     * @param topicId      the topic ID.
+     * @param vocabularyId the vocabulary ID.
+     */
+    public void markVocabularyAsProficient(Integer userId, Integer topicId, Integer vocabularyId) {
+        VocabularyProgress existingProgress = findVocabularyProgressById(userId, vocabularyId, topicId);
+        vocabularyProgressMapper.markVocabularyAsProficient(userId, topicId, vocabularyId);
+    }
+
+            /**
+     * Mark a VocabularyProgress entry as not proficient.
+     *
+     * @param userId       the user ID.
+     * @param topicId      the topic ID.
+     * @param vocabularyId the vocabulary ID.
+     */
+    public void markVocabularyAsNotProficient(Integer userId, Integer topicId, Integer vocabularyId) {
+        VocabularyProgress existingProgress = findVocabularyProgressById(userId, vocabularyId, topicId);
+        vocabularyProgressMapper.markVocabularyAsNotProficient(userId, topicId, vocabularyId);
     }
 
     /**

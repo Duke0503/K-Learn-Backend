@@ -50,6 +50,38 @@ public class VocabularyProgressController {
         return ResponseEntity.ok("Vocabulary marked as learned.");
     }
 
+        /**
+     * Marks a vocabulary as proficient for a specific topic.
+     *
+     * @param topicId      The ID of the topic.
+     * @param vocabularyId The ID of the vocabulary to mark as learned.
+     * @return ResponseEntity indicating the result of the operation.
+     */
+    @PatchMapping("/mark-proficient/topic/{topicId}/vocabulary/{vocabularyId}")
+    public ResponseEntity<String> markVocabularyAsProficient(@PathVariable Integer topicId,
+            @PathVariable Integer vocabularyId) {
+        User user = userService.getAuthenticatedUser();
+
+        vocabularyProgressService.markVocabularyAsProficient(user.getId(), topicId, vocabularyId);
+        return ResponseEntity.ok("Vocabulary marked as proficient.");
+    }
+
+            /**
+     * Marks a vocabulary as proficient for a specific topic.
+     *
+     * @param topicId      The ID of the topic.
+     * @param vocabularyId The ID of the vocabulary to mark as learned.
+     * @return ResponseEntity indicating the result of the operation.
+     */
+    @PatchMapping("/mark-not-proficient/topic/{topicId}/vocabulary/{vocabularyId}")
+    public ResponseEntity<String> markVocabularyAsNotProficient(@PathVariable Integer topicId,
+            @PathVariable Integer vocabularyId) {
+        User user = userService.getAuthenticatedUser();
+
+        vocabularyProgressService.markVocabularyAsNotProficient(user.getId(), topicId, vocabularyId);
+        return ResponseEntity.ok("Vocabulary marked as not proficient.");
+    }
+
     /**
      * Retrieves the count of learned and not learned vocabularies for a specific
      * topic.

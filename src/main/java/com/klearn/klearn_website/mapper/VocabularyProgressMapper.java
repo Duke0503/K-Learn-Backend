@@ -9,13 +9,14 @@ import java.util.List;
 public interface VocabularyProgressMapper {
 
     // Create a new vocabulary progress entry
-    @Insert("INSERT INTO vocabulary_progress (user_id, vocabulary_id, topic_id, is_learned, last_modified, is_deleted) "
+    @Insert("INSERT INTO vocabulary_progress (user_id, vocabulary_id, topic_id, is_learned, is_proficient, last_modified, is_deleted) "
             +
-            "VALUES (#{id.user_id}, #{id.vocabulary_id}, #{id.topic_id}, #{is_learned}, #{last_modified}, #{is_deleted})")
+            "VALUES (#{id.user_id}, #{id.vocabulary_id}, #{id.topic_id}, #{is_learned}, #{is_proficient}, #{last_modified}, #{is_deleted})")
     void insertVocabularyProgress(VocabularyProgress vocabularyProgress);
 
     // Read vocabulary progress entries by user ID and topic ID
-    @Select("SELECT vp.user_id, vp.vocabulary_id, vp.topic_id, vp.is_learned, vp.last_modified, vp.is_deleted, " +
+    @Select("SELECT vp.user_id, vp.vocabulary_id, vp.topic_id, vp.is_learned, vp.is_proficient, vp.last_modified, vp.is_deleted, "
+            +
             "v.id AS vocabulary_id, v.word, v.definition, v.transcription, v.image, v.last_modified AS vocabulary_last_modified, v.is_deleted AS vocabulary_is_deleted, "
             +
             "u.id AS user_id, u.username, " +
@@ -30,6 +31,7 @@ public interface VocabularyProgressMapper {
             @Result(property = "id.vocabulary_id", column = "vocabulary_id"),
             @Result(property = "id.topic_id", column = "topic_id"),
             @Result(property = "is_learned", column = "is_learned"),
+            @Result(property = "is_proficient", column = "is_proficient"),
             @Result(property = "last_modified", column = "last_modified"),
             @Result(property = "is_deleted", column = "is_deleted"),
 
@@ -64,7 +66,8 @@ public interface VocabularyProgressMapper {
 
     // Update vocabulary progress entry by ID
     @Update("UPDATE vocabulary_progress " +
-            "SET is_learned = #{is_learned}, last_modified = NOW(), is_deleted = #{is_deleted} " +
+            "SET is_learned = #{is_learned}, is_proficient = #{is_proficient}, last_modified = NOW(), is_deleted = #{is_deleted} "
+            +
             "WHERE user_id = #{id.user_id} AND vocabulary_id = #{id.vocabulary_id} AND topic_id = #{id.topic_id}")
     void updateVocabularyProgress(VocabularyProgress vocabularyProgress);
 
@@ -73,6 +76,20 @@ public interface VocabularyProgressMapper {
             "SET is_learned = true, last_modified = NOW() " +
             "WHERE user_id = #{user_id} AND topic_id = #{topic_id} AND vocabulary_id = #{vocabulary_id} AND is_deleted = 0")
     void markVocabularyAsLearned(@Param("user_id") Integer userId, @Param("topic_id") Integer topicId,
+            @Param("vocabulary_id") Integer vocabularyId);
+
+    // Mark a vocabulary entry as learned
+    @Update("UPDATE vocabulary_progress " +
+            "SET is_learned = true, is_proficient = true, last_modified = NOW() " +
+            "WHERE user_id = #{user_id} AND topic_id = #{topic_id} AND vocabulary_id = #{vocabulary_id} AND is_deleted = 0")
+    void markVocabularyAsProficient(@Param("user_id") Integer userId, @Param("topic_id") Integer topicId,
+            @Param("vocabulary_id") Integer vocabularyId);
+
+    // Mark a vocabulary entry as learned
+    @Update("UPDATE vocabulary_progress " +
+            "SET is_learned = true, is_proficient = false, last_modified = NOW() " +
+            "WHERE user_id = #{user_id} AND topic_id = #{topic_id} AND vocabulary_id = #{vocabulary_id} AND is_deleted = 0")
+    void markVocabularyAsNotProficient(@Param("user_id") Integer userId, @Param("topic_id") Integer topicId,
             @Param("vocabulary_id") Integer vocabularyId);
 
     // Count vocabulary entries that are not learned
