@@ -52,7 +52,7 @@ public interface GrammarProgressMapper {
             @Param("grammar_id") Integer grammarId);
 
     // Update an existing GrammarProgress entry
-    @Update("UPDATE grammar_progress SET is_learned_theory = #{is_learned_theory}, is_finish_quiz = #{is_finish_quiz}, is_failed_quiz, #{is_failed_quiz}, last_modified = #{last_modified}, is_deleted = #{is_deleted} "
+    @Update("UPDATE grammar_progress SET is_learned_theory = #{is_learned_theory}, is_finish_quiz = #{is_finish_quiz}, is_failed_quiz = #{is_failed_quiz}, last_modified = #{last_modified}, is_deleted = #{is_deleted} "
             +
             "WHERE user_id = #{id.user_id} AND grammar_id = #{id.grammar_id} AND course_id = #{id.course_id} AND is_deleted = 0")
     void updateGrammarProgress(GrammarProgress grammarProgress);
