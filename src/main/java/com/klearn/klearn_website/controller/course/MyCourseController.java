@@ -69,9 +69,15 @@ public class MyCourseController {
      * @param myCourseDTOIn The details of the course enrollment.
      * @return A message indicating the result of the enrollment.
      */
-    @PostMapping("/enroll")
-    public ResponseEntity<String> enrollInCourse(@RequestBody MyCourseDTOIn myCourseDTOIn) {
-        myCourseService.insertMyCourse(myCourseDTOIn);
+    @GetMapping("/enroll/{courseId}")
+    public ResponseEntity<String> enrollInCourse(@PathVariable Integer courseId) {
+        User user = userService.getAuthenticatedUser();
+        
+        myCourseService.insertMyCourse(new MyCourseDTOIn(
+            user.getId(),
+            courseId,
+            "pending"
+        ));
         return ResponseEntity.ok("Course enrolled successfully");
     }
 
