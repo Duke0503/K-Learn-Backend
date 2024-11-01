@@ -78,7 +78,7 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("history")
+    @GetMapping("/history")
     public List<PaymentHistory> getPaymentHistory() {
         User user = userService.getAuthenticatedUser();
 
