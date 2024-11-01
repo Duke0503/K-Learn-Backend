@@ -54,15 +54,22 @@ public class MyCourseService {
                 course);
 
         // Insert into the database
-        myCourseMapper.insertMyCourse(myCourse);
+        MyCourse existCourse = myCourseMapper.getMyCourseByUserIdAndCourseId(myCourseDTOIn.getUser_id(),
+                myCourseDTOIn.getCourse_id());
 
-        List<VocabularyTopic> listTopics = vocabularyTopicService.getVocabularyTopicsByCourseId(course.getId());
+        if (existCourse != null) {
+            myCourseMapper.updateMyCourse(myCourse);
+        } else {
+            myCourseMapper.insertMyCourse(myCourse);
 
-        for (VocabularyTopic topic : listTopics) {
-            vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topic.getId());
+            List<VocabularyTopic> listTopics = vocabularyTopicService.getVocabularyTopicsByCourseId(course.getId());
+
+            for (VocabularyTopic topic : listTopics) {
+                vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topic.getId());
+            }
+
+            grammarProgressService.getGrammarProgressByUserIdAndGrammarId(user.getId(), course.getId());
         }
-
-        grammarProgressService.getGrammarProgressByUserIdAndGrammarId(user.getId(), course.getId());
 
     }
 
