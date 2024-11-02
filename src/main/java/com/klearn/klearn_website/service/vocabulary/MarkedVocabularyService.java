@@ -84,9 +84,9 @@ public class MarkedVocabularyService {
 
     public Boolean existsMarkedVocab(Integer userId, Integer vocabId) {
         Optional<MarkedVocabulary> markedVocab = markedVocabularyMapper.findAllByUserIdAndVocabId(userId, vocabId);
-        if (markedVocab == null) {
+        if (markedVocab.isEmpty()) {
             return false;
-        }
-        return true;
+        } else return true;
+        
     }
 }
