@@ -96,7 +96,9 @@ public class MyCourseService {
      */
     public String myCoursePaymentStatus(Integer userId, Integer courseId) {
         MyCourse myCourse = myCourseMapper.getMyCourseByUserIdAndCourseId(userId, courseId);
-
+        if (myCourse == null) {
+            return "";
+        }
         return myCourse.getPayment_status();
     }
     /**
