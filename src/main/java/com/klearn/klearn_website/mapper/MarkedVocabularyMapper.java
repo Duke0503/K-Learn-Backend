@@ -55,8 +55,8 @@ public interface MarkedVocabularyMapper {
     Optional<MarkedVocabulary> findAllByUserIdAndVocabId(Integer userId, Integer vocabulary_id);
 
     // Delete by ID (Soft Delete)
-    @Update("UPDATE marked_vocabulary SET is_deleted = true WHERE id = #{id}")
-    void deleteById(Integer id);
+    @Update("UPDATE marked_vocabulary SET is_deleted = true WHERE vocabulary_id = #{vocabularyId}")
+    void deleteByVocabularyId(@Param("vocabularyId") Integer vocabularyId);
 
     // Update last modified timestamp
     @Update("UPDATE marked_vocabulary SET last_modified = #{last_modified} WHERE id = #{id}")

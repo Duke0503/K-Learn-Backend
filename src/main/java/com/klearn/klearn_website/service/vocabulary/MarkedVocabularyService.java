@@ -1,6 +1,5 @@
 package com.klearn.klearn_website.service.vocabulary;
 
-import java.lang.StackWalker.Option;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.List;
@@ -74,7 +73,7 @@ public class MarkedVocabularyService {
      * @param vocabularyId
      */
     public void softDelete(Integer vocabularyId) {
-        markedVocabularyMapper.deleteById(vocabularyId);
+        markedVocabularyMapper.deleteByVocabularyId(vocabularyId);
     }
 
     public MarkedVocabulary findAllByUserIdAndVocabId(Integer userId, Integer vocabId) {
