@@ -90,6 +90,15 @@ public class MyCourseService {
     public Boolean existsMyCourseByUserIdAndCourseId(Integer userId, Integer courseId) {
         return myCourseMapper.existsMyCourseByUserIdAndCourseId(userId, courseId);
     }
+
+    /*
+     * 
+     */
+    public String myCoursePaymentStatus(Integer userId, Integer courseId) {
+        MyCourse myCourse = myCourseMapper.getMyCourseByUserIdAndCourseId(userId, courseId);
+
+        return myCourse.getPayment_status();
+    }
     /**
      * Get MyCourse details by user ID.
      *

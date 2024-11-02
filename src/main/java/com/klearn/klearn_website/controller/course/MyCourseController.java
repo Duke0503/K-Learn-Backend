@@ -125,11 +125,11 @@ public class MyCourseController {
         return ResponseEntity.ok(progress);
     }
 
-    @GetMapping("/exist/{courseId}")
-    public Boolean existsMyCourseByUserIdAndCourseId(@PathVariable Integer courseId) {
+    @GetMapping("/payment_status/{courseId}")
+    public String myCoursePaymentStatus(@PathVariable Integer courseId) {
         User user = userService.getAuthenticatedUser();
 
-        return myCourseService.existsMyCourseByUserIdAndCourseId(user.getId(), courseId);
+        return myCourseService.myCoursePaymentStatus(user.getId(), courseId);
     }
     
 }
