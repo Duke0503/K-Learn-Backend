@@ -81,4 +81,12 @@ public class MarkedVocabularyService {
         Optional<MarkedVocabulary> markedVocab = markedVocabularyMapper.findAllByUserIdAndVocabId(userId, vocabId);
         return markedVocab.orElse(null); // Unwrap the Optional safely
     }
+
+    public Boolean existsMarkedVocab(Integer userId, Integer vocabId) {
+        Optional<MarkedVocabulary> markedVocab = markedVocabularyMapper.findAllByUserIdAndVocabId(userId, vocabId);
+        if (markedVocab == null) {
+            return false;
+        }
+        return true;
+    }
 }

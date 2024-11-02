@@ -62,18 +62,14 @@ public class MarkedVocabularyController {
      * @param vocabId   The ID of the vocabulary.
      * @return ResponseEntity with MarkedVocabulary or a message "Not marked".
      */
-    @GetMapping("/find/{vocabularyId}")
-    public ResponseEntity<?> getMarkedVocabulary(
+    @GetMapping("/exist_marked_vocab/{vocabularyId}")
+    public Boolean getMarkedVocabulary(
             @PathVariable Integer vocabularyId) {
             
         User user = userService.getAuthenticatedUser();
 
-        MarkedVocabulary markedVocab = markedVocabularyService.findAllByUserIdAndVocabId(user.getId(), vocabularyId);
-
-        if (markedVocab != null) {
-            return ResponseEntity.ok(markedVocab);
-        } else {
-            return ResponseEntity.ok("Not marked");
-        }
+        return markedVocabularyService.existsMarkedVocab(user.getId(), vocabularyId);
     }
+
+    
 }
