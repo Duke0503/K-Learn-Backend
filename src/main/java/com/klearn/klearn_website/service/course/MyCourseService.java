@@ -78,10 +78,18 @@ public class MyCourseService {
      * @param userId
      * @return
      */
-    List<MyCourse> getAllCourseByUserId(Integer userId) {
+    public List<MyCourse> getAllCourseByUserId(Integer userId) {
         return myCourseMapper.getMyCourseByUserId(userId);
     }
 
+    /**
+     * 
+     * @param userId
+     * @return
+     */
+    public Boolean existsMyCourseByUserIdAndCourseId(Integer userId, Integer courseId) {
+        return myCourseMapper.existsMyCourseByUserIdAndCourseId(userId, courseId);
+    }
     /**
      * Get MyCourse details by user ID.
      *

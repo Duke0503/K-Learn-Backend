@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(registry -> {
                     registry.requestMatchers("/", "/login", "/profile", "/oauth2/**").permitAll();
                     registry.requestMatchers("/api/homepage/topic-section").permitAll();
+                    registry.requestMatchers("/api/upload").permitAll();
                     registry.requestMatchers("/api/homepage/vocabulary/**").permitAll();
                     registry.requestMatchers("/api/auth/**").permitAll();
                     registry.requestMatchers("/api/course/**").permitAll();
