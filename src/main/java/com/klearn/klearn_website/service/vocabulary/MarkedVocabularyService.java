@@ -118,7 +118,9 @@ public class MarkedVocabularyService {
             String questionType = onlyEssayQuestions ? "essay" : (random.nextBoolean() ? "multichoice" : "essay");
             quizQuestions.add(createVocabularyQuestion(vocabulary, questionType, getAllVocabularyDefinitions()));
         }
-    
+        
+        Collections.shuffle(quizQuestions);
+        
         return quizQuestions;
     }
     
