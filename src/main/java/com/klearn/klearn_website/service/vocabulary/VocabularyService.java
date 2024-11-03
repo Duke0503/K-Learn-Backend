@@ -130,4 +130,8 @@ public class VocabularyService {
 
         vocabularyMapper.deleteVocabularyPermanently(vocabularyId);
     }
+
+    public List<Vocabulary> getAllVocabulary() {
+        return vocabularyMapper.getAllVocabulary();
+    }
 }

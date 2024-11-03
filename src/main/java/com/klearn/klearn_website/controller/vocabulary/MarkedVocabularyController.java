@@ -1,5 +1,6 @@
 package com.klearn.klearn_website.controller.vocabulary;
 
+import com.klearn.klearn_website.dto.dtoout.VocabularyQuestionDTOOut;
 import com.klearn.klearn_website.model.MarkedVocabulary;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.user.UserService;
@@ -71,5 +72,21 @@ public class MarkedVocabularyController {
         return markedVocabularyService.existsMarkedVocab(user.getId(), vocabularyId);
     }
 
+        /**
+     * Generates a quiz based on a specific list of vocabulary IDs provided by the frontend.
+     *
+     * @param vocabularyIds List of vocabulary IDs.
+     * @return ResponseEntity containing a list of vocabulary quiz questions.
+     */
+    @PostMapping("/quiz_from_vocab_ids")
+    public ResponseEntity<List<VocabularyQuestionDTOOut>> generateQuizFromVocabularyIds(@RequestBody List<Integer> vocabularyIds) {
+        // Generate quiz questions based on the provided vocabulary IDs
+        User user = userService.getAuthenticatedUser();
+        
+        List<VocabularyQuestionDTOOut> quizQuestions = markedVocabularyService.generateQuizFromVocabularyIds(vocabularyIds);
+
+        // Return the generated quiz questions in the response
+        return ResponseEntity.ok(quizQuestions);
+    }
     
 }
