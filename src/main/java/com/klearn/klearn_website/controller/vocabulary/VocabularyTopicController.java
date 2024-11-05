@@ -4,6 +4,8 @@ import com.klearn.klearn_website.dto.dtoin.VocabularyTopicDTOIn;
 import com.klearn.klearn_website.model.VocabularyTopic;
 import com.klearn.klearn_website.service.vocabulary.VocabularyTopicService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -38,7 +40,7 @@ public class VocabularyTopicController {
      * @return ResponseEntity containing a list of vocabulary topics for the specified course.
      */
     @GetMapping("/course/{courseId}")
-    public ResponseEntity<List<VocabularyTopic>> getVocabularyTopicsByCourseId(@PathVariable Integer courseId) {
+    public ResponseEntity<List<VocabularyTopic>> getVocabularyTopicsByCourseId(@PathVariable @Positive Integer courseId) {
         List<VocabularyTopic> vocabularyTopics = vocabularyTopicService.getVocabularyTopicsByCourseId(courseId);
         return new ResponseEntity<>(vocabularyTopics, HttpStatus.OK);
     }
@@ -50,7 +52,7 @@ public class VocabularyTopicController {
      * @return ResponseEntity containing the vocabulary topic, if found.
      */
     @GetMapping("/{topicId}")
-    public ResponseEntity<VocabularyTopic> getVocabularyTopicById(@PathVariable Integer topicId) {
+    public ResponseEntity<VocabularyTopic> getVocabularyTopicById(@PathVariable @Positive Integer topicId) {
         Optional<VocabularyTopic> vocabularyTopic = vocabularyTopicService.getVocabularyTopicById(topicId);
         return vocabularyTopic.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -63,7 +65,7 @@ public class VocabularyTopicController {
      * @return ResponseEntity indicating the result of the create operation.
      */
     @PostMapping("/create")
-    public ResponseEntity<String> createVocabularyTopic(@RequestBody VocabularyTopicDTOIn vocabularyTopicDTOIn) {
+    public ResponseEntity<String> createVocabularyTopic(@Valid @RequestBody VocabularyTopicDTOIn vocabularyTopicDTOIn) {
         try {
             vocabularyTopicService.createVocabularyTopic(vocabularyTopicDTOIn);
             return new ResponseEntity<>("Vocabulary Topic created successfully", HttpStatus.CREATED);
@@ -82,8 +84,8 @@ public class VocabularyTopicController {
      * @return ResponseEntity indicating the result of the update operation.
      */
     @PutMapping("/update/{topicId}")
-    public ResponseEntity<String> updateVocabularyTopic(@PathVariable Integer topicId,
-                                                        @RequestBody VocabularyTopicDTOIn vocabularyTopicDTOIn) {
+    public ResponseEntity<String> updateVocabularyTopic(@PathVariable @Positive Integer topicId,
+                                                        @Valid @RequestBody VocabularyTopicDTOIn vocabularyTopicDTOIn) {
         try {
             vocabularyTopicService.updateVocabularyTopic(topicId, vocabularyTopicDTOIn);
             return new ResponseEntity<>("Vocabulary Topic updated successfully", HttpStatus.OK);
@@ -101,7 +103,7 @@ public class VocabularyTopicController {
      * @return ResponseEntity indicating the result of the delete operation.
      */
     @DeleteMapping("/delete/{topicId}")
-    public ResponseEntity<String> deleteVocabularyTopic(@PathVariable Integer topicId) {
+    public ResponseEntity<String> deleteVocabularyTopic(@PathVariable @Positive Integer topicId) {
         try {
             vocabularyTopicService.softDeleteVocabularyTopic(topicId);
             return new ResponseEntity<>("Vocabulary Topic deleted successfully", HttpStatus.OK);

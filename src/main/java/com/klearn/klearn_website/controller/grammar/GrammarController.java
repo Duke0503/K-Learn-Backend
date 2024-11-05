@@ -4,6 +4,8 @@ import com.klearn.klearn_website.dto.dtoin.GrammarDTOIn;
 import com.klearn.klearn_website.model.Grammar;
 import com.klearn.klearn_website.service.grammar.GrammarService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -36,7 +38,7 @@ public class GrammarController {
      * @return A list of Grammar entries related to the specified course.
      */
     @GetMapping("/{courseId}")
-    public List<Grammar> getGrammarByCourseId(@PathVariable Integer courseId) {
+    public List<Grammar> getGrammarByCourseId(@PathVariable @Positive Integer courseId) {
         return grammarService.getGrammarByCourseId(courseId);
     }
 
@@ -47,7 +49,7 @@ public class GrammarController {
      * @return ResponseEntity indicating the result of the create operation.
      */
     @PostMapping("/create")
-    public ResponseEntity<String> createGrammar(@RequestBody GrammarDTOIn grammarDTOIn) {
+    public ResponseEntity<String> createGrammar(@Valid @RequestBody GrammarDTOIn grammarDTOIn) {
         try {
             grammarService.createGrammar(grammarDTOIn);
             return new ResponseEntity<>("Grammar Lesson created successfully", HttpStatus.CREATED);
@@ -64,7 +66,7 @@ public class GrammarController {
      * @return ResponseEntity containing the Grammar entry if found, or a not found status.
      */
     @GetMapping("/entry/{grammarId}")
-    public ResponseEntity<Grammar> getGrammarById(@PathVariable Integer grammarId) {
+    public ResponseEntity<Grammar> getGrammarById(@PathVariable @Positive Integer grammarId) {
         return grammarService.getGrammarById(grammarId)
                 .map(grammar -> new ResponseEntity<>(grammar, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -78,7 +80,7 @@ public class GrammarController {
      * @return ResponseEntity indicating the result of the update operation.
      */
     @PutMapping("/update/{grammarId}")
-    public ResponseEntity<String> updateGrammar(@PathVariable Integer grammarId, @RequestBody GrammarDTOIn grammarDTOIn) {
+    public ResponseEntity<String> updateGrammar(@PathVariable @Positive Integer grammarId, @Valid @RequestBody GrammarDTOIn grammarDTOIn) {
         try {
             grammarService.updateGrammar(grammarId, grammarDTOIn);
             return new ResponseEntity<>("Grammar updated successfully", HttpStatus.OK);
@@ -96,7 +98,7 @@ public class GrammarController {
      * @return ResponseEntity indicating the result of the delete operation.
      */
     @DeleteMapping("/soft-delete/{grammarId}")
-    public ResponseEntity<String> softDeleteGrammar(@PathVariable Integer grammarId) {
+    public ResponseEntity<String> softDeleteGrammar(@PathVariable @Positive Integer grammarId) {
         try {
             grammarService.softDeleteGrammar(grammarId);
             return new ResponseEntity<>("Grammar soft deleted successfully", HttpStatus.OK);
@@ -114,7 +116,7 @@ public class GrammarController {
      * @return ResponseEntity indicating the result of the delete operation.
      */
     @DeleteMapping("/delete/{grammarId}")
-    public ResponseEntity<String> deleteGrammarPermanently(@PathVariable Integer grammarId) {
+    public ResponseEntity<String> deleteGrammarPermanently(@PathVariable @Positive Integer grammarId) {
         try {
             grammarService.deleteGrammarPermanently(grammarId);
             return new ResponseEntity<>("Grammar permanently deleted successfully", HttpStatus.OK);

@@ -4,6 +4,7 @@ import com.klearn.klearn_website.dto.dtoin.CourseDTOIn;
 import com.klearn.klearn_website.model.Course;
 import com.klearn.klearn_website.service.course.CourseService;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class CourseController {
      * @return ResponseEntity indicating the result of the operation.
      */
     @PostMapping("/create")
-    public ResponseEntity<String> createCourse(@RequestBody CourseDTOIn courseDTOIn) {
+    public ResponseEntity<String> createCourse(@Valid @RequestBody CourseDTOIn courseDTOIn) {
         try {
             courseService.createCourse(courseDTOIn);
             return new ResponseEntity<>("Course created successfully", HttpStatus.CREATED);

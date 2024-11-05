@@ -5,6 +5,8 @@ import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.grammar.GrammarProgressService;
 import com.klearn.klearn_website.service.user.UserService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class GrammarProgressController {
      * @return A list of GrammarProgress entries for the user and course.
      */
     @GetMapping("/{courseId}")
-    public List<GrammarProgress> getGrammarProgress(@PathVariable Integer courseId) {
+    public List<GrammarProgress> getGrammarProgress(@PathVariable @Positive Integer courseId) {
         User user = userService.getAuthenticatedUser();
         return grammarProgressService.getGrammarProgressByUserIdAndCourseId(user.getId(), courseId);
     }
@@ -38,8 +40,8 @@ public class GrammarProgressController {
      */
     @PatchMapping("/mark_learned_theory/{grammarId}/{courseId}")
     public ResponseEntity<String> markGrammarTheoryAsLearned(
-            @PathVariable Integer grammarId,
-            @PathVariable Integer courseId) {
+            @PathVariable @Positive Integer grammarId,
+            @PathVariable @Positive Integer courseId) {
         try {
             User user = userService.getAuthenticatedUser();
 
@@ -59,8 +61,8 @@ public class GrammarProgressController {
      */
     @PatchMapping("/mark_grammar_quiz/{grammarId}/{courseId}")
     public ResponseEntity<String> markGrammarQuizAsFinished(
-            @PathVariable Integer grammarId,
-            @PathVariable Integer courseId) {
+            @PathVariable @Positive Integer grammarId,
+            @PathVariable @Positive Integer courseId) {
         try {
             User user = userService.getAuthenticatedUser();
 
@@ -73,8 +75,8 @@ public class GrammarProgressController {
 
     @PatchMapping("/mark_grammar_quiz_failed/{grammarId}/{courseId}")
     public ResponseEntity<String> markGrammarQuizAsFailed(
-            @PathVariable Integer grammarId,
-            @PathVariable Integer courseId) {
+            @PathVariable @Positive Integer grammarId,
+            @PathVariable @Positive Integer courseId) {
         try {
             User user = userService.getAuthenticatedUser();
 
@@ -92,7 +94,7 @@ public class GrammarProgressController {
      * @return ResponseEntity containing the count of learned grammar entries.
      */
     @GetMapping("/count_learned/{courseId}")
-    public ResponseEntity<Integer> countLearnedGrammar(@PathVariable Integer courseId) {
+    public ResponseEntity<Integer> countLearnedGrammar(@PathVariable @Positive Integer courseId) {
         User user = userService.getAuthenticatedUser();
 
         int count = grammarProgressService.countLearnedGrammar(user.getId(), courseId);
@@ -106,7 +108,7 @@ public class GrammarProgressController {
      * @return ResponseEntity containing the count of not learned grammar entries.
      */
     @GetMapping("/count_not_learned/{courseId}")
-    public ResponseEntity<Integer> countNotLearnedGrammar(@PathVariable Integer courseId) {
+    public ResponseEntity<Integer> countNotLearnedGrammar(@PathVariable @Positive Integer courseId) {
         User user = userService.getAuthenticatedUser();
 
         int count = grammarProgressService.countNotLearnedGrammar(user.getId(), courseId);
@@ -120,7 +122,7 @@ public class GrammarProgressController {
      * @return ResponseEntity indicating the result of the update operation.
      */
     @PutMapping("/update")
-    public ResponseEntity<String> updateGrammarProgress(@RequestBody GrammarProgress grammarProgress) {
+    public ResponseEntity<String> updateGrammarProgress(@Valid @RequestBody GrammarProgress grammarProgress) {
         try {
             grammarProgressService.updateGrammarProgress(grammarProgress);
             return ResponseEntity.ok("Grammar Progress updated successfully.");
@@ -140,9 +142,9 @@ public class GrammarProgressController {
      */
     @DeleteMapping("/soft_delete/{userId}/{grammarId}/{courseId}")
     public ResponseEntity<String> softDeleteGrammarProgress(
-            @PathVariable Integer userId,
-            @PathVariable Integer grammarId,
-            @PathVariable Integer courseId) {
+            @PathVariable @Positive Integer userId,
+            @PathVariable @Positive Integer grammarId,
+            @PathVariable @Positive Integer courseId) {
         try {
             grammarProgressService.softDeleteGrammarProgress(userId, grammarId, courseId);
             return ResponseEntity.ok("Grammar Progress soft deleted successfully.");
@@ -163,9 +165,9 @@ public class GrammarProgressController {
      */
     @DeleteMapping("/delete/{userId}/{grammarId}/{courseId}")
     public ResponseEntity<String> deleteGrammarProgressPermanently(
-            @PathVariable Integer userId,
-            @PathVariable Integer grammarId,
-            @PathVariable Integer courseId) {
+            @PathVariable @Positive Integer userId,
+            @PathVariable @Positive Integer grammarId,
+            @PathVariable @Positive Integer courseId) {
         try {
             grammarProgressService.deleteGrammarProgressPermanently(userId, grammarId, courseId);
             return ResponseEntity.ok("Grammar Progress permanently deleted successfully.");

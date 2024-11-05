@@ -4,6 +4,8 @@ import com.klearn.klearn_website.dto.dtoin.VocabularyDTOIn;
 import com.klearn.klearn_website.model.Vocabulary;
 import com.klearn.klearn_website.service.vocabulary.VocabularyService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 import java.util.HashMap;
@@ -28,7 +30,7 @@ public class VocabularyController {
      * @return ResponseEntity with a message indicating the result.
      */
     @PostMapping("/create")
-    public ResponseEntity<String> createVocabulary(@RequestBody VocabularyDTOIn vocabularyDTOIn) {
+    public ResponseEntity<String> createVocabulary(@Valid @RequestBody VocabularyDTOIn vocabularyDTOIn) {
         try {
             vocabularyService.createVocabulary(vocabularyDTOIn);
             return new ResponseEntity<>("Vocabulary created successfully", HttpStatus.CREATED);
@@ -44,7 +46,7 @@ public class VocabularyController {
      * @return List of Vocabulary entities.
      */
     @GetMapping("/{topicId}")
-    public ResponseEntity<List<Vocabulary>> getVocabularyByTopicId(@PathVariable Integer topicId) {
+    public ResponseEntity<List<Vocabulary>> getVocabularyByTopicId(@PathVariable @Positive Integer topicId) {
         List<Vocabulary> vocabularies = vocabularyService.getVocabularyByTopicId(topicId);
         return new ResponseEntity<>(vocabularies, HttpStatus.OK);
     }
@@ -56,7 +58,7 @@ public class VocabularyController {
      * @return ResponseEntity containing the count of vocabulary entries.
      */
     @GetMapping("/count/{topicId}")
-    public ResponseEntity<Map<String, Integer>> countVocabularyByTopicId(@PathVariable Integer topicId) {
+    public ResponseEntity<Map<String, Integer>> countVocabularyByTopicId(@PathVariable @Positive Integer topicId) {
         Integer count = vocabularyService.countVocabularyByTopicId(topicId);
         Map<String, Integer> response = new HashMap<>();
         response.put("count_vocabulary", count);
@@ -71,7 +73,7 @@ public class VocabularyController {
      * @return ResponseEntity with a message indicating the result.
      */
     @PutMapping("/update/{vocabularyId}")
-    public ResponseEntity<String> updateVocabulary(@PathVariable Integer vocabularyId, @RequestBody VocabularyDTOIn vocabularyDTOIn) {
+    public ResponseEntity<String> updateVocabulary(@PathVariable @Positive Integer vocabularyId, @Valid @RequestBody VocabularyDTOIn vocabularyDTOIn) {
         try {
             vocabularyService.updateVocabulary(vocabularyId, vocabularyDTOIn);
             return new ResponseEntity<>("Vocabulary updated successfully", HttpStatus.OK);
@@ -89,7 +91,7 @@ public class VocabularyController {
      * @return ResponseEntity with a message indicating the result.
      */
     @DeleteMapping("/soft-delete/{vocabularyId}")
-    public ResponseEntity<String> softDeleteVocabulary(@PathVariable Integer vocabularyId) {
+    public ResponseEntity<String> softDeleteVocabulary(@PathVariable @Positive Integer vocabularyId) {
         try {
             vocabularyService.softDeleteVocabulary(vocabularyId);
             return new ResponseEntity<>("Vocabulary soft deleted successfully", HttpStatus.OK);
@@ -107,7 +109,7 @@ public class VocabularyController {
      * @return ResponseEntity with a message indicating the result.
      */
     @DeleteMapping("/delete/{vocabularyId}")
-    public ResponseEntity<String> deleteVocabularyPermanently(@PathVariable Integer vocabularyId) {
+    public ResponseEntity<String> deleteVocabularyPermanently(@PathVariable @Positive Integer vocabularyId) {
         try {
             vocabularyService.deleteVocabularyPermanently(vocabularyId);
             return new ResponseEntity<>("Vocabulary permanently deleted successfully", HttpStatus.OK);

@@ -4,6 +4,7 @@ import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.course.CourseHomePageService;
 import com.klearn.klearn_website.service.user.UserService;
 
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 import java.util.Map;
@@ -55,7 +56,7 @@ public class HomePageController {
 
     @GetMapping("/vocabulary/{courseId}")
     public ResponseEntity<List<Map<String, Object>>> getCustomVocabularyTopicsByCourseId(
-            @PathVariable Integer courseId) {
+            @PathVariable @Positive Integer courseId) {
         List<Map<String, Object>> vocabularyTopicsWithProgress = courseHomePageService
                 .getCustomVocabularyTopicsByCourseId(courseId);
         return new ResponseEntity<>(vocabularyTopicsWithProgress, HttpStatus.OK);

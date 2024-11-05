@@ -3,6 +3,9 @@ package com.klearn.klearn_website.controller.grammar;
 import com.klearn.klearn_website.dto.dtoin.QuestionGrammarDTOIn;
 import com.klearn.klearn_website.model.QuestionGrammar;
 import com.klearn.klearn_website.service.grammar.QuestionGrammarService;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
@@ -24,7 +27,7 @@ public class QuestionGrammarController {
      */
     @PostMapping("/create")
     public ResponseEntity<String> createQuestionGrammar(
-            @RequestBody QuestionGrammarDTOIn questionGrammarDTOIn) {
+            @Valid @RequestBody QuestionGrammarDTOIn questionGrammarDTOIn) {
         questionGrammarService.createQuestionGrammar(questionGrammarDTOIn);
         return ResponseEntity.ok("Question grammar created successfully");
     }
@@ -38,8 +41,8 @@ public class QuestionGrammarController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateQuestionGrammar(
-            @PathVariable Integer id,
-            @RequestBody QuestionGrammarDTOIn questionGrammarDTOIn) {
+            @PathVariable @Positive Integer id,
+            @Valid @RequestBody QuestionGrammarDTOIn questionGrammarDTOIn) {
         questionGrammarService.updateQuestionGrammar(id, questionGrammarDTOIn);
         return ResponseEntity.ok("Question grammar updated successfully");
     }
@@ -51,7 +54,7 @@ public class QuestionGrammarController {
      * @return ResponseEntity with a success message.
      */
     @DeleteMapping("/soft_delete/{id}")
-    public ResponseEntity<String> softDeleteQuestionGrammar(@PathVariable Integer id) {
+    public ResponseEntity<String> softDeleteQuestionGrammar(@PathVariable @Positive Integer id) {
         questionGrammarService.softDeleteQuestionGrammar(id);
         return ResponseEntity.ok("Question grammar soft deleted successfully");
     }
@@ -63,7 +66,7 @@ public class QuestionGrammarController {
      * @return ResponseEntity with a success message.
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteQuestionGrammarPermanently(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteQuestionGrammarPermanently(@PathVariable @Positive Integer id) {
         questionGrammarService.deleteQuestionGrammarPermanently(id);
         return ResponseEntity.ok("Question grammar permanently deleted successfully");
     }
@@ -75,7 +78,7 @@ public class QuestionGrammarController {
      * @return ResponseEntity containing a list of QuestionGrammar entries.
      */
     @GetMapping("/grammar/{grammarId}")
-    public ResponseEntity<List<QuestionGrammar>> getAllQuestionsByGrammarId(@PathVariable Integer grammarId) {
+    public ResponseEntity<List<QuestionGrammar>> getAllQuestionsByGrammarId(@PathVariable @Positive Integer grammarId) {
         List<QuestionGrammar> questions = questionGrammarService.getAllQuestionsByGrammarId(grammarId);
         if (questions.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -90,7 +93,7 @@ public class QuestionGrammarController {
      * @return ResponseEntity containing the QuestionGrammar entry.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<QuestionGrammar> getQuestionById(@PathVariable Integer id) {
+    public ResponseEntity<QuestionGrammar> getQuestionById(@PathVariable @Positive Integer id) {
         QuestionGrammar question = questionGrammarService.getQuestionById(id);
         return ResponseEntity.ok(question);
     }
@@ -102,7 +105,7 @@ public class QuestionGrammarController {
      * @return ResponseEntity containing a boolean indicating existence.
      */
     @GetMapping("/exists/{grammarId}")
-    public ResponseEntity<Boolean> existsByGrammarId(@PathVariable Integer grammarId) {
+    public ResponseEntity<Boolean> existsByGrammarId(@PathVariable @Positive Integer grammarId) {
         boolean exists = questionGrammarService.existsByGrammarId(grammarId);
         return ResponseEntity.ok(exists);
     }

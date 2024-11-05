@@ -5,6 +5,8 @@ import com.klearn.klearn_website.model.MarkedVocabulary;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.user.UserService;
 import com.klearn.klearn_website.service.vocabulary.MarkedVocabularyService;
+
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,7 @@ public class MarkedVocabularyController {
      * @return ResponseEntity indicating the result of the operation.
      */
     @PostMapping("/marked/{vocabularyId}")
-    public ResponseEntity<String> createMarkedVocabulary(@PathVariable Integer vocabularyId) {
+    public ResponseEntity<String> createMarkedVocabulary(@PathVariable @Positive Integer vocabularyId) {
         User user = userService.getAuthenticatedUser();
 
         markedVocabularyService.createMarkedVocabByUserAndVocabulary(user.getId(), vocabularyId);
@@ -51,7 +53,7 @@ public class MarkedVocabularyController {
      * @return ResponseEntity indicating the result of the deletion.
      */
     @DeleteMapping("/soft_delete/{vocabularyId}")
-    public ResponseEntity<String> softDeleteMarkedVocabulary(@PathVariable Integer vocabularyId) {
+    public ResponseEntity<String> softDeleteMarkedVocabulary(@PathVariable @Positive Integer vocabularyId) {
         markedVocabularyService.softDelete(vocabularyId);
         return ResponseEntity.ok("Marked vocabulary soft deleted successfully.");
     }
@@ -65,7 +67,7 @@ public class MarkedVocabularyController {
      */
     @GetMapping("/exist_marked_vocab/{vocabularyId}")
     public Boolean getMarkedVocabulary(
-            @PathVariable Integer vocabularyId) {
+            @PathVariable @Positive Integer vocabularyId) {
             
         User user = userService.getAuthenticatedUser();
 

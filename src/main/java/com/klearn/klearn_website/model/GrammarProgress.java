@@ -1,6 +1,8 @@
 package com.klearn.klearn_website.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,18 +23,22 @@ public class GrammarProgress {
     @EmbeddedId
     private GrammarProgressId id;
 
+    @NotNull(message = "Learned theory status cannot be null")
     @Column(name = "is_learned_theory", nullable = false)
-    private Boolean is_learned_theory;
+    private Boolean is_learned_theory = false;
 
+    @NotNull(message = "Finish quiz status cannot be null")
     @Column(name = "is_finish_quiz", nullable = false)
-    private Boolean is_finish_quiz;
+    private Boolean is_finish_quiz = false;
 
+    @NotNull(message = "Failed quiz status cannot be null")
     @Column(name = "is_failed_quiz", nullable = false)
-    private Boolean is_failed_quiz;
+    private Boolean is_failed_quiz = false;
 
-    @Column(name = "last_modified")
+    @Column(name = "last_modified", nullable = false)
     private LocalDateTime last_modified;
 
+    @NotNull(message = "Deleted status cannot be null")
     @Column(name = "is_deleted", nullable = false)
     private Boolean is_deleted = false;
 
@@ -48,14 +54,34 @@ public class GrammarProgress {
     @JoinColumn(name = "course_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Course course;
 
+    // Lifecycle callbacks for setting the timestamps
+    @PrePersist
+    protected void onCreate() {
+        this.last_modified = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.last_modified = LocalDateTime.now();
+    }
+
     @Embeddable
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GrammarProgressId implements Serializable {
+
+        @NotNull(message = "User ID cannot be null")
+        @Column(name = "user_id")
         private Integer user_id;
+
+        @NotNull(message = "Grammar ID cannot be null")
+        @Column(name = "grammar_id")
         private Integer grammar_id;
+
+        @NotNull(message = "Course ID cannot be null")
+        @Column(name = "course_id")
         private Integer course_id;
 
         @Override

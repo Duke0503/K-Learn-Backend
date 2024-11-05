@@ -10,6 +10,8 @@ import com.klearn.klearn_website.model.VocabularyProgress;
 import com.klearn.klearn_website.service.user.UserService;
 import com.klearn.klearn_website.service.vocabulary.VocabularyProgressService;
 
+import jakarta.validation.constraints.Positive;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class VocabularyProgressController {
      * @return List of VocabularyProgress entries for the user and topic.
      */
     @GetMapping("/topic/{topicId}")
-    public List<VocabularyProgress> getVocabularyProgress(@PathVariable Integer topicId) {
+    public List<VocabularyProgress> getVocabularyProgress(@PathVariable @Positive Integer topicId) {
         User user = userService.getAuthenticatedUser();
                 
         return vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topicId);
@@ -42,7 +44,7 @@ public class VocabularyProgressController {
      * @return ResponseEntity indicating the result of the operation.
      */
     @PatchMapping("/mark/topic/{topicId}/vocabulary/{vocabularyId}")
-    public ResponseEntity<String> markVocabularyAsLearned(@PathVariable Integer topicId,
+    public ResponseEntity<String> markVocabularyAsLearned(@PathVariable @Positive Integer topicId,
             @PathVariable Integer vocabularyId) {
         User user = userService.getAuthenticatedUser();
 
@@ -58,7 +60,7 @@ public class VocabularyProgressController {
      * @return ResponseEntity indicating the result of the operation.
      */
     @PatchMapping("/mark-proficient/topic/{topicId}/vocabulary/{vocabularyId}")
-    public ResponseEntity<String> markVocabularyAsProficient(@PathVariable Integer topicId,
+    public ResponseEntity<String> markVocabularyAsProficient(@PathVariable @Positive Integer topicId,
             @PathVariable Integer vocabularyId) {
         User user = userService.getAuthenticatedUser();
 
@@ -74,7 +76,7 @@ public class VocabularyProgressController {
      * @return ResponseEntity indicating the result of the operation.
      */
     @PatchMapping("/mark-not-proficient/topic/{topicId}/vocabulary/{vocabularyId}")
-    public ResponseEntity<String> markVocabularyAsNotProficient(@PathVariable Integer topicId,
+    public ResponseEntity<String> markVocabularyAsNotProficient(@PathVariable @Positive Integer topicId,
             @PathVariable Integer vocabularyId) {
         User user = userService.getAuthenticatedUser();
 
@@ -91,7 +93,7 @@ public class VocabularyProgressController {
      *         vocabularies.
      */
     @GetMapping("/progress/{topicId}")
-    public ResponseEntity<?> getVocabularyProgressCounts(@PathVariable Integer topicId) {
+    public ResponseEntity<?> getVocabularyProgressCounts(@PathVariable @Positive Integer topicId) {
         User user = userService.getAuthenticatedUser();
 
         Integer countVocabularyNotLearned = vocabularyProgressService.countVocabularyNotLearned(user.getId(), topicId);
@@ -111,7 +113,7 @@ public class VocabularyProgressController {
      * @return List of learned VocabularyProgress entries for the user and topic.
      */
     @GetMapping("/learned/{topicId}")
-    public List<VocabularyProgress> getLearnedVocabularyProgress(@PathVariable Integer topicId) {
+    public List<VocabularyProgress> getLearnedVocabularyProgress(@PathVariable @Positive Integer topicId) {
         User user = userService.getAuthenticatedUser();
 
         return vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topicId).stream()
@@ -127,7 +129,7 @@ public class VocabularyProgressController {
      *         topic.
      */
     @GetMapping("/not_learned/{topicId}")
-    public List<VocabularyProgress> getNotLearnedVocabularyProgress(@PathVariable Integer topicId) {
+    public List<VocabularyProgress> getNotLearnedVocabularyProgress(@PathVariable @Positive Integer topicId) {
         User user = userService.getAuthenticatedUser();
 
         return vocabularyProgressService.getVocabularyProgressByUserIdAndTopicId(user.getId(), topicId).stream()
@@ -168,9 +170,9 @@ public class VocabularyProgressController {
      * @return ResponseEntity indicating the result of the soft delete operation.
      */
     @DeleteMapping("/soft_delete/{userId}/{vocabularyId}/{topicId}")
-    public ResponseEntity<String> softDeleteVocabularyProgress(@PathVariable Integer userId,
-            @PathVariable Integer vocabularyId,
-            @PathVariable Integer topicId) {
+    public ResponseEntity<String> softDeleteVocabularyProgress(@PathVariable @Positive Integer userId,
+            @PathVariable @Positive Integer vocabularyId,
+            @PathVariable @Positive Integer topicId) {
         vocabularyProgressService.softDeleteVocabularyProgress(userId, vocabularyId, topicId);
         return ResponseEntity.ok("VocabularyProgress soft deleted successfully.");
     }
@@ -185,9 +187,9 @@ public class VocabularyProgressController {
      *         operation.
      */
     @DeleteMapping("/delete/{userId}/{vocabularyId}/{topicId}")
-    public ResponseEntity<String> deleteVocabularyProgressPermanently(@PathVariable Integer userId,
-            @PathVariable Integer vocabularyId,
-            @PathVariable Integer topicId) {
+    public ResponseEntity<String> deleteVocabularyProgressPermanently(@PathVariable @Positive Integer userId,
+            @PathVariable @Positive Integer vocabularyId,
+            @PathVariable @Positive Integer topicId) {
         vocabularyProgressService.deleteVocabularyProgressPermanently(userId, vocabularyId, topicId);
         return ResponseEntity.ok("VocabularyProgress permanently deleted successfully.");
     }

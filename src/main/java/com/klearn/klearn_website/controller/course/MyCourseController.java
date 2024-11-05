@@ -7,6 +7,8 @@ import com.klearn.klearn_website.dto.dtoin.MyCourseDTOIn;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.course.MyCourseService;
 import com.klearn.klearn_website.service.user.UserService;
+
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -44,7 +46,7 @@ public class MyCourseController {
      * @return A JSON representation of the vocabulary progress.
      */
     @GetMapping("/vocabulary/{courseId}/progress")
-    public ResponseEntity<String> getVocabularyProgress(@PathVariable Integer courseId) {
+    public ResponseEntity<String> getVocabularyProgress(@PathVariable @Positive Integer courseId) {
         User user = userService.getAuthenticatedUser();
 
         String progress = myCourseService.getVocabularyProgressByUserIdAndCourseId(user.getId(), courseId);
@@ -58,7 +60,7 @@ public class MyCourseController {
      * @return A JSON representation of the grammar progress.
      */
     @GetMapping("/grammar/{courseId}/progress")
-    public ResponseEntity<String> getGrammarProgress(@PathVariable Integer courseId) {
+    public ResponseEntity<String> getGrammarProgress(@PathVariable @Positive Integer courseId) {
         User user = userService.getAuthenticatedUser();
 
         String progress = myCourseService.getDetailedGrammarProgressByUserIdAndCourseId(user.getId(), courseId);
@@ -72,7 +74,7 @@ public class MyCourseController {
      * @return A message indicating the result of the enrollment.
      */
     @GetMapping("/enroll/{courseId}")
-    public ResponseEntity<String> enrollInCourse(@PathVariable Integer courseId) {
+    public ResponseEntity<String> enrollInCourse(@PathVariable @Positive Integer courseId) {
         User user = userService.getAuthenticatedUser();
         
         myCourseService.insertMyCourse(new MyCourseDTOIn(
@@ -104,7 +106,7 @@ public class MyCourseController {
      * @return A JSON representation of the detailed vocabulary progress.
      */
     @GetMapping("/vocabulary/{courseId}/detailed-progress")
-    public ResponseEntity<String> getDetailedVocabularyProgress(@PathVariable Integer courseId) {
+    public ResponseEntity<String> getDetailedVocabularyProgress(@PathVariable @Positive Integer courseId) {
         User user = userService.getAuthenticatedUser();
 
         String progress = myCourseService.getVocabularyProgressByUserIdAndCourseId(user.getId(), courseId);
@@ -118,7 +120,7 @@ public class MyCourseController {
      * @return JSON representation of the course's overall progress.
      */
     @GetMapping("/{courseId}/overall-progress")
-    public ResponseEntity<String> getOverallCourseProgress(@PathVariable Integer courseId) {
+    public ResponseEntity<String> getOverallCourseProgress(@PathVariable @Positive Integer courseId) {
         User user = userService.getAuthenticatedUser();
 
         String progress = myCourseService.getMyCourseByUserId(user.getId());

@@ -1,6 +1,7 @@
 package com.klearn.klearn_website.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,17 +22,20 @@ public class MyCourse {
     @EmbeddedId
     private MyCourseId id;
 
-    @Column(name = "date_registration")
+    @NotNull(message = "Date of registration cannot be null")
+    @Column(name = "date_registration", nullable = false)
     private LocalDateTime date_registration;
 
-    @Column(name = "payment_status")
+    @NotNull(message = "Payment status cannot be null")
+    @Column(name = "payment_status", length = 50, nullable = false)
     private String payment_status;
 
-    @Column(name = "last_modified")
+    @Column(name = "last_modified", nullable = false)
     private LocalDateTime last_modified;
 
-    @Column(name = "is_deleted")
-    private Boolean is_deleted;
+    @NotNull(message = "Deleted status cannot be null")
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean is_deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
@@ -41,18 +45,32 @@ public class MyCourse {
     @JoinColumn(name = "course_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Course course;
 
+    // Lifecycle callbacks for setting the timestamps
+    @PrePersist
+    protected void onCreate() {
+        this.last_modified = LocalDateTime.now();
+        this.date_registration = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.last_modified = LocalDateTime.now();
+    }
+
     @Embeddable
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MyCourseId implements Serializable {
+
+        @NotNull(message = "User ID cannot be null")
+        @Column(name = "user_id")
         private Integer user_id;
+
+        @NotNull(message = "Course ID cannot be null")
+        @Column(name = "course_id")
         private Integer course_id;
-
-        public MyCourseId() {
-        }
-
-        public MyCourseId(Integer user_id, Integer course_id) {
-            this.user_id = user_id;
-            this.course_id = course_id;
-        }
 
         @Override
         public boolean equals(Object o) {

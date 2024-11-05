@@ -6,6 +6,7 @@ import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.quiz.ComprehensiveQuizService;
 import com.klearn.klearn_website.service.user.UserService;
 
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class ComprehensiveQuizController {
      */
     @GetMapping("/vocabulary/{courseId}")
     public ResponseEntity<List<VocabularyQuestionDTOOut>> getVocabComprehensiveQuiz(
-            @PathVariable Integer courseId) {
+            @PathVariable @Positive Integer courseId) {
 
         User user = userService.getAuthenticatedUser();
 
@@ -47,7 +48,7 @@ public class ComprehensiveQuizController {
      */
     @GetMapping("/grammar/{courseId}")
     public ResponseEntity<List<GrammarQuestionDTOOut>> getGrammarComprehensiveQuiz(
-            @PathVariable Integer courseId) {
+            @PathVariable @Positive Integer courseId) {
 
         User user = userService.getAuthenticatedUser();
 

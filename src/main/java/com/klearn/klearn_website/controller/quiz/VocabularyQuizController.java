@@ -10,6 +10,7 @@ import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.quiz.VocabularyQuizService;
 import com.klearn.klearn_website.service.user.UserService;
 
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -28,7 +29,7 @@ public class VocabularyQuizController {
      *         objects representing the quiz.
      */
     @GetMapping("/vocabulary/{topicId}")
-    public ResponseEntity<List<VocabularyQuestionDTOOut>> createVocabularyQuiz(@PathVariable Integer topicId) {
+    public ResponseEntity<List<VocabularyQuestionDTOOut>> createVocabularyQuiz(@PathVariable @Positive Integer topicId) {
         User user = userService.getAuthenticatedUser();
 
         List<VocabularyQuestionDTOOut> listQuestions = vocabularyQuizService.createVocabularyQuiz(user.getId(),
