@@ -154,12 +154,16 @@ public class ComprehensiveQuizService {
     private GrammarQuestionDTOOut createGrammarQuestion(QuestionGrammar question) {
         List<String> options = prepareGrammarOptions(question);
 
+
         return new GrammarQuestionDTOOut(
                 question.getId(),
                 question.getQuiz_type(),
                 question.getQuestion_text(),
                 question.getCorrect_answer(),
-                "essay".equals(question.getQuiz_type()) ? Collections.emptyList() : options
+                "essay".equals(question.getQuiz_type()) ? Collections.emptyList() : options,
+                question.getGrammar().getId(),
+                question.getGrammar().getLesson_number(),
+                question.getGrammar().getGrammar_name()
         );
     }
 

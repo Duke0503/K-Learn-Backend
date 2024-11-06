@@ -22,4 +22,10 @@ public class GrammarQuestionDTOOut {
     private String correct_answer;
 
     private List<String> options;
+
+    private Integer grammar_id;
+
+    private Integer grammar_lesson_number;
+
+    private String grammar_name;
 }
