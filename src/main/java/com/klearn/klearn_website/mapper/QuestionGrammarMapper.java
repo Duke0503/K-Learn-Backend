@@ -51,7 +51,7 @@ public interface QuestionGrammarMapper {
             @Result(property = "grammar.last_modified", column = "g.last_modified"),
             @Result(property = "grammar.is_deleted", column = "g.is_deleted")
     })
-    List<QuestionGrammar> getQuestionsByGrammarIdWithGrammar(@Param("grammar_id") Integer grammarId);
+    List<QuestionGrammar> getQuestionsByGrammarId(@Param("grammar_id") Integer grammarId);
 
     // Get a QuestionGrammar entry by its ID
     @Select("SELECT * FROM question_grammar WHERE id = #{id} AND is_deleted = 0")
