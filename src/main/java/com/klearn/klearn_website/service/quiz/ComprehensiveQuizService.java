@@ -1,6 +1,7 @@
 package com.klearn.klearn_website.service.quiz;
 
 import org.springframework.stereotype.Service;
+
 import com.klearn.klearn_website.dto.dtoout.GrammarQuestionDTOOut;
 import com.klearn.klearn_website.dto.dtoout.VocabularyQuestionDTOOut;
 import com.klearn.klearn_website.model.*;
@@ -30,7 +31,8 @@ public class ComprehensiveQuizService {
      *
      * @param userId   The ID of the user.
      * @param courseId The ID of the course.
-     * @return A list of up to 25 VocabularyQuestionDTOOut representing the quiz questions.
+     * @return A list of up to 25 VocabularyQuestionDTOOut representing the quiz
+     *         questions.
      */
     public List<VocabularyQuestionDTOOut> getVocabComprehensiveQuiz(Integer userId, Integer courseId) {
         validateUserAndCourseExist(userId, courseId);
@@ -51,7 +53,8 @@ public class ComprehensiveQuizService {
      *
      * @param userId   The ID of the user.
      * @param courseId The ID of the course.
-     * @return A list of up to 25 GrammarQuestionDTOOut representing the quiz questions.
+     * @return A list of up to 25 GrammarQuestionDTOOut representing the quiz
+     *         questions.
      */
     public List<GrammarQuestionDTOOut> getGrammarComprehensiveQuiz(Integer userId, Integer courseId) {
         validateUserAndCourseExist(userId, courseId);
@@ -74,7 +77,8 @@ public class ComprehensiveQuizService {
      */
     private void validateUserAndCourseExist(Integer userId, Integer courseId) {
         userService.getUserById(userId).orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
-        courseService.getCourseById(courseId).orElseThrow(() -> new RuntimeException("Course not found with ID: " + courseId));
+        courseService.getCourseById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found with ID: " + courseId));
     }
 
     /**
@@ -87,19 +91,20 @@ public class ComprehensiveQuizService {
         if (vocabularyList.isEmpty()) {
             return Collections.emptyList();
         }
-    
+
         Collections.shuffle(vocabularyList);
-        List<Vocabulary> limitedVocabulary = vocabularyList.size() > 25 ? vocabularyList.subList(0, 25) : vocabularyList;
-    
+        List<Vocabulary> limitedVocabulary = vocabularyList.size() > 25 ? vocabularyList.subList(0, 25)
+                : vocabularyList;
+
         List<VocabularyQuestionDTOOut> quizQuestions = new ArrayList<>();
         boolean onlyEssayQuestions = limitedVocabulary.size() < 4;
-    
+
         for (Vocabulary vocabulary : limitedVocabulary) {
             // If the list size is less than 4, only create essay questions
             String questionType = onlyEssayQuestions ? "essay" : (random.nextBoolean() ? "multichoice" : "essay");
             quizQuestions.add(createVocabularyQuestion(vocabulary, questionType, vocabularyList));
         }
-    
+
         return quizQuestions;
     }
 
@@ -115,7 +120,9 @@ public class ComprehensiveQuizService {
         }
 
         Collections.shuffle(questionGrammarList);
-        List<QuestionGrammar> limitedQuestionGrammar = questionGrammarList.size() > 25 ? questionGrammarList.subList(0, 25) : questionGrammarList;
+        List<QuestionGrammar> limitedQuestionGrammar = questionGrammarList.size() > 25
+                ? questionGrammarList.subList(0, 25)
+                : questionGrammarList;
 
         List<GrammarQuestionDTOOut> quizQuestions = new ArrayList<>();
         for (QuestionGrammar questionGrammar : limitedQuestionGrammar) {
@@ -128,21 +135,23 @@ public class ComprehensiveQuizService {
     /**
      * Creates a VocabularyQuestionDTOOut for a given vocabulary.
      *
-     * @param vocabulary   The vocabulary.
-     * @param questionType The type of the question ("multichoice" or "essay").
+     * @param vocabulary    The vocabulary.
+     * @param questionType  The type of the question ("multichoice" or "essay").
      * @param allVocabulary The list of all vocabulary to generate options.
      * @return A VocabularyQuestionDTOOut.
      */
-    private VocabularyQuestionDTOOut createVocabularyQuestion(Vocabulary vocabulary, String questionType, List<Vocabulary> allVocabulary) {
-        List<String> options = questionType.equals("multichoice") ? generateOptions(vocabulary.getDefinition(), allVocabulary) : Collections.emptyList();
+    private VocabularyQuestionDTOOut createVocabularyQuestion(Vocabulary vocabulary, String questionType,
+            List<Vocabulary> allVocabulary) {
+        List<String> options = questionType.equals("multichoice")
+                ? generateOptions(vocabulary.getDefinition(), allVocabulary)
+                : Collections.emptyList();
 
         return new VocabularyQuestionDTOOut(
                 vocabulary.getId(),
                 questionType,
                 vocabulary.getWord(),
                 vocabulary.getDefinition(),
-                options
-        );
+                options);
     }
 
     /**
@@ -154,7 +163,6 @@ public class ComprehensiveQuizService {
     private GrammarQuestionDTOOut createGrammarQuestion(QuestionGrammar question) {
         List<String> options = prepareGrammarOptions(question);
 
-
         return new GrammarQuestionDTOOut(
                 question.getId(),
                 question.getQuiz_type(),
@@ -163,8 +171,7 @@ public class ComprehensiveQuizService {
                 "essay".equals(question.getQuiz_type()) ? Collections.emptyList() : options,
                 question.getGrammar().getId(),
                 question.getGrammar().getLesson_number(),
-                question.getGrammar().getGrammar_name()
-        );
+                question.getGrammar().getGrammar_name());
     }
 
     /**
@@ -209,5 +216,5 @@ public class ComprehensiveQuizService {
             Collections.shuffle(options);
         }
         return options;
-    }
+    }    
 }

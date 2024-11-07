@@ -11,8 +11,8 @@ public interface ComprehensiveTestResultsMapper {
     @Insert("INSERT INTO comprehensive_test_results (test_type, test_date, no_correct_questions, no_incorrect_questions, duration, last_modified, is_deleted, user_id, course_id) "
             + "VALUES (#{test_type}, #{test_date}, #{no_correct_questions}, #{no_incorrect_questions}, #{duration}, #{last_modified}, #{is_deleted}, #{user.id}, #{course.id})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @SelectKey(statement = "SELECT * FROM comprehensive_test_results WHERE id = #{id}", keyProperty = "id", before = false, resultType = ComprehensiveTestResults.class)
-    ComprehensiveTestResults insertComprehensiveTestResults(ComprehensiveTestResults comprehensiveTestResults);
+    void insertComprehensiveTestResults(ComprehensiveTestResults comprehensiveTestResults);
+
 
     // Get the most recent comprehensive test result by course_id, user_id, and
     // test_type, including course and user data
