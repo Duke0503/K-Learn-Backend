@@ -27,10 +27,6 @@ public class ComprehensiveTestResultsDTOIn {
     @Min(value = 0, message = "Number of incorrect questions cannot be negative")
     private Integer no_incorrect_questions;
 
-    @NotNull(message = "Duration cannot be null")
-    @Positive(message = "Duration must be a positive value")
-    private Integer duration;
-
     @NotNull(message = "User ID cannot be null")
     @Min(value = 1, message = "User ID must be greater than or equal to 1")
     private Integer user_id;

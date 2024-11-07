@@ -8,8 +8,8 @@ import com.klearn.klearn_website.model.ComprehensiveTestResults;
 public interface ComprehensiveTestResultsMapper {
 
     // Insert a new comprehensive test result and return the inserted result
-    @Insert("INSERT INTO comprehensive_test_results (test_type, test_date, no_correct_questions, no_incorrect_questions, duration, last_modified, is_deleted, user_id, course_id) "
-            + "VALUES (#{test_type}, #{test_date}, #{no_correct_questions}, #{no_incorrect_questions}, #{duration}, #{last_modified}, #{is_deleted}, #{user.id}, #{course.id})")
+    @Insert("INSERT INTO comprehensive_test_results (test_type, test_date, no_correct_questions, no_incorrect_questions, last_modified, is_deleted, user_id, course_id) "
+            + "VALUES (#{test_type}, #{test_date}, #{no_correct_questions}, #{no_incorrect_questions}, #{last_modified}, #{is_deleted}, #{user.id}, #{course.id})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertComprehensiveTestResults(ComprehensiveTestResults comprehensiveTestResults);
 
@@ -28,7 +28,6 @@ public interface ComprehensiveTestResultsMapper {
             @Result(property = "test_date", column = "test_date"),
             @Result(property = "no_correct_questions", column = "no_correct_questions"),
             @Result(property = "no_incorrect_questions", column = "no_incorrect_questions"),
-            @Result(property = "duration", column = "duration"),
             @Result(property = "last_modified", column = "last_modified"),
             @Result(property = "is_deleted", column = "is_deleted"),
 

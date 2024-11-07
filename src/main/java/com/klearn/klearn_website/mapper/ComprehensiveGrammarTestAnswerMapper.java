@@ -85,7 +85,6 @@ public interface ComprehensiveGrammarTestAnswerMapper {
             @Result(property = "comprehensiveTestResults.test_date", column = "test_date"),
             @Result(property = "comprehensiveTestResults.no_correct_questions", column = "no_correct_questions"),
             @Result(property = "comprehensiveTestResults.no_incorrect_questions", column = "no_incorrect_questions"),
-            @Result(property = "comprehensiveTestResults.duration", column = "duration"),
             @Result(property = "comprehensiveTestResults.last_modified", column = "ctr.last_modified"),
             @Result(property = "comprehensiveTestResults.is_deleted", column = "ctr.is_deleted"),
             // Map the QuestionGrammar object

@@ -43,11 +43,6 @@ public class ComprehensiveTestResults {
     @Column(name = "no_incorrect_questions", nullable = false)
     private Integer no_incorrect_questions;
 
-    @NotNull(message = "Duration cannot be null")
-    @Min(value = 0, message = "Duration must be a positive value")
-    @Column(name = "duration", nullable = false)
-    private Integer duration;  // Duration in seconds
-
     @Column(name = "last_modified", nullable = false)
     private LocalDateTime last_modified;
 

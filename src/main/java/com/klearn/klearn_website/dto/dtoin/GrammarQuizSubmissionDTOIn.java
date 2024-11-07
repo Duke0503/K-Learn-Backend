@@ -19,7 +19,4 @@ public class GrammarQuizSubmissionDTOIn {
 
     @NotNull(message = "Course ID cannot be null")
     private Integer course_id;
-
-    @NotNull(message = "Duration cannot be null")
-    private Integer duration;
 }

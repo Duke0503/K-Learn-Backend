@@ -43,7 +43,7 @@ public class ComprehensiveTestResultsService {
     }
 
     public void processGrammarQuizAnswers(List<GrammarQuizAnswerDTOIn> grammarQuizAnswers, Integer courseId,
-            Integer duration, Integer userId) {
+            Integer userId) {
 
         int no_correct_answer = 0;
         int no_incorrect_answer = 0;
@@ -69,7 +69,6 @@ public class ComprehensiveTestResultsService {
         testResults.setTest_date(LocalDateTime.now());
         testResults.setNo_correct_questions(no_correct_answer);
         testResults.setNo_incorrect_questions(no_incorrect_answer);
-        testResults.setDuration(duration);
         testResults.setLast_modified(LocalDateTime.now());
         testResults.setIs_deleted(false);
         testResults.setUser(user);
