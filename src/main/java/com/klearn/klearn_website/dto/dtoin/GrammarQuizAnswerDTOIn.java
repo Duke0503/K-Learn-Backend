@@ -14,8 +14,6 @@ import jakarta.validation.constraints.Size;
 @NoArgsConstructor
 public class GrammarQuizAnswerDTOIn {
 
-    @NotNull(message = "User answer cannot be null")
-    @Size(min = 1, message = "User answer cannot be empty")
     private String user_answer;
 
     @NotNull(message = "is_correct field cannot be null")

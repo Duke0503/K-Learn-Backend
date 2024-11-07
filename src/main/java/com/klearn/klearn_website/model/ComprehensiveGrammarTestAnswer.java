@@ -23,8 +23,6 @@ public class ComprehensiveGrammarTestAnswer {
     @Column(name = "id")
     private Integer id;
 
-    @NotNull(message = "User answer cannot be null")
-    @Size(min = 1, message = "User answer cannot be empty")
     @Column(name = "user_answer")
     private String user_answer;
 
