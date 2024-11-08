@@ -1,10 +1,13 @@
 package com.klearn.klearn_website.service.quiz;
 
 import com.klearn.klearn_website.dto.dtoin.GrammarQuizAnswerDTOIn;
+import com.klearn.klearn_website.dto.dtoin.VocabularyQuizAnswerDTOIn;
 import com.klearn.klearn_website.dto.dtoout.GrammarAnswerDTOOut;
+import com.klearn.klearn_website.dto.dtoout.VocabularyAnswerDTOOut;
 import com.klearn.klearn_website.mapper.ComprehensiveTestResultsMapper;
 import com.klearn.klearn_website.model.ComprehensiveGrammarTestAnswer;
 import com.klearn.klearn_website.model.ComprehensiveTestResults;
+import com.klearn.klearn_website.model.ComprehensiveVocabularyTestAnswer;
 import com.klearn.klearn_website.model.Course;
 import com.klearn.klearn_website.model.Grammar;
 import com.klearn.klearn_website.model.QuestionGrammar;
@@ -32,6 +35,7 @@ public class ComprehensiveTestResultsService {
     private final QuestionGrammarService questionGrammarService;
     private final GrammarService grammarService;
     private final ComprehensiveGrammarTestAnswerService comprehensiveGrammarTestAnswerService;
+    private final ComprehensiveVocabularyTestAnswerService comprehensiveVocabularyTestAnswerService;
 
     public void addComprehensiveTestResult(ComprehensiveTestResults comprehensiveTestResults) {
         comprehensiveTestResultsMapper.insertComprehensiveTestResults(comprehensiveTestResults);
@@ -122,6 +126,94 @@ public class ComprehensiveTestResultsService {
             dtoOut.setGrammar_id(answer.getGrammar().getId());
             dtoOut.setGrammar_lesson_number(answer.getGrammar().getLesson_number());
             dtoOut.setGrammar_name(answer.getGrammar().getGrammar_name());
+
+            // Convert options from comma-separated string to list
+            if (answer.getOptions() != null) {
+                List<String> optionsList = Arrays.asList(answer.getOptions().split(","));
+                dtoOut.setOptions(optionsList);
+            } else {
+                dtoOut.setOptions(new ArrayList<>()); // Empty list if no options
+            }
+
+            dtoOutList.add(dtoOut);
+        }
+
+        return dtoOutList;
+    }
+
+    public void processVocabularyQuizAnswers(List<VocabularyQuizAnswerDTOIn> vocabularyQuizAnswers, Integer courseId,
+            Integer userId) {
+
+        int no_correct_answer = 0;
+        int no_incorrect_answer = 0;
+
+        // Calculate correct and incorrect answers
+        for (VocabularyQuizAnswerDTOIn vocabularyAnswer : vocabularyQuizAnswers) {
+            if (Boolean.TRUE.equals(vocabularyAnswer.getIs_correct())) {
+                no_correct_answer++;
+            } else {
+                no_incorrect_answer++;
+            }
+        }
+
+        // Fetch the course and user by their IDs
+        Course course = courseService.getCourseById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found with ID: " + courseId));
+        User user = userService.getUserById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        // Create and save a new ComprehensiveTestResults instance
+        ComprehensiveTestResults testResults = new ComprehensiveTestResults();
+        testResults.setTest_type("vocabulary");
+        testResults.setTest_date(LocalDateTime.now());
+        testResults.setNo_correct_questions(no_correct_answer);
+        testResults.setNo_incorrect_questions(no_incorrect_answer);
+        testResults.setLast_modified(LocalDateTime.now());
+        testResults.setIs_deleted(false);
+        testResults.setUser(user);
+        testResults.setCourse(course);
+
+        // Save the test result
+        addComprehensiveTestResult(testResults);
+
+        // Process each answer and associate it with the saved test result
+        for (VocabularyQuizAnswerDTOIn vocabularyAnswer : vocabularyQuizAnswers) {
+
+            ComprehensiveVocabularyTestAnswer answer = new ComprehensiveVocabularyTestAnswer();
+            answer.setIs_deleted(false);
+            answer.setComprehensiveTestResults(testResults);
+            answer.setDefinition(vocabularyAnswer.getDefinition());
+            answer.setIs_correct(vocabularyAnswer.getIs_correct());
+            answer.setLast_modified(LocalDateTime.now());
+            answer.setType(vocabularyAnswer.getType());
+            answer.setUser_answer(vocabularyAnswer.getUser_answer());
+            answer.setWord(vocabularyAnswer.getWord());
+
+            // Convert options array to a comma-separated string if it exists
+            if (vocabularyAnswer.getOptions() != null) {
+                answer.setOptions(String.join(",", vocabularyAnswer.getOptions()));
+            } else {
+                answer.setOptions(null);
+            }
+
+            // Save each answer associated with the test result
+            comprehensiveVocabularyTestAnswerService.insertComprehensiveVocabularyTestAnswer(answer);
+        }
+    }
+
+    public List<VocabularyAnswerDTOOut> getVocabularyAnswerByTestId(Integer testId) {
+        List<ComprehensiveVocabularyTestAnswer> listAnswer = comprehensiveVocabularyTestAnswerService
+                .getComprehensiveVocabularyTestAnswersByTestId(testId);
+        List<VocabularyAnswerDTOOut> dtoOutList = new ArrayList<>();
+
+        for (ComprehensiveVocabularyTestAnswer answer : listAnswer) {
+            VocabularyAnswerDTOOut dtoOut = new VocabularyAnswerDTOOut();
+            dtoOut.setAnswer_id(answer.getId());
+            dtoOut.setUser_answer(answer.getUser_answer());
+            dtoOut.setIs_correct(answer.getIs_correct());
+            dtoOut.setType(answer.getType());
+            dtoOut.setDefinition(answer.getDefinition());
+            dtoOut.setWord(answer.getWord());
 
             // Convert options from comma-separated string to list
             if (answer.getOptions() != null) {

@@ -1,7 +1,9 @@
 package com.klearn.klearn_website.controller.quiz;
 
 import com.klearn.klearn_website.dto.dtoin.GrammarQuizSubmissionDTOIn;
+import com.klearn.klearn_website.dto.dtoin.VocabularyQuizSubmissionDTOIn;
 import com.klearn.klearn_website.dto.dtoout.GrammarAnswerDTOOut;
+import com.klearn.klearn_website.dto.dtoout.VocabularyAnswerDTOOut;
 import com.klearn.klearn_website.model.ComprehensiveTestResults;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.quiz.ComprehensiveTestResultsService;
@@ -63,6 +65,27 @@ public class ComprehensiveTestResultsController {
         User user = userService.getAuthenticatedUser();
         
         List<GrammarAnswerDTOOut> answers = comprehensiveTestResultsService.getGrammarAnswerByTestId(testId);
+        return ResponseEntity.ok(answers);
+    }
+
+    @PostMapping("/submit-vocabulary-quiz-answers")
+    public ResponseEntity<String> submitVocabularyQuizAnswers(
+            @Valid @RequestBody VocabularyQuizSubmissionDTOIn submissionDTO) {
+        User user = userService.getAuthenticatedUser();
+        comprehensiveTestResultsService.processVocabularyQuizAnswers(
+                submissionDTO.getAnswers(),
+                submissionDTO.getCourse_id(),
+                user.getId());
+
+        return ResponseEntity.ok("Grammar quiz answers submitted successfully");
+    }
+
+    @GetMapping("/vocabulary-answers/{testId}")
+    public ResponseEntity<List<VocabularyAnswerDTOOut>> getVocabularyAnswersByTestId(
+            @PathVariable Integer testId) {
+        User user = userService.getAuthenticatedUser();
+        
+        List<VocabularyAnswerDTOOut> answers = comprehensiveTestResultsService.getVocabularyAnswerByTestId(testId);
         return ResponseEntity.ok(answers);
     }
 }
