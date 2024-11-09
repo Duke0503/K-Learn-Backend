@@ -39,7 +39,7 @@ public class PasswordResetTokenController {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            if (user.getType() != "email") {
+            if (!user.getType().equals("email")) {
                 // Generate or update the password reset token
                 PasswordResetToken resetToken = passwordResetTokenService.createOrUpdateToken(user);
 
