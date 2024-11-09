@@ -40,15 +40,22 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/", "/login", "/profile", "/oauth2/**").permitAll();
-                    registry.requestMatchers("/api/homepage/topic-section").permitAll();
-                    registry.requestMatchers("/api/upload").permitAll();
-                    registry.requestMatchers("/api/homepage/vocabulary/**").permitAll();
-                    registry.requestMatchers("/api/auth/**").permitAll();
-                    registry.requestMatchers("/api/course/**").permitAll();
-                    registry.requestMatchers("/api/vocabulary_topic/**").permitAll();
-                    registry.requestMatchers("/api/vocabulary/**").permitAll();
-                    registry.requestMatchers("/api/grammar/**").permitAll();
+                    registry.requestMatchers(
+                        "/", 
+                        "/login", 
+                        "/profile", 
+                        "/oauth2/**",
+                        "/api/homepage/topic-section",
+                        "/api/upload",
+                        "/api/homepage/vocabulary/**",
+                        "/api/auth/**",
+                        "/api/course/**",
+                        "/api/vocabulary_topic/**",
+                        "/api/vocabulary/**",
+                        "/api/grammar/**",
+                        "/api/user/reset-password-token/**",
+                        "/api/user/reset-password-auth/**"
+                    ).permitAll();
 
                     registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     // registry.requestMatchers("/api/mycourse/**").authenticated();

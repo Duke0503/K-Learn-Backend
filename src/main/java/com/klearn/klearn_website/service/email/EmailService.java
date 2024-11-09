@@ -31,4 +31,20 @@ public class EmailService {
         message.setText(body);
         mailSender.send(message);
     }
+
+    /**
+     * Sends a plain text email to the specified recipient.
+     * 
+     * @param to Recipient's email address
+     * @param subject Subject of the email
+     * @param body Body of the email
+     */
+    public void sendEmail(String to, String subject, String body) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(body);
+        mailSender.send(message);
+    }
 }

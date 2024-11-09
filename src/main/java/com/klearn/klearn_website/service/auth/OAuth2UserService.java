@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -43,6 +44,7 @@ public class OAuth2UserService {
             newUser.setPassword(""); // Password is left empty as this is an OAuth user
             newUser.setRole(0); // Default role is learner
             newUser.setAvatar(oAuth2User.getAttribute("picture"));
+            newUser.setDob(LocalDate.of(2000, 1, 1));
             newUser.setLast_login(LocalDateTime.now());
             newUser.setLast_modified(LocalDateTime.now());
             newUser.setGender(null);

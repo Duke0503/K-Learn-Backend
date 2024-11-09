@@ -27,7 +27,6 @@ public interface QuestionGrammarMapper {
     @Delete("DELETE FROM question_grammar WHERE id = #{id}")
     void deleteQuestionGrammarPermanently(Integer id);
 
-    // Get all QuestionGrammar entries for a specific grammar ID
     // Get all QuestionGrammar entries by Grammar ID including Grammar details
     @Select("SELECT q.*, g.* FROM question_grammar q " +
             "JOIN grammar g ON q.grammar_id = g.id " +
