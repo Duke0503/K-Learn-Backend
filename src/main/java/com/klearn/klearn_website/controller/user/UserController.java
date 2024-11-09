@@ -1,5 +1,6 @@
 package com.klearn.klearn_website.controller.user;
 
+import com.klearn.klearn_website.dto.dtoin.PasswordChangeDTOIn;
 import com.klearn.klearn_website.dto.dtoin.PasswordResetDTOIn;
 import com.klearn.klearn_website.dto.dtoin.UserEmailUpdateDTOIn;
 import com.klearn.klearn_website.dto.dtoin.UserUpdateDTOIn;
@@ -72,5 +73,24 @@ public class UserController {
         userService.updateUser(user); // Save updated user information
 
         return ResponseEntity.ok("User profile updated successfully.");
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDTOIn passwordChangeRequest) {
+        User user = userService.getAuthenticatedUser();
+
+        // Step 1: Check if the present password is correct
+        if (!passwordEncoder.matches(passwordChangeRequest.getPresentPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Current password is incorrect.");
+        }
+
+        // Step 2: Verify that newPassword and reNewPassword are equal
+        if (!passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getReNewPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New passwords do not match.");
+        }
+
+        // Step 4: Update password
+        userService.updatePassword(user.getId(), passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
+        return ResponseEntity.ok("Password changed successfully.");
     }
 }
