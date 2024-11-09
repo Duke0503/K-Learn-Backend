@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,9 @@ public class UserService {
 
     // Create a new user
     public User createUser(User user) {
+        if (user.getDob() == null) {
+            user.setDob(LocalDate.of(2000, 1, 1));
+        }
         user.setLast_modified(LocalDateTime.now());
         userMapper.createUser(user);
         return user;
