@@ -39,35 +39,39 @@ public class PasswordResetTokenController {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            // Generate or update the password reset token
-            PasswordResetToken resetToken = passwordResetTokenService.createOrUpdateToken(user);
+            if (user.getType() != "email") {
+                // Generate or update the password reset token
+                PasswordResetToken resetToken = passwordResetTokenService.createOrUpdateToken(user);
 
-            // Send the token to the user's email
-            String subject = "Password Reset Request";
-            String message = "Your password reset token is: " + resetToken.getToken();
-            emailService.sendEmail(user.getEmail(), subject, message);
+                // Send the token to the user's email
+                String subject = "Password Reset Request";
+                String message = "Your password reset token is: " + resetToken.getToken();
+                emailService.sendEmail(user.getEmail(), subject, message);
 
-            return ResponseEntity.ok("Password reset token sent to " + email);
+                return ResponseEntity.ok("Password reset token sent to " + email);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with email " + email + " not found");
+            }
         } else {
             // Return 404 if the user is not found
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with email " + email + " not found");
         }
     }
 
-    
     /**
-     * Endpoint to validate the password reset token and authenticate the user if valid.
+     * Endpoint to validate the password reset token and authenticate the user if
+     * valid.
      *
      * URL: /api/user/reset-password-auth/{email}/{code}
      * Method: POST
      *
      * @param email The email of the user.
-     * @param code The password reset code.
-     * @return ResponseEntity with JWT token if successful or error message if invalid.
+     * @param code  The password reset code.
+     * @return ResponseEntity with JWT token if successful or error message if
+     *         invalid.
      */
     @PostMapping("/reset-password-auth/{email}/{code}")
     public ResponseEntity<String> validateTokenAndAuthenticate(@PathVariable String email, @PathVariable String code) {
-        System.err.println("Enter");
         Optional<String> jwtTokenOptional = passwordResetTokenService.validateTokenAndAuthenticate(email, code);
 
         if (jwtTokenOptional.isPresent()) {
