@@ -13,4 +13,6 @@ public class UserUpdateDTOIn {
     private String email;
     
     private String gender;
+
+    private String avatar;
 }

@@ -55,6 +55,7 @@ public class UserController {
         user.setDob(userUpdateRequest.getDob());
         user.setEmail(userUpdateRequest.getEmail());
         user.setGender(userUpdateRequest.getGender());
+        user.setAvatar(userUpdateRequest.getAvatar());
 
         userService.updateUser(user); // Save updated user information
 
