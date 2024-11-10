@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class PasswordChangeDTOIn {
-    private String presentPassword;
+    private String currentPassword;
 
     private String newPassword;
     
-    private String reNewPassword;
+    private String confirmPassword;
 }

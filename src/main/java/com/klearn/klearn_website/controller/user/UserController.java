@@ -80,12 +80,12 @@ public class UserController {
         User user = userService.getAuthenticatedUser();
 
         // Step 1: Check if the present password is correct
-        if (!passwordEncoder.matches(passwordChangeRequest.getPresentPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(passwordChangeRequest.getCurrentPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Current password is incorrect.");
         }
 
         // Step 2: Verify that newPassword and reNewPassword are equal
-        if (!passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getReNewPassword())) {
+        if (!passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getConfirmPassword())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("New passwords do not match.");
         }
 
