@@ -43,6 +43,12 @@ public class CourseController {
      */
     @PostMapping("/create")
     public ResponseEntity<String> createCourse(@Valid @RequestBody CourseDTOIn courseDTOIn) {
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to update courses.",
+                    HttpStatus.FORBIDDEN);
+        }
         try {
             courseService.createCourse(courseDTOIn);
             return new ResponseEntity<>("Course created successfully", HttpStatus.CREATED);
@@ -96,5 +102,41 @@ public class CourseController {
         } catch (Exception e) {
             return new ResponseEntity<>("Error updating course: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * Deletes multiple courses by their IDs.
+     *
+     * @param courseIds List of course IDs to delete.
+     * @return ResponseEntity indicating the result of the operation.
+     */
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCourses(@RequestBody List<Integer> courseIds) {
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to delete courses.",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        StringBuilder responseMessage = new StringBuilder();
+        boolean allSuccess = true;
+
+        for (Integer courseId : courseIds) {
+            try {
+                courseService.deleteCourse(courseId);
+                responseMessage.append("Course ID ").append(courseId).append(" deleted successfully. ");
+            } catch (IllegalArgumentException e) {
+                responseMessage.append("Course ID ").append(courseId).append(" not found. ");
+                allSuccess = false;
+            } catch (Exception e) {
+                responseMessage.append("Error deleting course ID ").append(courseId).append(": ").append(e.getMessage())
+                        .append(" ");
+                allSuccess = false;
+            }
+        }
+
+        return new ResponseEntity<>(responseMessage.toString(),
+                allSuccess ? HttpStatus.OK : HttpStatus.PARTIAL_CONTENT);
     }
 }
