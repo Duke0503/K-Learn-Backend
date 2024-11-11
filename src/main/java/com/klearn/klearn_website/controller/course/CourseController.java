@@ -1,9 +1,11 @@
 package com.klearn.klearn_website.controller.course;
 
 import com.klearn.klearn_website.dto.dtoin.CourseDTOIn;
+import com.klearn.klearn_website.dto.dtoout.CourseWithCountDTOOut;
 import com.klearn.klearn_website.model.Course;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.course.CourseService;
+import com.klearn.klearn_website.service.course.MyCourseService;
 import com.klearn.klearn_website.service.user.UserService;
 
 import jakarta.validation.Valid;
@@ -23,6 +25,7 @@ public class CourseController {
 
     private final CourseService courseService;
     private final UserService userService;
+    private final MyCourseService myCourseService;
 
     /**
      * Retrieves all courses that are not deleted.
@@ -138,5 +141,22 @@ public class CourseController {
 
         return new ResponseEntity<>(responseMessage.toString(),
                 allSuccess ? HttpStatus.OK : HttpStatus.PARTIAL_CONTENT);
+    }
+
+    @GetMapping("/get-course-with-user-count")
+    public ResponseEntity<?> getCourseWithUserCount() {
+        User user = userService.getAuthenticatedUser();
+
+        // Allow access only if the user has role 1 or role 2
+        if (user.getRole() != 1 && user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        // Retrieve the list of courses with user count
+        List<CourseWithCountDTOOut> courseWithCountList = myCourseService.getCourseWithUserCount();
+
+        // Return the list with an OK status
+        return new ResponseEntity<>(courseWithCountList, HttpStatus.OK);
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -382,6 +383,36 @@ public class MyCourseService {
     }
 
     public List<CourseWithCountDTOOut> getCourseWithUserCount() {
-        return myCourseMapper.getCourseWithUserCount();
+        // Retrieve list of courses with user count
+        List<CourseWithCountDTOOut> listMyCourse = myCourseMapper.getCourseWithUserCount();
+        
+        // Map course_id to user_count for quick lookup
+        Map<Integer, Long> userCountMap = listMyCourse.stream()
+                .collect(Collectors.toMap(CourseWithCountDTOOut::getCourse_id, CourseWithCountDTOOut::getUser_count));
+    
+        // Retrieve all courses
+        List<Course> listCourse = courseService.getAllCourses();
+        List<CourseWithCountDTOOut> result = new ArrayList<>();
+    
+        // Iterate over each course and populate user_count
+        for (Course course : listCourse) {
+            Long userCount = userCountMap.getOrDefault(course.getId(), 0L);
+    
+            // Create new CourseWithCountDTOOut with user_count
+            CourseWithCountDTOOut dtoOut = new CourseWithCountDTOOut(
+                course.getId(),
+                course.getCourse_name(),
+                course.getCourse_level(),
+                course.getCourse_description(),
+                course.getCourse_image(),
+                course.getCourse_price(),
+                userCount
+            );
+    
+            // Add dtoOut to result list
+            result.add(dtoOut);
+        }
+    
+        return result;
     }
-}
+}    

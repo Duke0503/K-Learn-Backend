@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.klearn.klearn_website.dto.dtoin.MyCourseDTOIn;
-import com.klearn.klearn_website.dto.dtoout.CourseWithCountDTOOut;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.course.MyCourseService;
 import com.klearn.klearn_website.service.user.UserService;
@@ -12,9 +11,6 @@ import com.klearn.klearn_website.service.user.UserService;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -131,22 +127,6 @@ public class MyCourseController {
         User user = userService.getAuthenticatedUser();
 
         return myCourseService.myCoursePaymentStatus(user.getId(), courseId);
-    }
-
-    @GetMapping("/get-course-with-user-count")
-    public ResponseEntity<?> getCourseWithUserCount() {
-        User user = userService.getAuthenticatedUser();
-    
-        // Allow access only if the user has role 1 or role 2
-        if (user.getRole() != 1 && user.getRole() != 2) {
-            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.", HttpStatus.FORBIDDEN);
-        }
-    
-        // Retrieve the list of courses with user count
-        List<CourseWithCountDTOOut> courseWithCountList = myCourseService.getCourseWithUserCount();
-    
-        // Return the list with an OK status
-        return new ResponseEntity<>(courseWithCountList, HttpStatus.OK);
     }
     
 }
