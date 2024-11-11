@@ -2,11 +2,13 @@ package com.klearn.klearn_website.controller.user;
 
 import com.klearn.klearn_website.dto.dtoin.PasswordChangeDTOIn;
 import com.klearn.klearn_website.dto.dtoin.PasswordResetDTOIn;
-import com.klearn.klearn_website.dto.dtoin.UserEmailUpdateDTOIn;
 import com.klearn.klearn_website.dto.dtoin.UserUpdateDTOIn;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.user.UserService;
 import lombok.AllArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,20 +64,6 @@ public class UserController {
         return ResponseEntity.ok("User profile updated successfully.");
     }
 
-    @PutMapping("/update-profile-account-email")
-    public ResponseEntity<String> updateUserProfile(@RequestBody UserEmailUpdateDTOIn userEmailUpdateDTOIn) {
-        User user = userService.getAuthenticatedUser();
-
-        // Update user fields
-        user.setFullname(userEmailUpdateDTOIn.getFullname());
-        user.setDob(userEmailUpdateDTOIn.getDob());
-        user.setGender(userEmailUpdateDTOIn.getGender());
-
-        userService.updateUser(user); // Save updated user information
-
-        return ResponseEntity.ok("User profile updated successfully.");
-    }
-
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDTOIn passwordChangeRequest) {
         User user = userService.getAuthenticatedUser();
@@ -94,4 +82,18 @@ public class UserController {
         userService.updatePassword(user.getId(), passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
         return ResponseEntity.ok("Password changed successfully.");
     }
+
+    @GetMapping("/get-learners")
+    public ResponseEntity<?> findLearners() {
+        User user = userService.getAuthenticatedUser();
+    
+        // Allow access only if the user has role 1 or role 2
+        if (user.getRole() != 1 && user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.", HttpStatus.FORBIDDEN);
+        }
+    
+        List<User> learners = userService.findLearners();
+        return new ResponseEntity<>(learners, HttpStatus.OK);
+    }
+
 }

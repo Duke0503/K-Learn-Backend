@@ -88,4 +88,8 @@ public class UserService {
 
         return userMapper.findUsersNotLoggedInSince(startDate, endDate);
     }
+
+    public List<User> findLearners() {
+        return userMapper.findAllLearners();
+    }
 }

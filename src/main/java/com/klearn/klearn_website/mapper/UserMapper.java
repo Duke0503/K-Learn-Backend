@@ -53,5 +53,7 @@ public interface UserMapper {
 
     @Select("SELECT * FROM users WHERE last_login >= #{startDate} AND last_login < #{endDate} AND is_deleted = 0")
     List<User> findUsersNotLoggedInSince(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
-    
+  
+    @Select("SELECT * FROM users WHERE role = 0 AND is_deleted = 0")
+    List<User> findAllLearners();
 }

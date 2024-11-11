@@ -1,5 +1,6 @@
 package com.klearn.klearn_website.mapper;
 
+import com.klearn.klearn_website.dto.dtoout.CourseWithCountDTOOut;
 import com.klearn.klearn_website.model.MyCourse;
 import org.apache.ibatis.annotations.*;
 import java.util.List;
@@ -105,4 +106,21 @@ public interface MyCourseMapper {
             @Result(property = "user.username", column = "username")
     })
     List<MyCourse> getAllActiveMyCourses();
+
+    @Select("SELECT mc.course_id, COUNT(mc.user_id) AS user_count, " +
+            "c.course_name, c.course_level, c.course_description, c.course_image, c.course_price " +
+            "FROM my_course mc " +
+            "JOIN courses c ON mc.course_id = c.id " +
+            "WHERE mc.is_deleted = 0 " + 
+            "GROUP BY mc.course_id, c.course_name, c.course_level, c.course_description, c.course_image, c.course_price")
+    @Results({
+            @Result(property = "course_id", column = "course_id"),
+            @Result(property = "course_name", column = "course_name"),
+            @Result(property = "course_level", column = "course_level"),
+            @Result(property = "course_description", column = "course_description"),
+            @Result(property = "course_image", column = "course_image"),
+            @Result(property = "course_price", column = "course_price"),
+            @Result(property = "user_count", column = "user_count")
+    })
+    List<CourseWithCountDTOOut> getCourseWithUserCount();
 }

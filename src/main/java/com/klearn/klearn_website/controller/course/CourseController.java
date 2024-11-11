@@ -2,7 +2,9 @@ package com.klearn.klearn_website.controller.course;
 
 import com.klearn.klearn_website.dto.dtoin.CourseDTOIn;
 import com.klearn.klearn_website.model.Course;
+import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.course.CourseService;
+import com.klearn.klearn_website.service.user.UserService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ import java.util.Optional;
 public class CourseController {
 
     private final CourseService courseService;
+    private final UserService userService;
 
     /**
      * Retrieves all courses that are not deleted.
@@ -46,7 +49,8 @@ public class CourseController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>("Failed to create course: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -54,7 +58,8 @@ public class CourseController {
      * Retrieves a course by its ID.
      *
      * @param courseId The ID of the course to retrieve.
-     * @return ResponseEntity containing the course details or an error message if not found.
+     * @return ResponseEntity containing the course details or an error message if
+     *         not found.
      */
     @GetMapping("/{courseId}")
     public ResponseEntity<?> getCourseById(@PathVariable Integer courseId) {
@@ -66,5 +71,30 @@ public class CourseController {
         }
     }
 
+    /**
+     * Updates an existing course by ID.
+     *
+     * @param courseId    The ID of the course to update.
+     * @param courseDTOIn The DTO containing the new course details.
+     * @return ResponseEntity containing the result of the update operation.
+     */
+    @PutMapping("/update/{courseId}")
+    public ResponseEntity<?> updateCourseById(@PathVariable Integer courseId,
+            @RequestBody @Valid CourseDTOIn courseDTOIn) {
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to update courses.",
+                    HttpStatus.FORBIDDEN);
+        }
 
+        try {
+            Course updatedCourse = courseService.updateCourse(courseId, courseDTOIn);
+            return new ResponseEntity<>(updatedCourse, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Course not found: " + e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error updating course: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

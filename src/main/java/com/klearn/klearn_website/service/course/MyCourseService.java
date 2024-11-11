@@ -2,6 +2,7 @@ package com.klearn.klearn_website.service.course;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.klearn.klearn_website.dto.dtoin.MyCourseDTOIn;
+import com.klearn.klearn_website.dto.dtoout.CourseWithCountDTOOut;
 import com.klearn.klearn_website.mapper.MyCourseMapper;
 import com.klearn.klearn_website.model.*;
 import com.klearn.klearn_website.service.grammar.GrammarProgressService;
@@ -378,5 +379,9 @@ public class MyCourseService {
             Collections.shuffle(options);
         }
         return options;
+    }
+
+    public List<CourseWithCountDTOOut> getCourseWithUserCount() {
+        return myCourseMapper.getCourseWithUserCount();
     }
 }
