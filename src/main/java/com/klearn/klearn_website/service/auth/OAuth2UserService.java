@@ -47,7 +47,7 @@ public class OAuth2UserService {
             newUser.setDob(LocalDate.of(2000, 1, 1));
             newUser.setLast_login(LocalDateTime.now());
             newUser.setLast_modified(LocalDateTime.now());
-            newUser.setGender(null);
+            newUser.setGender("Nam");
             newUser.setIs_deleted(false);
             newUser.setType("email");
 
