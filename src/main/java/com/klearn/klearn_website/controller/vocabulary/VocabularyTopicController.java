@@ -1,7 +1,9 @@
 package com.klearn.klearn_website.controller.vocabulary;
 
 import com.klearn.klearn_website.dto.dtoin.VocabularyTopicDTOIn;
+import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.model.VocabularyTopic;
+import com.klearn.klearn_website.service.user.UserService;
 import com.klearn.klearn_website.service.vocabulary.VocabularyTopicService;
 
 import jakarta.validation.Valid;
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class VocabularyTopicController {
 
     private final VocabularyTopicService vocabularyTopicService;
+    private final UserService userService;
 
     /**
      * Retrieves all vocabulary topics that are not deleted.
@@ -37,10 +40,12 @@ public class VocabularyTopicController {
      * Retrieves all vocabulary topics associated with a specific course ID.
      *
      * @param courseId The ID of the course.
-     * @return ResponseEntity containing a list of vocabulary topics for the specified course.
+     * @return ResponseEntity containing a list of vocabulary topics for the
+     *         specified course.
      */
     @GetMapping("/course/{courseId}")
-    public ResponseEntity<List<VocabularyTopic>> getVocabularyTopicsByCourseId(@PathVariable @Positive Integer courseId) {
+    public ResponseEntity<List<VocabularyTopic>> getVocabularyTopicsByCourseId(
+            @PathVariable @Positive Integer courseId) {
         List<VocabularyTopic> vocabularyTopics = vocabularyTopicService.getVocabularyTopicsByCourseId(courseId);
         return new ResponseEntity<>(vocabularyTopics, HttpStatus.OK);
     }
@@ -66,13 +71,21 @@ public class VocabularyTopicController {
      */
     @PostMapping("/create")
     public ResponseEntity<String> createVocabularyTopic(@Valid @RequestBody VocabularyTopicDTOIn vocabularyTopicDTOIn) {
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to update courses.",
+                    HttpStatus.FORBIDDEN);
+        }
+
         try {
             vocabularyTopicService.createVocabularyTopic(vocabularyTopicDTOIn);
             return new ResponseEntity<>("Vocabulary Topic created successfully", HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>("Failed to create Vocabulary Topic: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -85,14 +98,23 @@ public class VocabularyTopicController {
      */
     @PutMapping("/update/{topicId}")
     public ResponseEntity<String> updateVocabularyTopic(@PathVariable @Positive Integer topicId,
-                                                        @Valid @RequestBody VocabularyTopicDTOIn vocabularyTopicDTOIn) {
+            @Valid @RequestBody VocabularyTopicDTOIn vocabularyTopicDTOIn) {
+
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to update courses.",
+                    HttpStatus.FORBIDDEN);
+        }
+
         try {
             vocabularyTopicService.updateVocabularyTopic(topicId, vocabularyTopicDTOIn);
             return new ResponseEntity<>("Vocabulary Topic updated successfully", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>("Failed to update Vocabulary Topic: " + e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -102,15 +124,34 @@ public class VocabularyTopicController {
      * @param topicId The ID of the vocabulary topic to delete.
      * @return ResponseEntity indicating the result of the delete operation.
      */
-    @DeleteMapping("/delete/{topicId}")
-    public ResponseEntity<String> deleteVocabularyTopic(@PathVariable @Positive Integer topicId) {
-        try {
-            vocabularyTopicService.softDeleteVocabularyTopic(topicId);
-            return new ResponseEntity<>("Vocabulary Topic deleted successfully", HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("Failed to delete Vocabulary Topic: " + e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteVocabularyTopic(@RequestBody List<Integer> vocabularyTopicListIds) {
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to delete courses.",
+                    HttpStatus.FORBIDDEN);
         }
+
+        StringBuilder responseMessage = new StringBuilder();
+        boolean allSuccess = true;
+
+        for (Integer vocabularyTopicIds : vocabularyTopicListIds) {
+            try {
+                vocabularyTopicService.softDeleteVocabularyTopic(vocabularyTopicIds);
+                responseMessage.append("Vocabulary Topic ID ").append(vocabularyTopicIds)
+                        .append(" deleted successfully. ");
+            } catch (IllegalArgumentException e) {
+                responseMessage.append("Vocabulary Topic ID ").append(vocabularyTopicIds).append(" not found. ");
+                allSuccess = false;
+            } catch (Exception e) {
+                responseMessage.append("Error deleting Vocabulary Topic ID ").append(vocabularyTopicIds).append(": ")
+                        .append(e.getMessage())
+                        .append(" ");
+                allSuccess = false;
+            }
+        }
+        return new ResponseEntity<>(responseMessage.toString(),
+                allSuccess ? HttpStatus.OK : HttpStatus.PARTIAL_CONTENT);
     }
 }

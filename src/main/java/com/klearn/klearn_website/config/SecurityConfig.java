@@ -45,13 +45,20 @@ public class SecurityConfig {
                         "/login", 
                         "/profile", 
                         "/oauth2/**",
-                        "/api/homepage/topic-section",
+                        
                         "/api/upload",
+                        
+                        "/api/homepage/topic-section",
                         "/api/homepage/vocabulary/**",
+
                         "/api/auth/**",
+
                         "/api/course",
                         "/api/course/{courseId}",
-                        "/api/vocabulary_topic/**",
+
+                        "/api/vocabulary_topic/course/{courseId}",
+                        "/api/vocabulary_topic/{topicId}",
+
                         "/api/vocabulary/**",
                         "/api/grammar/**",
                         "/api/user/reset-password-token/**",
