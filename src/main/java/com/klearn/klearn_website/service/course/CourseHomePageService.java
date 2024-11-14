@@ -184,7 +184,7 @@ public class CourseHomePageService {
             topicData.put("topic_id", topic.getId());
             topicData.put("topic_name", topic.getTopic_name());
             topicData.put("topic_description", topic.getTopic_description());
-    
+            topicData.put("topic_image", topic.getTopic_image());
             topicsWithData.add(topicData);
         }
     
