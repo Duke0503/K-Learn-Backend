@@ -1,7 +1,9 @@
 package com.klearn.klearn_website.controller.vocabulary;
 
 import com.klearn.klearn_website.dto.dtoin.VocabularyDTOIn;
+import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.model.Vocabulary;
+import com.klearn.klearn_website.service.user.UserService;
 import com.klearn.klearn_website.service.vocabulary.VocabularyService;
 
 import jakarta.validation.Valid;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class VocabularyController {
 
     private final VocabularyService vocabularyService;
+    private final UserService userService;
 
     /**
      * Create a new vocabulary.
@@ -31,11 +34,19 @@ public class VocabularyController {
      */
     @PostMapping("/create")
     public ResponseEntity<String> createVocabulary(@Valid @RequestBody VocabularyDTOIn vocabularyDTOIn) {
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to update courses.",
+                    HttpStatus.FORBIDDEN);
+        }
+
         try {
             vocabularyService.createVocabulary(vocabularyDTOIn);
             return new ResponseEntity<>("Vocabulary created successfully", HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to create Vocabulary: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Failed to create Vocabulary: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -68,19 +79,29 @@ public class VocabularyController {
     /**
      * Update an existing vocabulary.
      * 
-     * @param vocabularyId The ID of the vocabulary to update.
+     * @param vocabularyId    The ID of the vocabulary to update.
      * @param vocabularyDTOIn The DTO containing updated information.
      * @return ResponseEntity with a message indicating the result.
      */
     @PutMapping("/update/{vocabularyId}")
-    public ResponseEntity<String> updateVocabulary(@PathVariable @Positive Integer vocabularyId, @Valid @RequestBody VocabularyDTOIn vocabularyDTOIn) {
+    public ResponseEntity<String> updateVocabulary(@PathVariable @Positive Integer vocabularyId,
+            @Valid @RequestBody VocabularyDTOIn vocabularyDTOIn) {
+
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to update courses.",
+                    HttpStatus.FORBIDDEN);
+        }
+
         try {
             vocabularyService.updateVocabulary(vocabularyId, vocabularyDTOIn);
             return new ResponseEntity<>("Vocabulary updated successfully", HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>("Failed to update Vocabulary: " + e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -90,33 +111,34 @@ public class VocabularyController {
      * @param vocabularyId The ID of the vocabulary to delete.
      * @return ResponseEntity with a message indicating the result.
      */
-    @DeleteMapping("/soft-delete/{vocabularyId}")
-    public ResponseEntity<String> softDeleteVocabulary(@PathVariable @Positive Integer vocabularyId) {
-        try {
-            vocabularyService.softDeleteVocabulary(vocabularyId);
-            return new ResponseEntity<>("Vocabulary soft deleted successfully", HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>("Failed to delete Vocabulary: " + e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> softDeleteVocabulary(@RequestBody List<Integer> vocabularyListIds) {
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to update courses.",
+                    HttpStatus.FORBIDDEN);
         }
-    }
+        StringBuilder responseMessage = new StringBuilder();
+        boolean allSuccess = true;
 
-    /**
-     * Permanently delete a vocabulary.
-     * 
-     * @param vocabularyId The ID of the vocabulary to delete.
-     * @return ResponseEntity with a message indicating the result.
-     */
-    @DeleteMapping("/delete/{vocabularyId}")
-    public ResponseEntity<String> deleteVocabularyPermanently(@PathVariable @Positive Integer vocabularyId) {
-        try {
-            vocabularyService.deleteVocabularyPermanently(vocabularyId);
-            return new ResponseEntity<>("Vocabulary permanently deleted successfully", HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>("Failed to delete Vocabulary: " + e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        for (Integer vocabularyId : vocabularyListIds) {
+            try {
+                vocabularyService.softDeleteVocabulary(vocabularyId);
+                responseMessage.append("Vocabulary ID ").append(vocabularyId)
+                        .append(" deleted successfully. ");
+            } catch (RuntimeException e) {
+                responseMessage.append("Vocabulary ID ").append(vocabularyId).append(" not found. ");
+                allSuccess = false;
+            } catch (Exception e) {
+                responseMessage.append("Error deleting Vocabulary ID ").append(vocabularyId).append(": ")
+                        .append(e.getMessage())
+                        .append(" ");
+                allSuccess = false;
+            }
         }
+
+        return new ResponseEntity<>(responseMessage.toString(),
+                allSuccess ? HttpStatus.OK : HttpStatus.PARTIAL_CONTENT);
     }
 }

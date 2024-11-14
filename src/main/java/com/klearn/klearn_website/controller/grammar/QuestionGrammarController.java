@@ -2,13 +2,16 @@ package com.klearn.klearn_website.controller.grammar;
 
 import com.klearn.klearn_website.dto.dtoin.QuestionGrammarDTOIn;
 import com.klearn.klearn_website.model.QuestionGrammar;
+import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.grammar.QuestionGrammarService;
+import com.klearn.klearn_website.service.user.UserService;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,16 +21,26 @@ import org.springframework.web.bind.annotation.*;
 public class QuestionGrammarController {
 
     private final QuestionGrammarService questionGrammarService;
+    private final UserService userService;
 
     /**
      * Create a new QuestionGrammar entry.
      *
-     * @param questionGrammarDTOIn The DTO containing the details for the new QuestionGrammar.
+     * @param questionGrammarDTOIn The DTO containing the details for the new
+     *                             QuestionGrammar.
      * @return ResponseEntity with a success message.
      */
     @PostMapping("/create")
     public ResponseEntity<String> createQuestionGrammar(
             @Valid @RequestBody QuestionGrammarDTOIn questionGrammarDTOIn) {
+
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to update courses.",
+                    HttpStatus.FORBIDDEN);
+        }
+
         questionGrammarService.createQuestionGrammar(questionGrammarDTOIn);
         return ResponseEntity.ok("Question grammar created successfully");
     }
@@ -35,7 +48,7 @@ public class QuestionGrammarController {
     /**
      * Update an existing QuestionGrammar entry.
      *
-     * @param id The ID of the QuestionGrammar to update.
+     * @param id                   The ID of the QuestionGrammar to update.
      * @param questionGrammarDTOIn The DTO containing the updated details.
      * @return ResponseEntity with a success message.
      */
@@ -43,6 +56,13 @@ public class QuestionGrammarController {
     public ResponseEntity<String> updateQuestionGrammar(
             @PathVariable @Positive Integer id,
             @Valid @RequestBody QuestionGrammarDTOIn questionGrammarDTOIn) {
+                User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to update courses.",
+                    HttpStatus.FORBIDDEN);
+        }
+        
         questionGrammarService.updateQuestionGrammar(id, questionGrammarDTOIn);
         return ResponseEntity.ok("Question grammar updated successfully");
     }

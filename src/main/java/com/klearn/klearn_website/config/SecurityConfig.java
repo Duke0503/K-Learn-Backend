@@ -59,8 +59,11 @@ public class SecurityConfig {
                         "/api/vocabulary_topic/course/{courseId}",
                         "/api/vocabulary_topic/{topicId}",
 
-                        "/api/vocabulary/**",
-                        "/api/grammar/**",
+                        "/api/vocabulary/{topicId}",
+                        "/api/vocabulary/count/{topicId}",
+
+                        "/api/grammar/{courseId}",
+                        
                         "/api/user/reset-password-token/**",
                         "/api/user/reset-password-auth/**"
                     ).permitAll();
