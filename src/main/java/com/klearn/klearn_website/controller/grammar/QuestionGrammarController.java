@@ -73,22 +73,36 @@ public class QuestionGrammarController {
      * @param id The ID of the QuestionGrammar to soft delete.
      * @return ResponseEntity with a success message.
      */
-    @DeleteMapping("/soft_delete/{id}")
-    public ResponseEntity<String> softDeleteQuestionGrammar(@PathVariable @Positive Integer id) {
-        questionGrammarService.softDeleteQuestionGrammar(id);
-        return ResponseEntity.ok("Question grammar soft deleted successfully");
-    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> softDeleteQuestionGrammar(@RequestBody List<Integer> listQuestionIds) {     
+        User user = userService.getAuthenticatedUser();
+        // Check if the user has the 'content-management' role (role number 2)
+        if (user.getRole() != 2) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to update courses.",
+                    HttpStatus.FORBIDDEN);
+        }
 
-    /**
-     * Permanently delete a QuestionGrammar entry.
-     *
-     * @param id The ID of the QuestionGrammar to delete.
-     * @return ResponseEntity with a success message.
-     */
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteQuestionGrammarPermanently(@PathVariable @Positive Integer id) {
-        questionGrammarService.deleteQuestionGrammarPermanently(id);
-        return ResponseEntity.ok("Question grammar permanently deleted successfully");
+        StringBuilder responseMessage = new StringBuilder();
+        boolean allSuccess = true;
+
+        for (Integer questionId : listQuestionIds) {
+            try {
+                questionGrammarService.softDeleteQuestionGrammar(questionId);
+                responseMessage.append("Question ID ").append(questionId)
+                        .append(" deleted successfully. ");
+            } catch (RuntimeException e) {
+                responseMessage.append("Question ID ").append(questionId).append(" not found. ");
+                allSuccess = false;
+            } catch (Exception e) {
+                responseMessage.append("Error deleting Question ID ").append(questionId).append(": ")
+                        .append(e.getMessage())
+                        .append(" ");
+                allSuccess = false;
+            }
+        }
+
+        return new ResponseEntity<>(responseMessage.toString(),
+                allSuccess ? HttpStatus.OK : HttpStatus.PARTIAL_CONTENT);
     }
 
     /**
