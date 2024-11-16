@@ -28,8 +28,9 @@ public interface QuestionGrammarMapper {
     void deleteQuestionGrammarPermanently(Integer id);
 
     // Get all QuestionGrammar entries by Grammar ID including Grammar details
-    @Select("SELECT q.*, g.* FROM question_grammar q " +
+    @Select("SELECT q.*, g.*, c* FROM question_grammar q " +
             "JOIN grammar g ON q.grammar_id = g.id " +
+            "JOIN courses c ON g.course_id = c.id " +
             "WHERE q.grammar_id = #{grammar_id} AND q.is_deleted = 0")
     @Results({
             @Result(property = "id", column = "id"),
@@ -48,7 +49,17 @@ public interface QuestionGrammarMapper {
             @Result(property = "grammar.example", column = "example"),
             @Result(property = "grammar.lesson_number", column = "lesson_number"),
             @Result(property = "grammar.last_modified", column = "g.last_modified"),
-            @Result(property = "grammar.is_deleted", column = "g.is_deleted")
+            @Result(property = "grammar.is_deleted", column = "g.is_deleted"),
+            // Map the Course object
+            @Result(property = "grammar.course.id", column = "course_id"),
+            @Result(property = "grammar.course.course_name", column = "course_name"),
+            @Result(property = "grammar.course.course_level", column = "course_level"),
+            @Result(property = "grammar.course.course_description", column = "course_description"),
+            @Result(property = "grammar.course.course_image", column = "course_image"),
+            @Result(property = "grammar.course.course_price", column = "course_price"),
+            @Result(property = "grammar.course.created_at", column = "c.created_at"),
+            @Result(property = "grammar.course.last_modified", column = "c.last_modified"),
+            @Result(property = "grammar.course.is_deleted", column = "c.is_deleted")
     })
     List<QuestionGrammar> getQuestionsByGrammarId(@Param("grammar_id") Integer grammarId);
 
@@ -63,6 +74,7 @@ public interface QuestionGrammarMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "last_modified", column = "last_modified"),
             @Result(property = "is_deleted", column = "is_deleted"),
+
             @Result(property = "grammar.id", column = "grammar_id")
     })
     QuestionGrammar getQuestionById(@Param("id") Integer id);
@@ -72,7 +84,10 @@ public interface QuestionGrammarMapper {
     boolean existsByGrammarId(@Param("grammar_id") Integer grammarId);
 
     // Get all active QuestionGrammar entries
-    @Select("SELECT * FROM question_grammar WHERE is_deleted = 0")
+    @Select("SELECT q.*, g.*, c.* FROM question_grammar q " +
+            "JOIN grammar g ON q.grammar_id = g.id " +
+            "JOIN courses c ON g.course_id = c.id " +
+            "WHERE q.is_deleted = 0")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "question_text", column = "question_text"),
@@ -82,7 +97,25 @@ public interface QuestionGrammarMapper {
             @Result(property = "created_at", column = "created_at"),
             @Result(property = "last_modified", column = "last_modified"),
             @Result(property = "is_deleted", column = "is_deleted"),
-            @Result(property = "grammar.id", column = "grammar_id")
+            // Map the Grammar object
+            @Result(property = "grammar.id", column = "grammar_id"),
+            @Result(property = "grammar.grammar_name", column = "grammar_name"),
+            @Result(property = "grammar.grammar_description", column = "grammar_description"),
+            @Result(property = "grammar.explanation", column = "explanation"),
+            @Result(property = "grammar.example", column = "example"),
+            @Result(property = "grammar.lesson_number", column = "lesson_number"),
+            @Result(property = "grammar.last_modified", column = "g.last_modified"),
+            @Result(property = "grammar.is_deleted", column = "g.is_deleted"),
+            // Map the Course object
+            @Result(property = "grammar.course.id", column = "course_id"),
+            @Result(property = "grammar.course.course_name", column = "course_name"),
+            @Result(property = "grammar.course.course_level", column = "course_level"),
+            @Result(property = "grammar.course.course_description", column = "course_description"),
+            @Result(property = "grammar.course.course_image", column = "course_image"),
+            @Result(property = "grammar.course.course_price", column = "course_price"),
+            @Result(property = "grammar.course.created_at", column = "c.created_at"),
+            @Result(property = "grammar.course.last_modified", column = "c.last_modified"),
+            @Result(property = "grammar.course.is_deleted", column = "c.is_deleted")
     })
     List<QuestionGrammar> getAllActiveQuestions();
 }
