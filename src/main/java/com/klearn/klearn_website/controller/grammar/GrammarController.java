@@ -24,6 +24,11 @@ public class GrammarController {
     private final GrammarService grammarService;
     private final UserService userService;
 
+    @GetMapping("")
+    public List<Grammar> getAllGrammars() {
+        return grammarService.getAllGrammar();
+    }
+
     /**
      * Retrieve all Grammar entries by Course ID.
      *
