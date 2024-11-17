@@ -115,7 +115,6 @@ public class UserController {
     }
 
     @GetMapping("/monthly_user_counts")
-
     public ResponseEntity<?> getMonthlyUserCounts() {
         User user = userService.getAuthenticatedUser();
 
@@ -168,5 +167,38 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An unexpected error occurred.");
         }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> softDeleteGrammar(@RequestBody List<Integer> userListIds) {
+        User authenticatedUser = userService.getAuthenticatedUser();
+
+        // Allow access only if the user has role 1 (Admin)
+        if (authenticatedUser.getRole() != 1) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Unauthorized: You do not have permission to access this resource.");
+        }
+
+        StringBuilder responseMessage = new StringBuilder();
+        boolean allSuccess = true;
+
+        for (Integer userId : userListIds) {
+            try {
+                userService.softDeleteUser(userId);
+                responseMessage.append("User ID ").append(userId)
+                        .append(" deleted successfully. ");
+            } catch (RuntimeException e) {
+                responseMessage.append("User ID ").append(userId).append(" not found. ");
+                allSuccess = false;
+            } catch (Exception e) {
+                responseMessage.append("Error deleting User ID ").append(userId).append(": ")
+                        .append(e.getMessage())
+                        .append(" ");
+                allSuccess = false;
+            }
+        }
+
+        return new ResponseEntity<>(responseMessage.toString(),
+                allSuccess ? HttpStatus.OK : HttpStatus.PARTIAL_CONTENT);
     }
 }
