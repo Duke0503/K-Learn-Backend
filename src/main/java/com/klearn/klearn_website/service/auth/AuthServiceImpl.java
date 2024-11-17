@@ -1,5 +1,6 @@
 package com.klearn.klearn_website.service.auth;
 
+import com.klearn.klearn_website.dto.dtoin.CreateUserByAdminDTOIn;
 import com.klearn.klearn_website.dto.dtoin.LoginDTOIn;
 import com.klearn.klearn_website.dto.dtoin.RegisterDTOIn;
 import com.klearn.klearn_website.model.User;
@@ -87,5 +88,36 @@ public class AuthServiceImpl implements AuthService {
 
         // Generate and return the JWT token
         return jwtTokenProvider.generateToken(authentication);
+    }
+
+     public void createUserByAdmin(CreateUserByAdminDTOIn createUserByAdminDTOIn) {
+        // Check if the email or username already exists
+        if (userService.userExists(createUserByAdminDTOIn.getEmail()) || userService.userExists(createUserByAdminDTOIn.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or username already exists");
+        }
+
+        // Check if the passwords match
+        if (!createUserByAdminDTOIn.getPassword().equals(createUserByAdminDTOIn.getRe_password())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
+        }
+
+        // Create a new user instance
+        User user = new User();
+
+        user.setFullname(createUserByAdminDTOIn.getFirstname() + " " + createUserByAdminDTOIn.getLastname());
+        user.setEmail(createUserByAdminDTOIn.getEmail());
+        user.setUsername(createUserByAdminDTOIn.getUsername());
+        user.setDob(createUserByAdminDTOIn.getDob());
+        user.setGender(createUserByAdminDTOIn.getGender());
+        user.setLast_login(LocalDateTime.now());
+        user.setLast_modified(LocalDateTime.now());
+        user.setCreated_at(LocalDateTime.now());
+        user.setPassword(passwordEncoder.encode(createUserByAdminDTOIn.getPassword()));
+        user.setRole(createUserByAdminDTOIn.getRole()); // 0 for learner, 1 for admin, 2 for content-management
+        user.setIs_deleted(false);
+        user.setType("normal");
+        user.setAvatar(null);
+
+        userService.createUser(user);
     }
 }

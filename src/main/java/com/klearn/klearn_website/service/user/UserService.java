@@ -1,6 +1,5 @@
 package com.klearn.klearn_website.service.user;
 
-import com.klearn.klearn_website.dto.dtoin.CreateUserByAdminDTOIn;
 import com.klearn.klearn_website.dto.dtoin.UpdateUserByAdminDTOIn;
 import com.klearn.klearn_website.dto.dtoout.MonthlyUserCountDTOOut;
 import com.klearn.klearn_website.mapper.UserMapper;
@@ -10,8 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
@@ -24,7 +21,6 @@ import java.util.Optional;
 public class UserService {
 
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
 
     // Find a user by email or username
     public Optional<User> getUser(String emailOrUsername) {
@@ -108,36 +104,7 @@ public class UserService {
         return userMapper.getMonthlyUserCounts();
     }
 
-    public void createUserByAdmin(CreateUserByAdminDTOIn createUserByAdminDTOIn) {
-        // Check if the email or username already exists
-        if (userExists(createUserByAdminDTOIn.getEmail()) || userExists(createUserByAdminDTOIn.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or username already exists");
-        }
-
-        // Check if the passwords match
-        if (!createUserByAdminDTOIn.getPassword().equals(createUserByAdminDTOIn.getRe_password())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
-        }
-
-        // Create a new user instance
-        User user = new User();
-
-        user.setFullname(createUserByAdminDTOIn.getFirstname() + " " + createUserByAdminDTOIn.getLastname());
-        user.setEmail(createUserByAdminDTOIn.getEmail());
-        user.setUsername(createUserByAdminDTOIn.getUsername());
-        user.setDob(createUserByAdminDTOIn.getDob());
-        user.setGender(createUserByAdminDTOIn.getGender());
-        user.setLast_login(LocalDateTime.now());
-        user.setLast_modified(LocalDateTime.now());
-        user.setCreated_at(LocalDateTime.now());
-        user.setPassword(passwordEncoder.encode(createUserByAdminDTOIn.getPassword()));
-        user.setRole(createUserByAdminDTOIn.getRole()); // 0 for learner, 1 for admin, 2 for content-management
-        user.setIs_deleted(false);
-        user.setType("normal");
-        user.setAvatar(null);
-
-        createUser(user);
-    }
+   
 
     public void updateUserByAdmin(Integer userId, UpdateUserByAdminDTOIn updateUserByAdminDTOIn) {
         User user = getUserById(userId)

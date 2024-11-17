@@ -7,6 +7,7 @@ import com.klearn.klearn_website.dto.dtoin.UpdateUserByAdminDTOIn;
 import com.klearn.klearn_website.dto.dtoin.UserUpdateDTOIn;
 import com.klearn.klearn_website.dto.dtoout.MonthlyUserCountDTOOut;
 import com.klearn.klearn_website.model.User;
+import com.klearn.klearn_website.service.auth.AuthService;
 import com.klearn.klearn_website.service.user.UserService;
 import lombok.AllArgsConstructor;
 
@@ -28,6 +29,7 @@ public class UserController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
     @PutMapping("/update-password")
     public ResponseEntity<String> updatePassword(@RequestBody PasswordResetDTOIn passwordUpdateRequest) {
@@ -138,7 +140,7 @@ public class UserController {
         }
 
         try {
-            userService.createUserByAdmin(createUserByAdminDTOIn);
+            authService.createUserByAdmin(createUserByAdminDTOIn);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("User created successfully.");
         } catch (Exception e) {
