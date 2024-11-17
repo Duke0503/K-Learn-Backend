@@ -87,4 +87,9 @@ public class PaymentHistoryService {
                 courseId,
                 userId);
     }
+
+    public BigDecimal getSumOfSuccessfulTransactions() {
+        return paymentHistoryMapper.getTotalSuccessfulTransactionPrice();
+    }
+    
 }

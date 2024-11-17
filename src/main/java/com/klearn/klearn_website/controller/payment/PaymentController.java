@@ -103,4 +103,22 @@ public class PaymentController {
         return ResponseEntity.ok(paymentHistories);
     }
 
+    @GetMapping("/sum_successful_transactions")
+    public ResponseEntity<?> getSumOfSuccessfulTransactions() {
+        // Retrieve the authenticated user
+        User user = userService.getAuthenticatedUser();
+
+        // Check if the user is authorized (if needed, adjust role check as per your
+        // requirements)
+        if (user.getRole() != 1) { // Assuming role 1 is for admin
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        // Calculate the sum of successful transactions
+        BigDecimal sum = paymentHistoryService.getSumOfSuccessfulTransactions();
+
+        return ResponseEntity.ok(sum);
+    }
+
 }

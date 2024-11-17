@@ -118,4 +118,9 @@ public interface PaymentHistoryMapper {
     })
     List<PaymentHistory> getAllActivePaymentHistory();
 
+    @Select("SELECT SUM(transaction_price) " +
+            "FROM payment_history " +
+            "WHERE transaction_status = 'success' AND is_deleted = false")
+    BigDecimal getTotalSuccessfulTransactionPrice();
+
 }
