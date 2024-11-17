@@ -1,5 +1,6 @@
 package com.klearn.klearn_website.mapper;
 
+import com.klearn.klearn_website.dto.dtoout.MonthlyUserCountDTOOut;
 import com.klearn.klearn_website.model.User;
 import org.apache.ibatis.annotations.*;
 
@@ -31,9 +32,9 @@ public interface UserMapper {
     void updateLastLogin(@Param("id") Integer id, @Param("last_login") LocalDateTime lastLogin);
 
     // CRUD operations
-    @Insert("INSERT INTO users (username, password, email, fullname, dob, gender, type, avatar, role, last_login, last_modified, is_deleted) "
+    @Insert("INSERT INTO users (username, password, email, fullname, dob, gender, type, avatar, role, last_login, created_at, last_modified, is_deleted) "
             +
-            "VALUES (#{username}, #{password}, #{email}, #{fullname}, #{dob}, #{gender}, #{type}, #{avatar}, #{role}, #{last_login}, #{last_modified}, #{is_deleted})")
+            "VALUES (#{username}, #{password}, #{email}, #{fullname}, #{dob}, #{gender}, #{type}, #{avatar}, #{role}, #{last_login}, #{created_at}, #{last_modified}, #{is_deleted})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void createUser(User user);
 
@@ -52,11 +53,25 @@ public interface UserMapper {
     void unDeleteUser(@Param("id") Integer id);
 
     @Select("SELECT * FROM users WHERE last_login >= #{startDate} AND last_login < #{endDate} AND is_deleted = 0")
-    List<User> findUsersNotLoggedInSince(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
-  
+    List<User> findUsersNotLoggedInSince(@Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
+
     @Select("SELECT * FROM users WHERE role = 0 AND is_deleted = 0")
     List<User> findAllLearners();
 
     @Select("SELECT * FROM users WHERE is_deleted = 0 AND id != #{id}")
     List<User> findAllUsers(@Param("id") Integer id);
+
+    @Select("""
+                SELECT
+                    YEAR(created_at) AS year,
+                    MONTH(created_at) AS month,
+                    COUNT(*) AS userCount
+                FROM users
+                WHERE is_deleted = 0
+                GROUP BY YEAR(created_at), MONTH(created_at)
+                ORDER BY YEAR(created_at), MONTH(created_at)
+            """)
+    List<MonthlyUserCountDTOOut> getMonthlyUserCounts();
+
 }

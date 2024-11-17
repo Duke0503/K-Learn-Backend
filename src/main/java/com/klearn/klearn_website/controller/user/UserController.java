@@ -3,6 +3,7 @@ package com.klearn.klearn_website.controller.user;
 import com.klearn.klearn_website.dto.dtoin.PasswordChangeDTOIn;
 import com.klearn.klearn_website.dto.dtoin.PasswordResetDTOIn;
 import com.klearn.klearn_website.dto.dtoin.UserUpdateDTOIn;
+import com.klearn.klearn_website.dto.dtoout.MonthlyUserCountDTOOut;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.user.UserService;
 import lombok.AllArgsConstructor;
@@ -107,5 +108,18 @@ public class UserController {
     
         List<User> users = userService.findAllUsers(user.getId());
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/monthly_user_counts")
+
+    public ResponseEntity<?> getMonthlyUserCounts() {
+        User user = userService.getAuthenticatedUser();
+    
+        // Allow access only if the user has role 1 or role 2
+        if (user.getRole() != 1) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.", HttpStatus.FORBIDDEN);
+        }
+        List<MonthlyUserCountDTOOut> monthlyCounts = userService.getMonthlyUserCounts();
+        return ResponseEntity.ok(monthlyCounts);
     }
 }

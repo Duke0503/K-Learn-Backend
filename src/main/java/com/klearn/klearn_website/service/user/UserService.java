@@ -1,5 +1,6 @@
 package com.klearn.klearn_website.service.user;
 
+import com.klearn.klearn_website.dto.dtoout.MonthlyUserCountDTOOut;
 import com.klearn.klearn_website.mapper.UserMapper;
 import com.klearn.klearn_website.model.User;
 import lombok.AllArgsConstructor;
@@ -95,5 +96,9 @@ public class UserService {
 
     public List<User> findAllUsers(Integer id) {
         return userMapper.findAllUsers(id);
+    }
+
+    public List<MonthlyUserCountDTOOut> getMonthlyUserCounts() {
+        return userMapper.getMonthlyUserCounts();
     }
 }

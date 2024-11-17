@@ -46,6 +46,7 @@ public class OAuth2UserService {
             newUser.setAvatar(oAuth2User.getAttribute("picture"));
             newUser.setDob(LocalDate.of(2000, 1, 1));
             newUser.setLast_login(LocalDateTime.now());
+            newUser.setCreated_at(LocalDateTime.now());
             newUser.setLast_modified(LocalDateTime.now());
             newUser.setGender("Nam");
             newUser.setIs_deleted(false);

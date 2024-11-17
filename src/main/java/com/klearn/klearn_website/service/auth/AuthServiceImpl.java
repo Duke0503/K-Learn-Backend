@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -71,6 +72,7 @@ public class AuthServiceImpl implements AuthService {
         user.setGender(registerDTOIn.getGender());
         user.setLast_login(LocalDateTime.now());
         user.setLast_modified(LocalDateTime.now());
+        user.setCreated_at(LocalDateTime.now());
         user.setPassword(passwordEncoder.encode(registerDTOIn.getPassword()));
         user.setRole(0); // 0 for learner, 1 for admin, 2 for content-management
         user.setIs_deleted(false);

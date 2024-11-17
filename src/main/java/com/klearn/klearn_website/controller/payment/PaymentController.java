@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.klearn.klearn_website.dto.dtoin.PaymentDTOIn;
+import com.klearn.klearn_website.dto.dtoout.MonthlySumTransactionPriceDTOOut;
 import com.klearn.klearn_website.model.PaymentHistory;
 import com.klearn.klearn_website.model.User;
 import com.klearn.klearn_website.service.payment.PaymentHistoryService;
@@ -119,6 +120,25 @@ public class PaymentController {
         BigDecimal sum = paymentHistoryService.getSumOfSuccessfulTransactions();
 
         return ResponseEntity.ok(sum);
+    }
+
+    @GetMapping("/monthly_successful_transaction_sums")
+    public ResponseEntity<?> getMonthlySuccessfulTransactionSums() {
+        User user = userService.getAuthenticatedUser();
+
+        // Check if the user is authorized (if needed, adjust role check as per your
+        // requirements)
+        if (user.getRole() != 1) { // Assuming role 1 is for admin
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        // Fetch monthly sums
+        List<MonthlySumTransactionPriceDTOOut> monthlySums = paymentHistoryService
+                .getMonthlySuccessfulTransactionSums();
+
+        // Return the response
+        return ResponseEntity.ok(monthlySums);
     }
 
 }

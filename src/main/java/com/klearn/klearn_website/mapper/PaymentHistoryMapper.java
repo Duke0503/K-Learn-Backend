@@ -2,6 +2,7 @@ package com.klearn.klearn_website.mapper;
 
 import org.apache.ibatis.annotations.*;
 
+import com.klearn.klearn_website.dto.dtoout.MonthlySumTransactionPriceDTOOut;
 import com.klearn.klearn_website.model.PaymentHistory;
 
 import java.math.BigDecimal;
@@ -122,5 +123,17 @@ public interface PaymentHistoryMapper {
             "FROM payment_history " +
             "WHERE transaction_status = 'success' AND is_deleted = false")
     BigDecimal getTotalSuccessfulTransactionPrice();
+
+    @Select("""
+                SELECT
+                    YEAR(date_transaction) AS year,
+                    MONTH(date_transaction) AS month,
+                    SUM(transaction_price) AS totalAmount
+                FROM payment_history
+                WHERE transaction_status = 'success'
+                GROUP BY YEAR(date_transaction), MONTH(date_transaction)
+                ORDER BY YEAR(date_transaction), MONTH(date_transaction)
+            """)
+    List<MonthlySumTransactionPriceDTOOut> getMonthlySuccessfulTransactionSums();
 
 }

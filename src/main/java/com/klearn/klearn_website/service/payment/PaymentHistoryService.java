@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.klearn.klearn_website.dto.dtoin.MyCourseDTOIn;
 import com.klearn.klearn_website.dto.dtoin.PaymentDTOIn;
+import com.klearn.klearn_website.dto.dtoout.MonthlySumTransactionPriceDTOOut;
 import com.klearn.klearn_website.mapper.PaymentHistoryMapper;
 import com.klearn.klearn_website.model.Course;
 import com.klearn.klearn_website.model.PaymentHistory;
@@ -92,4 +93,7 @@ public class PaymentHistoryService {
         return paymentHistoryMapper.getTotalSuccessfulTransactionPrice();
     }
     
+    public List<MonthlySumTransactionPriceDTOOut> getMonthlySuccessfulTransactionSums() {
+        return paymentHistoryMapper.getMonthlySuccessfulTransactionSums();
+    }
 }
