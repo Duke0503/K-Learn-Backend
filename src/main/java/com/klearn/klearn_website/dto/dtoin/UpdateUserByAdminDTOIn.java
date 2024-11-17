@@ -1,5 +1,7 @@
 package com.klearn.klearn_website.dto.dtoin;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +12,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateUserByAdminDTOIn {
-    private Integer user_id;
+    private String fullname;
 
+    private LocalDate dob;
+
+    private String email;
+    
     private Integer role;
 }

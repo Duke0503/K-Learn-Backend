@@ -68,7 +68,7 @@ public interface UserMapper {
                     MONTH(created_at) AS month,
                     COUNT(*) AS userCount
                 FROM users
-                WHERE is_deleted = 0
+                WHERE is_deleted = 0 AND role = 0
                 GROUP BY YEAR(created_at), MONTH(created_at)
                 ORDER BY YEAR(created_at), MONTH(created_at)
             """)

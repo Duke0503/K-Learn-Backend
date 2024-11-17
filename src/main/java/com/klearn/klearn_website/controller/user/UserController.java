@@ -1,7 +1,9 @@
 package com.klearn.klearn_website.controller.user;
 
+import com.klearn.klearn_website.dto.dtoin.CreateUserByAdminDTOIn;
 import com.klearn.klearn_website.dto.dtoin.PasswordChangeDTOIn;
 import com.klearn.klearn_website.dto.dtoin.PasswordResetDTOIn;
+import com.klearn.klearn_website.dto.dtoin.UpdateUserByAdminDTOIn;
 import com.klearn.klearn_website.dto.dtoin.UserUpdateDTOIn;
 import com.klearn.klearn_website.dto.dtoout.MonthlyUserCountDTOOut;
 import com.klearn.klearn_website.model.User;
@@ -87,12 +89,13 @@ public class UserController {
     @GetMapping("/get-learners")
     public ResponseEntity<?> findLearners() {
         User user = userService.getAuthenticatedUser();
-    
+
         // Allow access only if the user has role 1 or role 2
         if (user.getRole() != 1 && user.getRole() != 2) {
-            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.",
+                    HttpStatus.FORBIDDEN);
         }
-    
+
         List<User> learners = userService.findLearners();
         return new ResponseEntity<>(learners, HttpStatus.OK);
     }
@@ -100,12 +103,13 @@ public class UserController {
     @GetMapping("/get-users")
     public ResponseEntity<?> findUsers() {
         User user = userService.getAuthenticatedUser();
-    
+
         // Allow access only if the user has role 1 or role 2
         if (user.getRole() != 1) {
-            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.",
+                    HttpStatus.FORBIDDEN);
         }
-    
+
         List<User> users = userService.findAllUsers(user.getId());
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
@@ -114,12 +118,55 @@ public class UserController {
 
     public ResponseEntity<?> getMonthlyUserCounts() {
         User user = userService.getAuthenticatedUser();
-    
+
         // Allow access only if the user has role 1 or role 2
         if (user.getRole() != 1) {
-            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.",
+                    HttpStatus.FORBIDDEN);
         }
         List<MonthlyUserCountDTOOut> monthlyCounts = userService.getMonthlyUserCounts();
         return ResponseEntity.ok(monthlyCounts);
+    }
+
+    @PostMapping("/create_user")
+    public ResponseEntity<?> createUserByAdmin(@RequestBody CreateUserByAdminDTOIn createUserByAdminDTOIn) {
+        User authenticatedUser = userService.getAuthenticatedUser();
+
+        // Allow access only if the user has role 1 (Admin)
+        if (authenticatedUser.getRole() != 1) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Unauthorized: You do not have permission to access this resource.");
+        }
+
+        try {
+            userService.createUserByAdmin(createUserByAdminDTOIn);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("User created successfully.");
+        } catch (Exception e) {
+            // Handle unexpected errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred.");
+        }
+    }
+
+    @PutMapping("/update_user/{id}")
+    public ResponseEntity<?> updateUserByAdmin(@PathVariable Integer id,
+            @RequestBody UpdateUserByAdminDTOIn updateUserByAdminDTOIn) {
+        User authenticatedUser = userService.getAuthenticatedUser();
+
+        // Allow access only if the user has role 1 (Admin)
+        if (authenticatedUser.getRole() != 1) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Unauthorized: You do not have permission to access this resource.");
+        }
+
+        try {
+            userService.updateUserByAdmin(id, updateUserByAdminDTOIn);
+            return ResponseEntity.ok("User updated successfully.");
+        } catch (Exception e) {
+            // Handle unexpected errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred.");
+        }
     }
 }
