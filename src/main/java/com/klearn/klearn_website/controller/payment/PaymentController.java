@@ -3,6 +3,7 @@ package com.klearn.klearn_website.controller.payment;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ import java.time.format.DateTimeFormatter;
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
-    
+
     private final UserService userService;
     private final VNPayService vnPayService;
     private final PaymentHistoryService paymentHistoryService;
@@ -54,17 +55,16 @@ public class PaymentController {
         String paymentTime = request.getParameter("vnp_PayDate");
         String transactionId = request.getParameter("vnp_TransactionNo");
         String totalPrice = request.getParameter("vnp_Amount");
-        
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        LocalDateTime vnPayDate = LocalDateTime.parse( request.getParameter("vnp_PayDate"), formatter);
+        LocalDateTime vnPayDate = LocalDateTime.parse(request.getParameter("vnp_PayDate"), formatter);
 
         PaymentDTOIn paymentDTOIn = new PaymentDTOIn(
-            user.getId(),
-            Integer.parseInt(orderInfo),
-            new BigDecimal(totalPrice),
-            paymentStatus,
-            vnPayDate
-        );
+                user.getId(),
+                Integer.parseInt(orderInfo),
+                new BigDecimal(totalPrice),
+                paymentStatus,
+                vnPayDate);
 
         paymentHistoryService.insertPaymentHistory(paymentDTOIn);
 
@@ -73,7 +73,7 @@ public class PaymentController {
         response.put("totalPrice", totalPrice);
         response.put("paymentTime", paymentTime);
         response.put("transactionId", transactionId);
-        response.put("paymentStatus", paymentStatus );
+        response.put("paymentStatus", paymentStatus);
 
         return ResponseEntity.ok(response);
     }
@@ -84,4 +84,23 @@ public class PaymentController {
 
         return paymentHistoryService.getPaymentHistory(user.getId());
     }
+
+    @GetMapping("/all_transactions")
+    public ResponseEntity<?> getAllActivePaymentHistory() {
+        // Retrieve the authenticated user
+        User user = userService.getAuthenticatedUser();
+
+        // Check if the user is authorized
+        if (user.getRole() != 1) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        // Fetch the payment history
+        List<PaymentHistory> paymentHistories = paymentHistoryService.getAllActivePaymentHistory();
+
+        // Return the payment history in a ResponseEntity
+        return ResponseEntity.ok(paymentHistories);
+    }
+
 }

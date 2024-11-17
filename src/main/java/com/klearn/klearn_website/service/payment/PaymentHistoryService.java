@@ -29,6 +29,10 @@ public class PaymentHistoryService {
     /**
      * 
      */
+    public List<PaymentHistory> getAllActivePaymentHistory() {
+        return paymentHistoryMapper.getAllActivePaymentHistory();
+    }
+
     public void insertPaymentHistory(PaymentDTOIn paymentDTOIn) {
         // Check if user exists
         if (!checkExistedPayment(
@@ -56,12 +60,11 @@ public class PaymentHistoryService {
             paymentHistoryMapper.insertPaymentHistory(paymentHistory);
 
             if (paymentDTOIn.getTransaction_status() == "success") {
-                
+
                 myCourseService.insertMyCourse(new MyCourseDTOIn(
-                    paymentDTOIn.getUser_id(),
-                    paymentDTOIn.getCourse_id(),
-                    paymentDTOIn.getTransaction_status()
-                ));
+                        paymentDTOIn.getUser_id(),
+                        paymentDTOIn.getCourse_id(),
+                        paymentDTOIn.getTransaction_status()));
             }
         }
 

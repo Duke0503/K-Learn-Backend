@@ -56,4 +56,7 @@ public interface UserMapper {
   
     @Select("SELECT * FROM users WHERE role = 0 AND is_deleted = 0")
     List<User> findAllLearners();
+
+    @Select("SELECT * FROM users WHERE is_deleted = 0 AND id != #{id}")
+    List<User> findAllUsers(@Param("id") Integer id);
 }

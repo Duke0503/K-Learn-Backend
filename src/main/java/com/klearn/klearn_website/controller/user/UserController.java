@@ -96,4 +96,16 @@ public class UserController {
         return new ResponseEntity<>(learners, HttpStatus.OK);
     }
 
+    @GetMapping("/get-users")
+    public ResponseEntity<?> findUsers() {
+        User user = userService.getAuthenticatedUser();
+    
+        // Allow access only if the user has role 1 or role 2
+        if (user.getRole() != 1) {
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.", HttpStatus.FORBIDDEN);
+        }
+    
+        List<User> users = userService.findAllUsers(user.getId());
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
 }

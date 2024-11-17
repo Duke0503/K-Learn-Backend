@@ -92,4 +92,8 @@ public class UserService {
     public List<User> findLearners() {
         return userMapper.findAllLearners();
     }
+
+    public List<User> findAllUsers(Integer id) {
+        return userMapper.findAllUsers(id);
+    }
 }

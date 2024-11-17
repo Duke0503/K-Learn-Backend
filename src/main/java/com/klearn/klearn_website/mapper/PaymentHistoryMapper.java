@@ -88,4 +88,34 @@ public interface PaymentHistoryMapper {
             @Param("transactionStatus") String transactionStatus,
             @Param("courseId") Integer courseId,
             @Param("userId") Integer userId);
+
+    @Select("SELECT ph.*, c.*, u.* FROM payment_history " +
+            "JOIN courses c ON ph.course_id = c.id " +
+            "JOIN users u ON ph.user_id = u.id " +
+            "WHERE ph.is_deleted = false")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "date_transaction", column = "date_transaction"),
+            @Result(property = "transaction_price", column = "transaction_price"),
+            @Result(property = "transaction_status", column = "transaction_status"),
+            @Result(property = "last_modified", column = "last_modified"),
+            @Result(property = "is_deleted", column = "is_deleted"),
+
+            // Nested mapping for course
+            @Result(property = "course.id", column = "course_id"),
+            @Result(property = "course.course_name", column = "course_name"),
+            @Result(property = "course.course_level", column = "course_level"),
+            @Result(property = "course.course_description", column = "course_description"),
+            @Result(property = "course.course_image", column = "course_image"),
+            @Result(property = "course.course_price", column = "course_price"),
+            @Result(property = "course.created_at", column = "created_at"),
+            @Result(property = "course.last_modified", column = "last_modified"),
+            @Result(property = "course.is_deleted", column = "is_deleted"),
+
+            // Nested mapping for user
+            @Result(property = "user.id", column = "user_id"),
+            @Result(property = "user.fullname", column = "user_fullname")
+    })
+    List<PaymentHistory> getAllActivePaymentHistory();
+
 }
