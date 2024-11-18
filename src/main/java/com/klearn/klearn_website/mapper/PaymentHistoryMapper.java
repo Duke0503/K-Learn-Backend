@@ -90,7 +90,7 @@ public interface PaymentHistoryMapper {
             @Param("courseId") Integer courseId,
             @Param("userId") Integer userId);
 
-    @Select("SELECT ph.*, c.*, u.* FROM payment_history " +
+    @Select("SELECT ph.*, c.*, u.* FROM payment_history ph " +
             "JOIN courses c ON ph.course_id = c.id " +
             "JOIN users u ON ph.user_id = u.id " +
             "WHERE ph.is_deleted = false")
