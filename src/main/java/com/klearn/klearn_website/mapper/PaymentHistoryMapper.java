@@ -30,7 +30,7 @@ public interface PaymentHistoryMapper {
             @Result(property = "is_deleted", column = "is_deleted"),
 
             @Result(property = "user.id", column = "user_id"),
-            @Result(property = "user.fullname", column = "user_fullname"),
+            @Result(property = "user.fullname", column = "fullname"),
 
             @Result(property = "course.id", column = "course_id"),
             @Result(property = "course.course_name", column = "course_name"),
@@ -58,7 +58,7 @@ public interface PaymentHistoryMapper {
 
             // Nested mapping for user
             @Result(property = "user.id", column = "user_id"),
-            @Result(property = "user.fullname", column = "user_fullname"),
+            @Result(property = "user.fullname", column = "fullname"),
 
             // Nested mapping for course
             @Result(property = "course.id", column = "course_id"),
