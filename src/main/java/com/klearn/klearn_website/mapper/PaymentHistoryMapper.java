@@ -117,7 +117,7 @@ public interface PaymentHistoryMapper {
 
             // Nested mapping for user
             @Result(property = "user.id", column = "user_id"),
-            @Result(property = "user.fullname", column = "user_fullname")
+            @Result(property = "user.fullname", column = "fullname")
     })
     List<PaymentHistory> getAllActivePaymentHistory();
 
