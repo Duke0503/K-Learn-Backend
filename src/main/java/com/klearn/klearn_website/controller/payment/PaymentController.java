@@ -86,6 +86,22 @@ public class PaymentController {
         return paymentHistoryService.getPaymentHistory(user.getId());
     }
 
+    @GetMapping("/history/{id}")
+    public ResponseEntity<?> getPaymentHistoryByUserId(@PathVariable Integer id) {
+        User user = userService.getAuthenticatedUser();
+
+        // Check if the user is authorized (if needed, adjust role check as per your
+        // requirements)
+        if (user.getRole() != 1) { // Assuming role 1 is for admin
+            return new ResponseEntity<>("Unauthorized: You do not have permission to access this resource.",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        List<PaymentHistory> listPaymentHistory = paymentHistoryService.getPaymentHistory(id);
+
+        return ResponseEntity.ok(listPaymentHistory);
+    }
+
     @GetMapping("/all_transactions")
     public ResponseEntity<?> getAllActivePaymentHistory() {
         // Retrieve the authenticated user
