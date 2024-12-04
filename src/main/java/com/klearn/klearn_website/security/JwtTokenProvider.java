@@ -13,48 +13,44 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-  @Value("${app.jwt-secret}")
-  private String jwt_secret;
+    @Value("${app.jwt-secret}")
+    private String jwt_secret;
 
+    // Generate JWT token
+    public String generateToken(Authentication authentication) {
+        String username = authentication.getName();
 
-  // generate JWT token
-  public String generateToken(Authentication authentication) {
-    String username = authentication.getName();
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .signWith(key())
+                .compact();
+    }
 
-    String token = Jwts.builder()
-              .setSubject(username)
-              .setIssuedAt(new Date())
-              .signWith(key())
-              .compact();
-    
-    return token;
-  }
+    private Key key() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwt_secret));
+    }
 
-  private Key key() {
-    return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwt_secret));
-  }
+    // Get username from JWT token
+    public String getUsername(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey((SecretKey) key())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
 
-// get username from JWT token
-public String getUsername(String token){
-  return Jwts.parserBuilder()
-             .setSigningKey((SecretKey) key())
-             .build()
-             .parseClaimsJws(token)
-             .getBody()
-             .getSubject();
-}
-
-// validate JWT token
-public boolean validateToken(String token) {
-  try {
-      Jwts.parserBuilder()
-          .setSigningKey((SecretKey) key())
-          .build()
-          .parseClaimsJws(token);
-      return true;
-  } catch (Exception e) {
-      // handle different exceptions for token expiration, signature mismatch, etc.
-      return false;
-  }
-}
+    // Validate JWT token
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey((SecretKey) key())
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

@@ -1,4 +1,4 @@
-package com.klearn.klearn_website.dto.auth;
+package com.klearn.klearn_website.dto.dtoin;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtAuthResponse {
-    private String accessToken;
-    private String tokenType = "Bearer";
+public class PasswordResetDTOIn {
+    private String newPassword;
+
+    private String reNewPassword;
 }

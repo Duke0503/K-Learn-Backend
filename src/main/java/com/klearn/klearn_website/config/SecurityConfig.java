@@ -1,11 +1,11 @@
 package com.klearn.klearn_website.config;
 
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,17 +14,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.klearn.klearn_website.security.CustomOAuth2LoginSuccessHandler;
+import com.klearn.klearn_website.security.OAuth2AuthenticationFailureHandler;
 import com.klearn.klearn_website.security.JwtAuthenticationEntryPoint;
 import com.klearn.klearn_website.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
 @AllArgsConstructor
+@SpringBootApplication
 public class SecurityConfig {
 
-    private JwtAuthenticationEntryPoint authenticationEntryPoint;
-
-    private JwtAuthenticationFilter authenticationFilter;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
+    private final JwtAuthenticationFilter authenticationFilter;
+    private final CustomOAuth2LoginSuccessHandler customOAuth2LoginSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -33,27 +37,48 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests((authorize) -> {
-                // Permit all requests to auth-related endpoints (login, register)
-                authorize.requestMatchers("/api/auth/**").permitAll();
-                
-                // Allow preflight OPTIONS requests for CORS
-                authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                
-                // All other requests must be authenticated
-                authorize.anyRequest().authenticated();
-            })
-            .httpBasic(Customizer.withDefaults());
+        return http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(registry -> {
+                    registry.requestMatchers(
+                        "/", 
+                        "/login", 
+                        "/profile", 
+                        "/oauth2/**",
+                        
+                        "/api/upload",
+                        
+                        "/api/homepage/topic-section",
+                        "/api/homepage/vocabulary/**",
 
-        // Handle authentication entry point (for unauthenticated access)
-        http.exceptionHandling(exception -> exception
-            .authenticationEntryPoint(authenticationEntryPoint));
+                        "/api/auth/**",
 
-        // Add the JWT filter to process JWTs in each request
-        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                        "/api/course",
+                        "/api/course/{courseId}",
 
-        return http.getOrBuild();
+                        "/api/vocabulary_topic/course/{courseId}",
+                        "/api/vocabulary_topic/{topicId}",
+
+                        "/api/vocabulary/{topicId}",
+                        "/api/vocabulary/count/{topicId}",
+
+                        "/api/grammar/{courseId}",
+                        
+                        "/api/user/reset-password-token/**",
+                        "/api/user/reset-password-auth/**"
+                    ).permitAll();
+
+                    registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                    // registry.requestMatchers("/api/mycourse/**").authenticated();
+                    registry.anyRequest().authenticated();
+                })
+                .oauth2Login(oauth2login -> oauth2login
+                        .successHandler(customOAuth2LoginSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint))
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .getOrBuild();
     }
 
     @Bean
